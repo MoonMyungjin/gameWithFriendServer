@@ -34,7 +34,7 @@
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
 		  p:dataSource-ref="dataSourceSpied"
 		  p:configLocation="classpath:com/lms/hexa/mybatis/config/sqlConfig.xml"
-		  p:mapperLocations="classpath:*/dao/*-Mapper.xml"
+		  p:mapperLocations="classpath:*/mapper/*-Mapper.xml"
 	/>	
 
 	
