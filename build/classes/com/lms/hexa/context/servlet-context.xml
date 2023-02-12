@@ -29,34 +29,12 @@
 
 	</beans:bean>
 	
-	<context:component-scan base-package="com.lms.hexa.controller, test" />
+	<context:component-scan base-package="test" />
 	
-	<interceptors>
-		
-		<interceptor>
-			<mapping path="/**/regist.do"/>
-			<mapping path="/**/modify.do" />						
-			<beans:bean class="com.lms.hexa.interceptor.XSSRequestInterceptor"/>
-		</interceptor>
-	</interceptors>
-	
-	 <interceptors>
-       <interceptor>
-           <mapping path="/**"/>
-           <exclude-mapping path="/resources/**"/>
-           <exclude-mapping path="/**/index.do"/>
-           <exclude-mapping path="common/loginForm.do"/>
-           <exclude-mapping path="/**/footer.do"/>
 
-           <beans:bean id="commonInterceptor" class="com.lms.hexa.interceptor.CommonInterceptor"/>
-         
-       </interceptor>
-    </interceptors>
-    
  	<beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
       <beans:property name="order" value="0"/>
     </beans:bean>
     
-	<beans:bean id="downloadFile" class="com.lms.hexa.view.FileDownloadView" />
-	
+
 </beans:beans>
