@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+
+ <mapper namespace="Attach-Mapper">
+ 	
+ 	<resultMap type="attach" id="attachMap">
+ 		<result property="attachGroupId" column="ATTACH_GROUP_ID" />
+ 		<result property="attachId" column="ATTACH_ID" />
+ 		<result property="attachPath" column="ATTACH_PATH" />
+ 		<result property="attachName" column="ATTACH_NAME" />
+ 		<result property="attachType" column="ATTACH_TYPE" />
+ 		<result property="attachWriter" column="ATTACH_WRITER" />
+ 		<result property="attachDate" column="ATTACH_DATE" />
+ 	</resultMap>
+ 	<select id="selectAttachSeqNextValue" resultType="int">
+		select attach_sch_seq.nextval from dual
+	</select>
+ 
+ 	<select id="selectAttachByPdsId" resultMap="attachMap">
+ 		SELECT * 
+ 		FROM ATTACH
+ 		WHERE ATTACH_GROUP_ID = #{attachGroupId}
+ 	</select>
+ 	
+ 	<select id="selectAttachByAttachId" resultMap="attachMap">
+ 		SELECT *
+ 		FROM ATTACH
+ 		WHERE ATTACH_GROUP_ID = #{attachGroupId}
+ 	</select>
+ 	
+ 	<select id="selectAttachByAttachAttachInfo" resultMap="attachMap">
+ 		SELECT *
+ 		FROM ATTACH
+ 		WHERE ATTACH_GROUP_ID = #{attachGroupId}
+ 		  AND ATTACH_ID = #{attachId}
+ 	</select>
+ 	
+ 	<update id="insertAttach">
+ 		insert into
+ 		attach (attach_id, attach_path, attach_name, attach_type, ATTACH_GROUP_ID, attach_writer, attach_date)
+ 		values (#{attachId}, #{attachPath}, #{attachName}, #{attachType}, #{attachGroupId}, #{attachWriter}, sysdate)
+ 	</update>
+ 	
+ 	<update id="deleteAttach">
+ 		DELETE FROM ATTACH
+ 			  WHERE ATTACH_ID = #{attachId}
+ 	</update>
+ 	
+ 	<update id="deleteAttachOne">
+ 		DELETE FROM ATTACH
+ 			  WHERE ATTACH_GROUP_ID = #{attachGroupId}
+ 				AND	ATTACH_ID = #{attachId}
+ 	</update>
+ 	
+ 	<update id="deleteAllAttach">
+ 		delete from attach where ATTACH_GROUP_ID = #{attachGroupId}
+ 	</update>
+ 	
+ 	<select id="selectMAXattachID" parameterType="int" resultType="int">
+ 		SELECT MAX(ATTACH_ID)
+		  FROM ATTACH
+ 	</select>
+ </mapper>

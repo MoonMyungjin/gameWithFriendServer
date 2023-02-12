@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Academyinfo-Mapper">
+	
+	<resultMap type="academyinfo" id="academyinfoMap">
+		<result property="acaIpoId" column="ACA_IPO_ID"/>
+		<result property="acaIpoImg" column="ACA_IPO_IMG"/>
+		<result property="acaIpoCeoName" column="ACA_IPO_CEO_NAME"/>
+		<result property="acaIpoName" column="ACA_IPO_NAME"/>
+		<result property="acaIpoAddress" column="ACA_IPO_ADDRESS"/>
+		<result property="acaIpoOnNumber" column="ACA_IPO_ON_NUMBER"/>
+		<result property="acaIpoPhone" column="ACA_IPO_PHONE"/>
+		<result property="acaIpoFax" column="ACA_IPO_FAX"/>
+		<result property="acaIpoCopy" column="ACA_IPO_COPY"/>
+	</resultMap>
+	
+	<select id="selectacademyinfo" resultMap="academyinfoMap">
+		SELECT *
+		  FROM ACA_IPO
+		order by ACA_IPO_ID desc
+	</select>
+	
+	<update id="updateAcademyinfo" parameterType="academyinfo">
+  		UPDATE ACA_IPO
+			SET 
+			    ACA_IPO_CEO_NAME =  #{acaIpoCeoName},
+			    ACA_IPO_NAME =  #{acaIpoName},
+			    ACA_IPO_ADDRESS =  #{acaIpoAddress},
+			    ACA_IPO_ON_NUMBER =  #{acaIpoOnNumber},
+			    ACA_IPO_PHONE =  #{acaIpoPhone},
+			    ACA_IPO_FAX =  #{acaIpoFax},
+			    ACA_IPO_COPY =  #{acaIpoCopy}
+			    
+			WHERE 
+				ACA_IPO_ID = #{acaIpoId}
+	</update>
+	
+	
+</mapper>

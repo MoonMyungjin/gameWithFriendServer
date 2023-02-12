@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MariaAcademyHomepageUse-Mapper">
+	
+	<resultMap type="academyHomepageUse" id="academyHomepageUseMap">
+		<result property="acaHuseId" column="ACA_HUSE_ID"/>
+		<result property="acaHuseIp" column="ACA_HUSE_IP"/>
+		<result property="acaHuseUrl" column="ACA_HUSE_URL"/>
+		<result property="acaHuseDate" column="ACA_HUSE_DATE"/>
+		<result property="acaHuseMenuName" column="ACA_HUSE_MENUNAME"/>
+		<result property="acaHuseUserId" column="ACA_HUSE_USERID"/>
+		
+	</resultMap>
+	
+	<insert id="insertVisitor" parameterType="academyHomepageUse">
+            INSERT
+            INTO ACA_HUSE
+            (
+                ACA_HUSE_ID,
+                ACA_HUSE_IP,
+                ACA_HUSE_DATE,
+                <if test="ACA_HUSE_REFER != null and ACA_HUSE_REFER !=''">
+                ACA_HUSE_REFER,
+                </if>
+                ACA_HUSE_AGENT
+            )
+            VALUES
+            (
+                ACA_HUSE_SEQ.NEXTVAL,
+                #{acaHuseIp},
+                SYSDATETIME,
+                <if test="ACA_HUSE_REFER != null and ACA_HUSE_REFER !=''">
+                #{acaHuseRefer},
+                </if>
+                #{acaHuseAgent}
+            )
+        </insert>
+		<insert id="insertVisitorMaria" parameterType="academyHomepageUse">
+			insert into aca_huse (
+			ACA_HUSE_IP,
+			 ACA_HUSE_URL,
+			  ACA_HUSE_DATE,
+			   ACA_HUSE_MENUNAME,
+			   ACA_HUSE_USERID)
+				values
+				(#{acaHuseIp},#{acaHuseUrl},#{acaHuseDate},#{acaHuseMenuName},#{acaHuseUserId})
+			
+		 </insert>
+		
+		<select id="selectVisitor" resultMap="academyHomepageUseMap">
+			
+					
+					SELECT *
+					FROM aca_huse
+		</select>
+		
+		<select id="selectVisitorCount" resultType="academyHomepageUse" >
+		
+			SELECT A.MENU_NAME as acaHuseMenuName, A.ACA_HUSE_DATE as acaHuseDate, IFNULL(B.COUNT,0)  as acaHuseCount
+			FROM   
+			( 
+				SELECT * 
+				FROM VW_MENU T CROSS JOIN (SELECT DISTINCT left(ACA_HUSE_DATE,7) ACA_HUSE_DATE FROM aca_huse) U
+			) A LEFT OUTER JOIN
+			(							
+				SELECT 
+				ACA_HUSE_MENUNAME,
+				left(ACA_HUSE_DATE,7) ACA_HUSE_DATE,
+				COUNT( ACA_HUSE_MENUNAME ) AS Count    
+				FROM aca_huse
+				GROUP BY left(ACA_HUSE_DATE,7), ACA_HUSE_MENUNAME
+			) B
+			ON(A.MENU_NAME = B.ACA_HUSE_MENUNAME AND A.ACA_HUSE_DATE = B.ACA_HUSE_DATE)	
+ 					
+ 				
+<!--  					SELECT  -->
+<!-- 							ACA_HUSE_MENUNAME, -->
+<!-- 							COUNT( ACA_HUSE_MENUNAME ) AS Count     -->
+<!-- 							FROM aca_huse -->
+<!-- 							WHERE 1=1  -->
+<!-- 				<foreach collection="dateList" item="item2" separator=";" close=";"> -->
+<!-- 							left(ACA_HUSE_DATE,7) = (#{item2.date}) -->
+<!-- 				<foreach collection="menuNameListForList" index="index" item="item"> -->
+<!-- 							or ACA_HUSE_MENUNAME = #{item} -->
+<!-- 				</foreach> -->
+<!-- 							GROUP BY ACA_HUSE_MENUNAME						 -->
+<!-- 				</foreach> -->
+ 					
+ 				
+					
+				
+		</select>
+</mapper>

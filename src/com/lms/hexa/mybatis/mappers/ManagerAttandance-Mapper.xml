@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ManagerAttandance-Mapper">
+
+	<resultMap type="attandance" id="attandanceMap">
+		<result property="atnId" column="ATN_ID"/>
+		<result property="atnDate" column="ATN_DATE"/>
+		<result property="atnGoTime" column="ATN_GO_TIME"/>
+		<result property="atnOutTime" column="ATN_OUT_TIME"/>
+		<result property="atnStartDeadlineYn" column="ATN_START_DEADLINE_YN"/>
+		<result property="atnYn" column="ATN_YN"/>
+		<result property="atnYnManager" column="ATN_YN_MANAGER"/>
+		<result property="atnRandomTime" column="ATN_RANDOM_TIME"/>
+		<result property="atnReason" column="ATN_REASON"/>
+		<result property="studentId" column="STUDENT_ID"/>
+	</resultMap>
+		
+	<select id="selectAttandance" parameterType="str" resultMap="attandanceMap">
+		SELECT ATN_ID,
+				ATN_DATE,
+				ATN_GO_TIME,
+				ATN_OUT_TIME,
+				ATN_START_DEADLINE_YN,
+				ATN_YN,
+				ATN_YN_MANAGER,
+				ATN_RANDOM_TIME,
+				ATN_REASON,
+				STUDENT_ID
+		  FROM ATTENDANCE
+		order by ATN_ID desc
+	</select>
+	
+	<select id="selectAtt" parameterType="str" resultMap="attandanceMap">
+		SELECT ATN_YN_MANAGER
+		  FROM ATTENDANCE
+		  where STUDENT_ID = #{studentId}
+		  and (TO_CHAR(ATN_DATE,'YY/MM/DD')) = (SELECT TO_CHAR(SYSDATE, 'YY/MM/DD') FROM DUAL)
+	</select>
+	
+	<select id="selectAttdate" parameterType="str" resultMap="attandanceMap">
+		SELECT ATN_GO_TIME,
+				ATN_OUT_TIME
+		  FROM ATTENDANCE
+		  where STUDENT_ID = #{studentId}
+		  and (TO_CHAR(ATN_DATE,'YY/MM/DD')) = (SELECT TO_CHAR(SYSDATE, 'YY/MM/DD') FROM DUAL)
+	</select>
+	
+	<select id="selectAttandanceGetStudentId" parameterType="str" resultMap="attandanceMap">
+		SELECT STUDENT_ID
+		  FROM ATTENDANCE
+          where atn_yn ='Y'
+          AND ATN_YN_MANAGER = 'N'
+          and (TO_CHAR(ATN_DATE,'YY/MM/DD')) = (SELECT TO_CHAR(SYSDATE, 'YY/MM/DD') FROM DUAL)
+			
+	</select>
+	
+	<select id="selectOutGetStudentId" parameterType="str" resultMap="attandanceMap">
+		SELECT STUDENT_ID
+		  FROM ATTENDANCE
+          where  ATN_START_DEADLINE_YN ='YN'
+          AND ATN_YN = 'Y'
+          AND ATN_YN_MANAGER = 'Y'
+          and (TO_CHAR(ATN_DATE,'YY/MM/DD')) = (SELECT TO_CHAR(SYSDATE, 'YY/MM/DD') FROM DUAL)	
+	</select>
+	
+	<select id="selectAttandanceTotalCount" resultType="int">
+				select count(*)
+            from
+            attendance A, 
+               STUDENT B,
+                 SCHOOL C,
+                 BELONG D,
+                 CLASS E
+			 where (TO_CHAR(a.ATN_DATE,'YY/MM/DD')) = (SELECT TO_CHAR(SYSDATE, 'YY/MM/DD') FROM DUAL)
+			  AND B.STUDENT_ID = A.STUDENT_ID
+                AND D.STUDENT_ID = A.STUDENT_ID
+             AND D.CLASS_ID =  E.CLASS_ID
+             AND C.SCHOOL_ID = B.SCHOOL_NO 
+	</select>
+	
+	<select id="selectAttandanceTotalCount2" resultType="int">
+		select count(*) from attendance 
+		
+	</select>
+	
+	<select id="selectAttandanceYNCount" resultType="int">
+		    select count(*) from attendance A, 
+               STUDENT B,
+                 SCHOOL C,
+                 BELONG D,
+                 CLASS E
+		where a.ATN_YN_MANAGER = 'N' 
+		AND (TO_CHAR(a.ATN_DATE,'YY/MM/DD')) = (SELECT TO_CHAR(SYSDATE, 'YY/MM/DD') FROM DUAL)
+         AND B.STUDENT_ID = A.STUDENT_ID
+ 		 AND D.STUDENT_ID = A.STUDENT_ID
+ 		 AND D.CLASS_ID =  E.CLASS_ID
+ 		 AND C.SCHOOL_ID = B.SCHOOL_NO
+	</select>
+	
+	<update id="updateAttandance" parameterType="str" >
+		  UPDATE ATTENDANCE
+          SET ATN_YN_MANAGER = 'Y'
+          	
+          where STUDENT_ID = #{studentId}
+          AND atn_yn ='Y'
+          AND ATN_YN_MANAGER = 'N'
+	</update>
+	
+	<update id="updateAttandanceCancle" parameterType="str" >
+		  UPDATE ATTENDANCE
+          SET atn_yn = 'N',
+          	  ATN_GO_TIME = ''
+          where STUDENT_ID = #{studentId}
+          AND atn_yn ='Y'
+          AND ATN_YN_MANAGER = 'N'
+	</update>
+	
+	<update id="updateAttandanceAll" parameterType="str" >
+		  UPDATE ATTENDANCE
+          SET ATN_YN_MANAGER = 'Y'
+          where ATN_ID = #{atnId}
+         	
+	</update>
+	
+	<update id="updateAttandanceAllCancle" parameterType="str" >
+		  UPDATE ATTENDANCE
+          SET ATN_YN_MANAGER = 'N'
+          where ATN_ID = #{atnId}
+         	
+	</update>
+	
+	<update id="updateOut" parameterType="str" >
+		  UPDATE ATTENDANCE
+          SET ATN_START_DEADLINE_YN = 'YY',
+          	  ATN_OUT_TIME = sysdate
+          where STUDENT_ID = #{studentId}
+          AND atn_yn ='Y'
+          AND ATN_YN_MANAGER = 'Y'
+	</update>
+	
+	<update id="updateOutCancle" parameterType="str" >
+		  UPDATE ATTENDANCE
+          SET ATN_START_DEADLINE_YN = 'N',
+          	  ATN_OUT_TIME = ''
+          where STUDENT_ID = #{studentId}
+          AND atn_yn ='Y'
+          AND ATN_YN_MANAGER = 'Y'
+	</update>
+	
+	<update id="updateAttandanceQr" parameterType="str" >
+		  UPDATE ATTENDANCE
+          SET atn_yn = 'Y',
+           ATN_GO_TIME = sysdate
+          where STUDENT_ID = #{studentId}
+          AND atn_yn ='N'
+          AND (TO_CHAR(ATN_DATE,'YY/MM/DD')) = (SELECT TO_CHAR(SYSDATE, 'YY/MM/DD') FROM DUAL)
+	</update>
+	
+	<update id="updateAttandanceQrz" parameterType="str" >
+		  UPDATE ATTENDANCE
+          SET ATN_START_DEADLINE_YN = 'YN'
+          where STUDENT_ID = #{studentId}
+          AND ATN_START_DEADLINE_YN ='N'
+          AND (TO_CHAR(ATN_DATE,'YY/MM/DD')) = (SELECT TO_CHAR(SYSDATE, 'YY/MM/DD') FROM DUAL)
+	</update>
+	
+	<insert id="insertDayAtt" parameterType="java.util.Map">
+		
+	
+	INSERT INTO ATTENDANCE(ATN_ID, ATN_DATE, ATN_GO_TIME, ATN_OUT_TIME, ATN_START_DEADLINE_YN, ATN_YN, ATN_YN_MANAGER, ATN_RANDOM_TIME,ATN_REASON,STUDENT_ID)
+	 SELECT ATTENDANCE_SEQ.nextval,  Z.A,
+           Z.B,
+           Z.C,
+           Z.D,
+           Z.E,
+           Z.F,
+           Z.G,
+           Z.H,
+           Z.I FROM(
+	 <foreach collection="studentList" item="item" separator="UNION ALL">
+	 			SELECT  sysdate AS A,
+	 					'' AS B,
+	 					'' AS C,
+	 					'N' AS D,
+	 					'N' AS E,
+	 					'N' AS F,
+	 					sysdate AS G,
+	 					'None' AS H,
+	 					#{item.id} AS I
+	 					from dual
+	 </foreach>)Z
+
+	</insert>
+	
+	
+	
+	
+	
+	<select id="selectAttSeqNext" resultType="int">
+		select ATTENDANCE_SEQ.nextval from dual
+
+	</select>
+	
+	<select id="selectAttandancePlus" parameterType="java.util.Map" resultType="attandance">
+ 		
+ 					select A.ATN_ID AS atnId,
+ 					A.ATN_DATE as atnDate,
+ 					A.ATN_GO_TIME as atnGoTime,
+ 					A.ATN_OUT_TIME as atnOutTime,
+ 					A.ATN_START_DEADLINE_YN AS atnStartDeadlineYn,
+ 					A.ATN_YN AS atnYn,
+ 					A.ATN_YN_MANAGER AS atnYnManager,
+ 					A.ATN_RANDOM_TIME AS atnRandomTime,
+ 					A.ATN_REASON AS atnReason,					
+ 					C.SCHOOL_NAME AS schoolName,
+ 					B.STUDENT_NAME AS studentName,
+ 					E.CLASS_NAME AS className,
+ 					B.STUDENT_ID AS studentId
+            FROM ATTENDANCE A,
+                 STUDENT B,
+                 SCHOOL C,
+                 BELONG D,
+                 CLASS E
+ 			where B.STUDENT_ID IN 
+ 			
+           
+		<foreach collection="attandanceList" index="index" item="item2" open="(" close=")"  separator=",">
+ 			#{item2.studentId}
+ 		</foreach>
+ 		 AND B.STUDENT_ID = A.STUDENT_ID
+ 		 AND D.STUDENT_ID = A.STUDENT_ID
+ 		 AND D.CLASS_ID =  E.CLASS_ID
+ 		 AND C.SCHOOL_ID = <![CDATA[B.SCHOOL_NO]]>
+ 		 and (TO_CHAR(ATN_DATE,'YY/MM/DD')) = (SELECT TO_CHAR(SYSDATE, 'YY/MM/DD') FROM DUAL)
+         <!-- AND (TO_CHAR(ATN_DATE,'YY/MM/DD')) = (SELECT TO_CHAR(SYSDATE, 'YY/MM/DD') FROM DUAL) -->
+ 			ORDER BY ATN_ID desc
+ 	</select>
+ 	
+	<select id="selectAttandancePlus2" parameterType="java.util.Map" resultType="attandance">
+ 		
+ 					select A.ATN_ID AS atnId,
+ 					A.ATN_DATE as atnDate,
+ 					A.ATN_GO_TIME as atnGoTime,
+ 					A.ATN_OUT_TIME as atnOutTime,
+ 					A.ATN_START_DEADLINE_YN AS atnStartDeadlineYn,
+ 					A.ATN_YN AS atnYn,
+ 					A.ATN_YN_MANAGER AS atnYnManager,
+ 					A.ATN_RANDOM_TIME AS atnRandomTime,
+ 					A.ATN_REASON AS atnReason,					
+ 					C.SCHOOL_NAME AS schoolName,
+ 					B.STUDENT_NAME AS studentName,
+ 					E.CLASS_NAME AS className,
+ 					B.STUDENT_ID AS studentId
+            FROM ATTENDANCE A,
+                 STUDENT B,
+                 SCHOOL C,
+                 BELONG D,
+                 CLASS E
+ 			where B.STUDENT_ID IN 
+ 			
+           
+		<foreach collection="attandanceList" index="index" item="item2" open="(" close=")"  separator=",">
+ 			#{item2.studentId}
+ 		</foreach>
+ 		 AND B.STUDENT_ID = A.STUDENT_ID
+ 		 AND D.STUDENT_ID = A.STUDENT_ID
+ 		 AND D.CLASS_ID =  E.CLASS_ID
+ 		 AND C.SCHOOL_ID = <![CDATA[B.SCHOOL_NO]]>
+ 		 and (TO_CHAR(ATN_DATE,'YY/MM/DD')) = (SELECT TO_CHAR(to_date(#{ajaxDate}), 'YY/MM/DD') FROM DUAL)
+         <!-- AND (TO_CHAR(ATN_DATE,'YY/MM/DD')) = (SELECT TO_CHAR(SYSDATE, 'YY/MM/DD') FROM DUAL) -->
+ 			ORDER BY ATN_ID desc
+ 	</select>
+ 	
+	<select id="selectAttandancePlus3" parameterType="java.util.Map" resultType="attandance">
+ 		
+ 					select A.ATN_ID AS atnId,
+ 					A.ATN_DATE as atnDate,
+ 					A.ATN_GO_TIME as atnGoTime,
+ 					A.ATN_OUT_TIME as atnOutTime,
+ 					A.ATN_START_DEADLINE_YN AS atnStartDeadlineYn,
+ 					A.ATN_YN AS atnYn,
+ 					A.ATN_YN_MANAGER AS atnYnManager,
+ 					A.ATN_RANDOM_TIME AS atnRandomTime,
+ 					A.ATN_REASON AS atnReason,					
+ 					C.SCHOOL_NAME AS schoolName,
+ 					B.STUDENT_NAME AS studentName,
+ 					E.CLASS_NAME AS className,
+ 					B.STUDENT_ID AS studentId
+            FROM ATTENDANCE A,
+                 STUDENT B,
+                 SCHOOL C,
+                 BELONG D,
+                 CLASS E
+ 			where B.STUDENT_ID IN 
+ 			
+           
+		<foreach collection="attandanceList" index="index" item="item2" open="(" close=")"  separator=",">
+ 			#{item2.studentId}
+ 		</foreach>
+ 		 AND B.STUDENT_ID = A.STUDENT_ID
+ 		 AND D.STUDENT_ID = A.STUDENT_ID
+ 		 AND D.CLASS_ID =  E.CLASS_ID
+ 		 AND C.SCHOOL_ID = <![CDATA[B.SCHOOL_NO]]>
+ 		 and (TO_CHAR(ATN_DATE,'YY/MM')) = (SELECT TO_CHAR(to_date(#{ajaxDate}), 'YY/MM') FROM DUAL)
+         <!-- AND (TO_CHAR(ATN_DATE,'YY/MM/DD')) = (SELECT TO_CHAR(SYSDATE, 'YY/MM/DD') FROM DUAL) -->
+ 			ORDER BY ATN_ID desc
+ 	</select>
+	
+	
+	
+	<select id="selectAttTimeForLate" parameterType="str" resultType="attandance">
+	
+	select DISTINCT
+            a.ATN_DATE as atnDate,
+            a.ATN_GO_TIME as atnGoTime,
+            a.ATN_OUT_TIME as atnOutTime,
+            a.ATN_REASON as atnReason,
+            b.STUDENT_NAME as studentName,
+            a.ATN_YN_MANAGER as atnYnManager,
+            h.MINSTART as minStart,
+            i.MAXEND as maxEnd
+        
+            
+    from   ATTENDANCE A,
+           STUDENT B,
+           TAKE_LESSON C,
+           LESSONTIME D,
+           LESSONASSIGNMENT E,
+           LESSON F,
+           TIMETABLE G,
+           (  
+           select 
+           
+            min(g.TIMETABLE_START_TIME) as MINSTART
+            
+            
+            from   ATTENDANCE A,
+                   STUDENT B,
+                   TAKE_LESSON C,
+                   LESSONTIME D,
+                   LESSONASSIGNMENT E,
+                   LESSON F,
+                   TIMETABLE G
+            WHERE  a.STUDENT_ID = b.STUDENT_ID
+              and  a.STUDENT_ID = c.STUDENT_ID
+              and  a.STUDENT_ID = #{id}
+              and  c.LESSONASSIGNMENT_ID = d.LESSONASSIGNMENT_ID
+              and  c.LESSONASSIGNMENT_ID = e.LESSONASSIGNMENT_ID
+              and  d.LESSONASSIGNMENT_ID = e.LESSONASSIGNMENT_ID
+              and  e.LESSON_ID = f.LESSON_ID
+              and  d.TIMETABLE_ID = g.TIMETABLE_ID
+              and  (TO_CHAR(TO_DATE(a.ATN_DATE),'YY/MM/DD'))  = (SELECT TO_CHAR(to_date(sysdate), 'YY/MM/DD') FROM DUAL)
+              and  g.TIMETABLE_DAY_OF_WEEK =  (select to_char(sysdate, 'dy','NLS_DATE_LANGUAGE=ENGLISH') from dual)
+              and  <![CDATA[ e.LA_START_DATE < (SELECT TO_CHAR(to_date(sysdate), 'YYYYMMDD') FROM DUAL) ]]>
+              and <![CDATA[(SELECT TO_CHAR(to_date(sysdate), 'YYYYMMDD') FROM DUAL) < e.LA_END_DATE ]]>
+      
+      ) H,
+      (
+      
+      select 
+           
+            max(g.TIMETABLE_END_TIME) as MAXEND
+            
+            
+            from   ATTENDANCE A,
+                   STUDENT B,
+                   TAKE_LESSON C,
+                   LESSONTIME D,
+                   LESSONASSIGNMENT E,
+                   LESSON F,
+                   TIMETABLE G
+            WHERE  a.STUDENT_ID = b.STUDENT_ID
+              and  a.STUDENT_ID = c.STUDENT_ID
+              and  a.STUDENT_ID = #{id}
+              and  c.LESSONASSIGNMENT_ID = d.LESSONASSIGNMENT_ID
+              and  c.LESSONASSIGNMENT_ID = e.LESSONASSIGNMENT_ID
+              and  d.LESSONASSIGNMENT_ID = e.LESSONASSIGNMENT_ID
+              and  e.LESSON_ID = f.LESSON_ID
+              and  d.TIMETABLE_ID = g.TIMETABLE_ID
+              and  (TO_CHAR(TO_DATE(a.ATN_DATE),'YY/MM/DD'))  = (SELECT TO_CHAR(to_date(sysdate), 'YY/MM/DD') FROM DUAL)
+              and  g.TIMETABLE_DAY_OF_WEEK = (select to_char(to_date('2022-05-14'), 'dy','NLS_DATE_LANGUAGE=ENGLISH') from dual)
+              and  e.LA_START_DATE <![CDATA[<]]> (SELECT TO_CHAR(to_date(sysdate), 'YYYYMMDD') FROM DUAL)
+              and  (SELECT TO_CHAR(to_date(sysdate), 'YYYYMMDD') FROM DUAL)<![CDATA[<]]> e.LA_END_DATE 
+      ) I
+      
+    WHERE  a.STUDENT_ID = b.STUDENT_ID
+      and  a.STUDENT_ID = c.STUDENT_ID
+      and  a.STUDENT_ID = #{id}
+      and  c.LESSONASSIGNMENT_ID = d.LESSONASSIGNMENT_ID
+      and  c.LESSONASSIGNMENT_ID = e.LESSONASSIGNMENT_ID
+      and  d.LESSONASSIGNMENT_ID = e.LESSONASSIGNMENT_ID
+      and  e.LESSON_ID = f.LESSON_ID
+      and  d.TIMETABLE_ID = g.TIMETABLE_ID
+      and  (TO_CHAR(TO_DATE(a.ATN_DATE),'YY/MM/DD'))  = (SELECT TO_CHAR(to_date(sysdate), 'YY/MM/DD') FROM DUAL)
+      and  g.TIMETABLE_DAY_OF_WEEK = (select (to_char(TO_DATE(to_date(sysdate),'YYYY-MM-DD'),'dy','NLS_DATE_LANGUAGE=ENGLISH')) from dual)
+      and  e.LA_START_DATE <![CDATA[<]]>(SELECT TO_CHAR(to_date(sysdate), 'YYYYMMDD') FROM DUAL) 
+      and  (SELECT TO_CHAR(to_date(sysdate), 'YYYYMMDD') FROM DUAL)<![CDATA[<]]> e.LA_END_DATE 
+	
+	
+	</select>
+	
+	<select id="memberAttandanceList" parameterType="attandance" resultType="attandance">
+		
+		    
+    select DISTINCT
+            a.ATN_DATE as atnDate,
+            a.ATN_GO_TIME as atnGoTime,
+            a.ATN_OUT_TIME as atnOutTime,
+            a.ATN_REASON as atnReason,
+            b.STUDENT_NAME as studentName,
+            a.ATN_YN_MANAGER as atnYnManager,
+            h.MINSTART as minStart,
+            i.MAXEND as maxEnd,
+            a.STUDENT_ID as studentId
+        
+            
+    from   ATTENDANCE A,
+           STUDENT B,
+           TAKE_LESSON C,
+           LESSONTIME D,
+           LESSONASSIGNMENT E,
+           LESSON F,
+           TIMETABLE G,
+           (  
+           select 
+           
+            min(g.TIMETABLE_START_TIME) as MINSTART
+            
+            
+            from   ATTENDANCE A,
+                   STUDENT B,
+                   TAKE_LESSON C,
+                   LESSONTIME D,
+                   LESSONASSIGNMENT E,
+                   LESSON F,
+                   TIMETABLE G
+            WHERE  a.STUDENT_ID = b.STUDENT_ID
+              and  a.STUDENT_ID = c.STUDENT_ID
+              and  a.STUDENT_ID = #{studentId}
+              and  c.LESSONASSIGNMENT_ID = d.LESSONASSIGNMENT_ID
+              and  c.LESSONASSIGNMENT_ID = e.LESSONASSIGNMENT_ID
+              and  d.LESSONASSIGNMENT_ID = e.LESSONASSIGNMENT_ID
+              and  e.LESSON_ID = f.LESSON_ID
+              and  d.TIMETABLE_ID = g.TIMETABLE_ID
+              and  (TO_CHAR(TO_DATE(a.ATN_DATE),'YY/MM/DD'))  = (SELECT TO_CHAR(sysdate-(#{nowDate}), 'YY/MM/DD') FROM DUAL)
+              and  g.TIMETABLE_DAY_OF_WEEK = (select (to_char(sysdate-(#{nowDate}),'dy','NLS_DATE_LANGUAGE=ENGLISH')) from dual)
+              and <![CDATA[ e.LA_START_DATE < (SELECT TO_CHAR(sysdate-(#{nowDate}), 'YYYYMMDD') FROM DUAL) ]]>
+              and <![CDATA[ (SELECT TO_CHAR(sysdate-(#{nowDate}), 'YYYYMMDD') FROM DUAL) < e.LA_END_DATE ]]>
+      
+      ) H,
+      (
+      
+      select 
+           
+            max(g.TIMETABLE_END_TIME) as MAXEND
+            
+            
+            from   ATTENDANCE A,
+                   STUDENT B,
+                   TAKE_LESSON C,
+                   LESSONTIME D,
+                   LESSONASSIGNMENT E,
+                   LESSON F,
+                   TIMETABLE G
+            WHERE  a.STUDENT_ID = b.STUDENT_ID
+              and  a.STUDENT_ID = c.STUDENT_ID
+              and  a.STUDENT_ID = #{studentId}
+              and  c.LESSONASSIGNMENT_ID = d.LESSONASSIGNMENT_ID
+              and  c.LESSONASSIGNMENT_ID = e.LESSONASSIGNMENT_ID
+              and  d.LESSONASSIGNMENT_ID = e.LESSONASSIGNMENT_ID
+              and  e.LESSON_ID = f.LESSON_ID
+              and  d.TIMETABLE_ID = g.TIMETABLE_ID
+              and  (TO_CHAR(TO_DATE(a.ATN_DATE),'YY/MM/DD'))  = (SELECT TO_CHAR(sysdate-(#{nowDate}), 'YY/MM/DD') FROM DUAL)
+              and  g.TIMETABLE_DAY_OF_WEEK = (select (to_char(sysdate-(#{nowDate}),'dy','NLS_DATE_LANGUAGE=ENGLISH')) from dual)
+              and <![CDATA[ e.LA_START_DATE < (SELECT TO_CHAR(sysdate-(#{nowDate}), 'YYYYMMDD') FROM DUAL)]]>
+              and <![CDATA[ (SELECT TO_CHAR(sysdate-(#{nowDate}), 'YYYYMMDD') FROM DUAL) < e.LA_END_DATE ]]>
+      ) I
+      
+    WHERE  a.STUDENT_ID = b.STUDENT_ID
+      and  a.STUDENT_ID = c.STUDENT_ID
+      and  a.STUDENT_ID = #{studentId}
+      and  c.LESSONASSIGNMENT_ID = d.LESSONASSIGNMENT_ID
+      and  c.LESSONASSIGNMENT_ID = e.LESSONASSIGNMENT_ID
+      and  d.LESSONASSIGNMENT_ID = e.LESSONASSIGNMENT_ID
+      and  e.LESSON_ID = f.LESSON_ID
+      and  d.TIMETABLE_ID = g.TIMETABLE_ID
+      and  (TO_CHAR(TO_DATE(a.ATN_DATE),'YY/MM/DD'))  = (SELECT TO_CHAR(sysdate-(#{nowDate}), 'YY/MM/DD') FROM DUAL)
+      and  g.TIMETABLE_DAY_OF_WEEK = (select (to_char(TO_DATE(sysdate-(#{nowDate}),'YYYY-MM-DD'),'dy','NLS_DATE_LANGUAGE=ENGLISH')) from dual)
+      and  e.LA_START_DATE <![CDATA[<]]> (SELECT TO_CHAR(sysdate-(#{nowDate}), 'YYYYMMDD') FROM DUAL) 
+      and  (SELECT TO_CHAR(sysdate-(#{nowDate}), 'YYYYMMDD') FROM DUAL) <![CDATA[<]]> e.LA_END_DATE 
+		
+	</select>
+	
+	
+	<select id="memberAttandanceListtwo" parameterType="attandance" resultType="attandance">
+		
+		    
+    select DISTINCT
+            a.ATN_DATE as atnDate,
+            a.ATN_GO_TIME as atnGoTime,
+            a.ATN_OUT_TIME as atnOutTime,
+            a.ATN_REASON as atnReason,
+            b.STUDENT_NAME as studentName,
+            a.ATN_YN_MANAGER as atnYnManager,
+            h.MINSTART as minStart,
+            i.MAXEND as maxEnd
+        
+            
+    from   ATTENDANCE A,
+           STUDENT B,
+           TAKE_LESSON C,
+           LESSONTIME D,
+           LESSONASSIGNMENT E,
+           LESSON F,
+           TIMETABLE G,
+           (  
+           select 
+           
+            min(g.TIMETABLE_START_TIME) as MINSTART
+            
+            
+            from   ATTENDANCE A,
+                   STUDENT B,
+                   TAKE_LESSON C,
+                   LESSONTIME D,
+                   LESSONASSIGNMENT E,
+                   LESSON F,
+                   TIMETABLE G
+            WHERE  a.STUDENT_ID = b.STUDENT_ID
+              and  a.STUDENT_ID = c.STUDENT_ID
+              and  a.STUDENT_ID = #{studentId}
+              and  c.LESSONASSIGNMENT_ID = d.LESSONASSIGNMENT_ID
+              and  c.LESSONASSIGNMENT_ID = e.LESSONASSIGNMENT_ID
+              and  d.LESSONASSIGNMENT_ID = e.LESSONASSIGNMENT_ID
+              and  e.LESSON_ID = f.LESSON_ID
+              and  d.TIMETABLE_ID = g.TIMETABLE_ID
+              and  (TO_CHAR(TO_DATE(a.ATN_DATE),'YY/MM/DD'))  = (SELECT TO_CHAR(to_date(#{nowDate}), 'YY/MM/DD') FROM DUAL)
+              and  g.TIMETABLE_DAY_OF_WEEK = (select to_char(to_date(#{nowDate}), 'dy','NLS_DATE_LANGUAGE=ENGLISH') from dual)
+              and <![CDATA[ e.LA_START_DATE < (SELECT TO_CHAR(to_date(#{nowDate}), 'YYYYMMDD') FROM DUAL) ]]>
+              and <![CDATA[ (SELECT TO_CHAR(to_date(#{nowDate}), 'YYYYMMDD') FROM DUAL) < e.LA_END_DATE ]]>
+      
+      ) H,
+      (
+      
+      select 
+           
+            max(g.TIMETABLE_END_TIME) as MAXEND
+            
+            
+            from   ATTENDANCE A,
+                   STUDENT B,
+                   TAKE_LESSON C,
+                   LESSONTIME D,
+                   LESSONASSIGNMENT E,
+                   LESSON F,
+                   TIMETABLE G
+            WHERE  a.STUDENT_ID = b.STUDENT_ID
+              and  a.STUDENT_ID = c.STUDENT_ID
+              and  a.STUDENT_ID = #{studentId}
+              and  c.LESSONASSIGNMENT_ID = d.LESSONASSIGNMENT_ID
+              and  c.LESSONASSIGNMENT_ID = e.LESSONASSIGNMENT_ID
+              and  d.LESSONASSIGNMENT_ID = e.LESSONASSIGNMENT_ID
+              and  e.LESSON_ID = f.LESSON_ID
+              and  d.TIMETABLE_ID = g.TIMETABLE_ID
+              and  (TO_CHAR(TO_DATE(a.ATN_DATE),'YY/MM/DD'))  = (SELECT TO_CHAR(to_date(#{nowDate}), 'YY/MM/DD') FROM DUAL)
+              and  g.TIMETABLE_DAY_OF_WEEK = (select to_char(to_date(#{nowDate}), 'dy','NLS_DATE_LANGUAGE=ENGLISH') from dual)
+              and <![CDATA[ e.LA_START_DATE < (SELECT TO_CHAR(to_date(#{nowDate}), 'YYYYMMDD') FROM DUAL)]]>
+              and <![CDATA[ (SELECT TO_CHAR(to_date(#{nowDate}), 'YYYYMMDD') FROM DUAL) < e.LA_END_DATE ]]>
+      ) I
+      
+    WHERE  a.STUDENT_ID = b.STUDENT_ID
+      and  a.STUDENT_ID = c.STUDENT_ID
+      and  a.STUDENT_ID = #{studentId}
+      and  c.LESSONASSIGNMENT_ID = d.LESSONASSIGNMENT_ID
+      and  c.LESSONASSIGNMENT_ID = e.LESSONASSIGNMENT_ID
+      and  d.LESSONASSIGNMENT_ID = e.LESSONASSIGNMENT_ID
+      and  e.LESSON_ID = f.LESSON_ID
+      and  d.TIMETABLE_ID = g.TIMETABLE_ID
+      and  (TO_CHAR(TO_DATE(a.ATN_DATE),'YY/MM/DD'))  = (SELECT TO_CHAR(to_date(#{nowDate}), 'YY/MM/DD') FROM DUAL)
+      and  g.TIMETABLE_DAY_OF_WEEK = (select (to_char(TO_DATE(to_date(#{nowDate}),'YYYY-MM-DD'),'dy','NLS_DATE_LANGUAGE=ENGLISH')) from dual)
+      and  e.LA_START_DATE <![CDATA[<]]> (SELECT TO_CHAR(to_date(#{nowDate}), 'YYYYMMDD') FROM DUAL) 
+      and  (SELECT TO_CHAR(to_date(#{nowDate}), 'YYYYMMDD') FROM DUAL) <![CDATA[<]]> e.LA_END_DATE 
+		
+	</select>
+	
+	
+	<select id="getMainAtt" parameterType="str" resultType="attandance">
+	
+		 
+    SELECT
+    ATN_GO_TIME as atnGoTime,
+    ATN_OUT_TIME as atnOutTime,
+    ATN_YN_MANAGER as atnYnManager,
+    ATN_START_DEADLINE_YN as atnStartDeadlineYn
+    FROM ATTENDANCE
+    where STUDENT_ID =#{id}
+    and (TO_CHAR(ATN_DATE,'YY/MM/DD')) = (SELECT TO_CHAR(SYSDATE, 'YY/MM/DD') FROM DUAL)
+    
+
+	
+	</select>
+
+	
+</mapper>

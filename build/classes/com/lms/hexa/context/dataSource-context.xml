@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	
+	<bean id="dataSource" 
+		  class="org.apache.commons.dbcp2.BasicDataSource"		  
+		  p:driverClassName="oracle.jdbc.driver.OracleDriver"
+		  p:url="jdbc:oracle:thin:@112.220.114.130:1521:XE"
+		  p:username="team1_202110F"
+		  p:password="java"
+		  p:maxIdle="10"
+	      p:maxTotal="10"
+	/>
+		<!-- MariaDB JDBC DataSource -->
+   <bean id="dataSource2" 
+        class="org.apache.commons.dbcp2.BasicDataSource"        
+        p:driverClassName="org.mariadb.jdbc.Driver"
+        p:url="jdbc:mariadb://192.168.144.13:3305/database_java"
+        p:username="root"
+        p:password="jn6149"
+        p:maxIdle="10"
+         p:maxTotal="10"
+   />
+
+	
+	<bean id="dataSourceSpied"
+		class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+		<constructor-arg ref="dataSource" />
+		<property name="logFormatter">
+			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+				<property name="loggingType" value="MULTI_LINE" />
+				<property name="sqlPrefix" value="SQL:::" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="dataSourceSpied2"
+		class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+		<constructor-arg ref="dataSource2" />
+		<property name="logFormatter">
+			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+				<property name="loggingType" value="MULTI_LINE" />
+				<property name="sqlPrefix" value="SQL:::" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+		  p:dataSource-ref="dataSourceSpied"
+		  p:configLocation="classpath:com/lms/hexa/mybatis/config/sqlConfig.xml"
+		  p:mapperLocations="classpath:com/lms/hexa/mybatis/mappers/*-Mapper.xml"
+	/>	
+	<bean id="sqlSessionFactory2" class="org.mybatis.spring.SqlSessionFactoryBean"
+		  p:dataSource-ref="dataSourceSpied2"
+		  p:configLocation="classpath:com/lms/hexa/mybatis/config/sqlConfig.xml"
+		  p:mapperLocations="classpath:com/lms/hexa/mybatis/mappers/Maria*-Mapper.xml"
+	/>	
+	
+	
+	
+	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate"
+		  c:sqlSessionFactory-ref="sqlSessionFactory"
+		  />
+		  
+	<bean id="sqlSessionMaria" class="org.mybatis.spring.SqlSessionTemplate"
+		  c:sqlSessionFactory-ref="sqlSessionFactory2"
+		  />
+	
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		p:dataSource-ref="dataSourceSpied"
+	/>	
+	
+	<bean id="transactionManager2"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		p:dataSource-ref="dataSourceSpied2"
+	/>	
+	
+	
+	
+</beans>

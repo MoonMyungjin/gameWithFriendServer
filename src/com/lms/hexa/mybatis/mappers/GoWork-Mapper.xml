@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+
+ <mapper namespace="GoWork-Mapper">
+ 	
+ 	<resultMap type="goWork" id="goWorkMap">
+ 		<result property="goWorkId" column="GO_WORK_ID" />
+ 		<result property="goWorkDate" column="GO_WORK_DATE" />
+ 		<result property="goWorkDayLabel" column="GO_WORK_DAYLABEL" />
+ 		<result property="goWorkTime" column="GO_WORK_TIME" />
+ 		<result property="goWorkOutTime" column="GO_WORK_OUT_TIME" />
+ 		<result property="goWorkYn" column="GO_WORK_YN" />
+ 		<result property="goWorkReason" column="GO_WORK_REASON" />
+ 		<result property="empNo" column="EMP_NO" />
+ 		<result property="goWorkStartDeadlineYn" column="GO_WORK_START_DEADLINE_YN" />
+ 		<result property="goWorkRandomNumber" column="GO_WORK_RANDOM_NUMBER" />
+ 		<result property="goWorkTotalTime" column="GO_WORK_TOTAL_TIME" />
+ 		<result property="goWorkStartTime" column="GO_WORK_START_TIME" />
+ 		<result property="mngId" column="MNG_ID" />
+ 	</resultMap>
+ 
+ 	<select id="selectGoWorkListBySelectDay" parameterType="str" resultMap="goWorkMap">
+		select a.GO_WORK_ID
+		        ,to_char(a.go_work_date,'YYYY-MM-DD') as go_work_date
+		        ,a.go_work_daylabel
+		        ,to_char(a.GO_WORK_TIME,'HH24:MI:SS') as GO_WORK_TIME
+		        ,to_char(a.GO_WORK_OUT_TIME,'HH24:MI:SS') as GO_WORK_OUT_TIME
+		        ,a.GO_WORK_YN
+		        ,a.GO_WORK_REASON
+		        ,a.EMP_NO
+		        ,a.GO_WORK_START_DEADLINE_YN
+		        ,a.GO_WORK_TOTAL_TIME
+		        ,a.MNG_ID
+		        ,b.Mng_Name as GO_WORK_RANDOM_NUMBER
+		        ,a.GO_WORK_START_TIME 
+		from go_work a, manager b
+		where to_char(a.go_work_date,'YYYY-MM-DD') = #{goWorkDate}
+		    and b.mng_id = a.MNG_ID
+ 	</select>
+ 	
+ 	<select id="selectGoWorkListBySelectMonthAndId" parameterType="goWork" resultMap="goWorkMap">
+			
+			select a.GO_WORK_ID
+			        ,to_char(a.go_work_date,'YYYY-MM-DD') as go_work_date
+			        ,a.go_work_daylabel
+			        ,to_char(a.GO_WORK_TIME,'HH24:MI:SS') as GO_WORK_TIME
+			        ,to_char(a.GO_WORK_OUT_TIME,'HH24:MI:SS') as GO_WORK_OUT_TIME
+			        ,a.GO_WORK_YN
+			        ,a.GO_WORK_REASON
+			        ,a.EMP_NO
+			        ,a.GO_WORK_START_DEADLINE_YN
+			        ,a.GO_WORK_TOTAL_TIME
+			        ,a.MNG_ID
+			        ,b.Mng_Name as GO_WORK_RANDOM_NUMBER
+			        ,a.GO_WORK_START_TIME  
+			from go_work a, manager b
+			where to_char(a.go_work_date,'YYYY-MM') = #{goWorkDate}
+			    and b.mng_id = a.MNG_ID
+			    and a.mng_id = #{mngId}
+			order by a.GO_WORK_ID    
+			 
+ 	</select>
+ 	
+ 	<insert id="insertDayGoWorkList" parameterType="java.util.List">
+ 		 insert into go_work(go_work_ID,GO_WORK_START_TIME,go_work_date,go_work_YN,MNG_ID,go_work_daylabel)
+ 		   select go_work_SEQ.nextval, A.* from(
+ 		   	<foreach item="work" collection="list" separator="UNION ALL " >
+   					select (to_char(sysdate, 'YYYYMMDD')||'090000'),
+          					sysdate,
+          					'N',
+          					#{work.mngId},
+          					(to_char(sysdate, 'dy'))
+   					from dual
+ 			</foreach>) A 
+ 	</insert>
+ 	
+ 	<update id="updateGoWorkTime" parameterType="str">
+ 		update go_work set GO_WORK_TIME = sysdate,
+ 						GO_WORK_START_DEADLINE_YN = 'Y'
+ 					
+		where mng_id = #{mngId}        
+		and to_char(go_work_date,'YYYY-MM-DD') =  to_char(sysdate, 'YYYY-MM-DD')
+ 	</update>
+ 	
+ 	<update id="updateGoWorkOutTime" parameterType="str">
+ 		update go_work set GO_WORK_Out_TIME = sysdate,
+ 						GO_WORK_START_DEADLINE_YN = 'N'
+		where mng_id = #{mngId}        
+		and to_char(go_work_date,'YYYY-MM-DD') =  to_char(sysdate, 'YYYY-MM-DD')
+ 	</update>
+ 	
+ 	<update id="changeGoWorkStatus" parameterType="goWork">
+ 		update go_work set GO_WORK_TIME = TO_DATE(#{goWorkDate}||<![CDATA[' 09:00:00']]>, 'YYYY-MM-DD HH24:MI:SS')
+ 							,GO_WORK_OUT_TIME = TO_DATE(#{goWorkDate}||<![CDATA[' 18:00:00']]>, 'YYYY-MM-DD HH24:MI:SS')
+		where mng_id = #{mngId}        
+		and to_char(go_work_date,'YYYY-MM-DD') =  #{goWorkDate}
+ 	</update>
+ 	
+ 	<update id="changeGoWorkOutStatus" parameterType="goWork">
+ 		update go_work set GO_WORK_TIME = '', GO_WORK_OUT_TIME = '', go_work_total_time = ''
+		where mng_id = #{mngId}           
+		and to_char(go_work_date,'YYYY-MM-DD') = #{goWorkDate}
+ 	</update>
+ 	
+ 	<update id="changeGoWorkTotalTimeStatus" parameterType="goWork">
+ 	  update go_work set GO_WORK_TOTAL_TIME =  
+		(select trunc((GO_WORK_OUT_TIME - GO_WORK_TIME) * 24 * 60) AS mm from go_work
+		   where mng_id = #{mngId}        
+		    and to_char(go_work_date,'YYYY-MM-DD') = #{goWorkDate})
+		where mng_id = #{mngId}          
+		and to_char(go_work_date,'YYYY-MM-DD') = #{goWorkDate}
+ 	</update>
+ 	
+ 	<update id="changeGoWorkReason" parameterType="goWork">
+ 		update go_work set GO_WORK_REASON = #{goWorkReason}
+		where mng_id = #{mngId}           
+		and to_char(go_work_date,'YYYY-MM-DD') = #{goWorkDate}
+ 	</update>
+ 	
+ 	
+ 	<update id="updateGoWorkTotalTimeLate" parameterType="str">
+ 	  update go_work set GO_WORK_TOTAL_TIME =  
+		(select trunc((GO_WORK_OUT_TIME - GO_WORK_TIME) * 24 * 60) AS mm from go_work
+		   where mng_id = #{mngId}        
+		    and to_char(go_work_date,'YYYY-MM-DD') = to_char(sysdate, 'YYYY-MM-DD'))
+		where mng_id = #{mngId}          
+		and to_char(go_work_date,'YYYY-MM-DD') = to_char(sysdate, 'YYYY-MM-DD')
+ 	</update>
+ 	
+ 	<update id="updateGoWorkTotalTime" parameterType="str">
+ 	   update go_work set GO_WORK_TOTAL_TIME =  
+		(select trunc((GO_WORK_OUT_TIME - to_date(go_work_start_time, 'YYYY-MM-DD HH24:MI:SS')) * 24 * 60) AS mm from go_work
+		   where mng_id = #{mngId}        
+		    and to_char(go_work_date,'YYYY-MM-DD') = to_char(sysdate, 'YYYY-MM-DD'))
+		where mng_id = #{mngId}          
+		and to_char(go_work_date,'YYYY-MM-DD') = to_char(sysdate, 'YYYY-MM-DD')
+ 	</update>
+ 	
+ 	<update id="updateGoWorkYes" parameterType="str">
+ 		update go_work set go_work_yn = 'Y'
+ 							
+ 							
+ 		where mng_id = #{mngId}          
+		and to_char(go_work_date,'YYYY-MM-DD') = to_char(sysdate, 'YYYY-MM-DD')
+ 	</update>
+ 	
+ 	<select id="selectTodayWorkStatusById" parameterType="str" resultMap="goWorkMap">
+ 		select *
+ 		from go_work
+ 		where mng_id = #{mngId}          
+		and to_char(go_work_date,'YYYY-MM-DD') = to_char(sysdate, 'YYYY-MM-DD')
+ 	</select>
+ 	
+ 	
+ 	<select id="selectGoWorkListGetMain" parameterType="goWork" resultType="goWork">
+	
+              
+                          
+               select a.GO_WORK_ID
+			        ,to_char(a.go_work_date,'YYYY-MM-DD') as goWorkDate
+			        ,a.go_work_daylabel as goWorkDayLabel
+			        ,to_char(a.GO_WORK_TIME,'HH24:MI:SS') as goWorkTime
+			        ,to_char(a.GO_WORK_OUT_TIME,'HH24:MI:SS') as goWorkOutTime
+			        ,a.GO_WORK_YN as goWorkYn
+			        ,a.GO_WORK_START_DEADLINE_YN as goWorkStartDeadlineYn
+			        ,a.GO_WORK_TOTAL_TIME as goWorkTotalTime
+			        ,a.GO_WORK_START_TIME as goWorkStartTime
+                    ,to_char(sysdate,'YYYY-MM-DD-HH24:MI:SS') as nowTime
+			from go_work a, manager b
+			where to_char(a.go_work_date,'YYYY-MM-DD') =  to_char(sysdate,'YYYY-MM-DD')
+			    and b.mng_id = a.MNG_ID
+			    and a.mng_id = #{mngId}
+			order by a.GO_WORK_ID    
+              
+			 
+ 	</select>
+ 	
+ 	
+ 	
+ 	
+ </mapper>

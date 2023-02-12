@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Score-Mapper">
+	
+	<resultMap type="feedback" id="feedbackMap">
+		<result property="feedId" column="FEED_ID"/>
+		<result property="feedSeg" column="FEED_SEG"/>
+		<result property="feedContent" column="FEED_CONTENT"/>
+		<result property="examId" column="EXAM_ID"/>
+		<result property="subExamId" column="SUB_EXAM_ID"/>
+		<result property="examDate" column="EXAM_DATE"/>
+		<result property="examGroup" column="EXAM_GROUP"/>
+		<result property="examGrade" column="EXAM_GRADE"/>
+		<result property="examSemester" column="EXAM_SEMESTER"/>
+		<result property="examQuarter" column="EXAM_QUARTER"/>
+		<result property="studentId" column="STUDENT_ID"/>
+		<result property="mngId" column="MNG_ID"/>
+		<result property="mngName" column="MNG_NAME"/>
+	</resultMap>
+	
+	
+	<resultMap type="exam" id="examMap">
+		<result property="examId" column="sub_exam_id"/>
+		<result property="examGroup" column="exam_group"/>
+		<result property="examDate" column="exam_date"/>
+		<result property="examGrade" column="exam_grade"/>
+		<result property="examSemester" column="exam_semester"/>
+		<result property="examQuarter" column="exam_quarter"/>
+		<result property="examSeg" column="sub_seg"/>
+		<result property="examName" column="sub_exam_name"/>
+		<result property="scored" column="SCORE_SCORED"/>
+		<result property="studentId" column="STUDENT_ID"/>
+	</resultMap>
+	
+	<resultMap type="question" id="questionMap">
+		<result property="quesId" column="ques_id"/>
+		<result property="examId" column="sub_exam_id"/>
+		<result property="quesNo" column="ques_no"/>
+		<result property="quesScore" column="ques_score"/>
+		<result property="quesArea" column="ques_area"/>
+		<result property="quesDifficult" column="ques_difficult"/>
+		<result property="subjArea" column="scode_value"/>
+	</resultMap>
+	
+	<resultMap type="mark" id="markMap">
+		<result property="markId" column="MARK_ID"/>
+		<result property="isCorrect" column="MARK_ISCORRECT"/>
+		<result property="examId" column="SUB_EXAM_ID"/>
+		<result property="quesId" column="QUES_ID"/>
+		<result property="studentId" column="STUDENT_ID"/>
+	</resultMap>
+	
+	<resultMap type="score" id="scoreMap">
+		<result property="scoreId" column="SCORE_ID"/>
+		<result property="scored" column="SCORE_SCORED"/>
+		<result property="subExamId" column="SUB_EXAM_ID"/>
+		<result property="studentId" column="STUDENT_ID"/>
+		<result property="attachGroupId" column="ATTACH_GROUP_ID"/>
+	</resultMap>
+	
+	<resultMap type="attach" id="attachMap">
+		<result property="attachGroupId" column="ATTACH_GROUP_ID"/>
+		<result property="attachId" column="ATTACH_ID"/>
+		<result property="attachPath" column="ATTACH_PATH"/>
+		<result property="attachName" column="ATTACH_NAME"/>
+		<result property="attachType" column="ATTACH_TYPE"/>
+	</resultMap>
+	
+	
+	
+	<update id="insertExam" parameterType="exam">
+		INSERT INTO subject_exam (
+		    sub_exam_id,
+		    sub_seg,
+		    exam_group,
+		    exam_date,
+		    exam_grade,
+		    exam_quarter,
+		    exam_semester,
+		    sub_exam_name
+		) VALUES (
+	    	SUBJECT_EXAM_SEQ.NEXTVAL,
+		    #{examSeg},
+		    #{examGroup},
+		    #{examDate},
+		    #{examGrade},
+		    #{examQuarter},
+		    #{examSemester},
+		    #{examName}
+		)
+	</update>
+	
+	<select id="selectExam" parameterType="int" resultMap="examMap">
+		select *
+		  from subject_exam
+		 where SUB_EXAM_ID = #{examId}
+	</select>
+	
+	<select id="selectExamList" resultMap="examMap">
+		select *
+		  from subject_exam
+	</select>
+	
+	<select id="searchExam" parameterType="str" resultMap="examMap">
+		SELECT SUB_EXAM_ID,
+			   EXAM_DATE,
+		       EXAM_GROUP,
+		       EXAM_GRADE,
+		       EXAM_SEMESTER,
+		       EXAM_QUARTER,
+		       SUB_SEG,
+		       SUB_EXAM_NAME
+		FROM SUBJECT_EXAM
+		WHERE 1=1
+		 <if test="value!= null and !value.equals('')">
+			AND (EXAM_GROUP LIKE '%'|| #{value} ||'%'
+			    OR EXAM_GRADE LIKE '%'|| #{value}||'%'
+			    OR SUB_SEG LIKE '%'|| #{value}||'%'
+			    OR EXAM_SEMESTER LIKE '%'|| #{value}||'%'
+			    OR EXAM_QUARTER LIKE '%'|| #{value}||'%'
+			    OR SUB_EXAM_NAME LIKE '%'|| #{value}||'%')
+		</if>	   
+	</select>
+	
+	
+	<select id="examSearch" parameterType="java.util.Map" resultMap="examMap">
+		SELECT *
+FROM(
+		SELECT
+		    A.EXAM_DATE,
+		    A.EXAM_GROUP,
+		    A.EXAM_GRADE,
+		    A.EXAM_SEMESTER,
+		    A.SUB_SEG,
+		    A.EXAM_QUARTER,
+		    A.SUB_EXAM_NAME,
+		    B.STUDENT_ID,
+            DENSE_RANK() OVER (PARTITION BY EXAM_GROUP,EXAM_GRADE,EXAM_SEMESTER,EXAM_QUARTER ORDER BY SUB_SEG DESC) AS RANK
+		FROM SUBJECT_EXAM A, SCORE B
+		WHERE A.SUB_EXAM_ID = B.SUB_EXAM_ID
+		 AND B.STUDENT_ID = #{studentId})
+ WHERE RANK = 1  
+		 <if test="keyword!= null and !keyword.equals('')">
+			AND (EXAM_GROUP LIKE '%'|| #{keyword} ||'%'
+			    OR EXAM_DATE LIKE '%'|| #{keyword}||'%'
+			    OR EXAM_GRADE LIKE '%'|| #{keyword}||'%'
+			    OR EXAM_GROUP LIKE '%'|| #{keyword}||'%'
+			    OR EXAM_SEMESTER LIKE '%'|| #{keyword}||'%'
+			    OR EXAM_QUARTER LIKE '%'|| #{keyword}||'%')
+			    
+		</if>	   
+	</select>
+	
+	
+	
+	<select id="selectQuestionList" resultMap="questionMap">
+		select *
+		  from question
+		 where sub_exam_id = #{examId}
+		 order by ques_no
+	</select>
+	
+	<select id="selectQuesAreaList" resultMap="questionMap">
+		select scode_value
+		  from standardcode
+		 where scode_category = (select sub_seg
+		                           from subject_exam
+		                          where sub_exam_id = #{examId})
+	</select>
+	
+	
+	<insert id="insertQuestionList" parameterType="java.util.Map">
+		<foreach collection="questionList" item="item" separator="" index="i" open="INSERT ALL" close="SELECT * FROM DUAL">
+			INTO question(ques_id,
+						  sub_exam_id,
+						  ques_score,
+						  ques_area,
+						  ques_difficult,
+						  ques_no)
+			VALUES ((SELECT MAX(QUES_ID)+1 FROM QUESTION)+#{i}, #{item.examId}, #{item.quesScore}, #{item.quesArea}, #{item.quesDifficult}, #{item.quesNo})
+		</foreach>
+	</insert>
+	
+	<insert id="insertMarkList" parameterType="java.util.Map">
+		<foreach collection="markList" item="item" separator="" index="i" open="INSERT ALL" close="SELECT * FROM DUAL">
+			INTO mark(mark_id,
+				      MARK_ISCORRECT,
+				      SUB_EXAM_ID,
+					  QUES_ID,
+					  STUDENT_ID)
+			VALUES ((SELECT MAX(MARK_ID)+1 FROM MARK)+#{i}, #{item.isCorrect}, #{item.examId}, #{item.quesId}, #{item.studentId})
+		</foreach>
+	</insert>
+	
+	<delete id="deleteQuestionList" parameterType="int">
+		DELETE 
+		  FROM QUESTION
+		 WHERE sub_exam_id = #{examId}
+	</delete>
+	
+	<delete id="deleteMarkList" parameterType="mark">
+		DELETE
+		  FROM MARK
+		 WHERE sub_exam_id = #{examId}
+		   AND student_id = #{studentId}
+	</delete>
+	
+	<select id="selectMarkList" parameterType="mark" resultType="mark">
+		select A.MARK_ID as markId,
+			   A.QUES_ID as quesId,
+       		   B.QUES_NO as quesNo,
+       		   B.QUES_AREA as quesArea,
+       	       B.QUES_SCORE as quesScore,
+        	   A.MARK_ISCORRECT as isCorrect
+  		  from MARK A, QUESTION B
+ 		 where A.QUES_ID = B.QUES_ID
+           and A.SUB_EXAM_ID = #{examId}
+           and A.STUDENT_ID = #{studentId}
+         order by B.QUES_NO
+	</select>
+	
+	<select id="examCheckByStudent" parameterType="str" resultMap="examMap">
+	SELECT *
+FROM(
+		SELECT
+		    A.EXAM_DATE,
+		    A.EXAM_GROUP,
+		    A.EXAM_GRADE,
+		    A.EXAM_SEMESTER,
+		    A.SUB_SEG,
+		    A.EXAM_QUARTER,
+		    A.SUB_EXAM_NAME,
+		    B.STUDENT_ID,
+            DENSE_RANK() OVER (PARTITION BY EXAM_GROUP,EXAM_GRADE,EXAM_SEMESTER,EXAM_QUARTER ORDER BY SUB_SEG DESC) AS RANK
+		FROM SUBJECT_EXAM A, SCORE B
+		WHERE A.SUB_EXAM_ID = B.SUB_EXAM_ID
+		 AND B.STUDENT_ID = #{studentId})
+ WHERE RANK = 1  
+	</select>
+	
+	<select id="selectOverall" parameterType="java.util.Map" resultMap="examMap">
+		SELECT
+		    A.EXAM_DATE,
+		    A.EXAM_GROUP,
+		    A.EXAM_GRADE,
+		    A.EXAM_SEMESTER,
+		    A.SUB_SEG,
+		    A.EXAM_QUARTER,
+		    A.SUB_EXAM_NAME,
+            B.SCORE_SCORED
+		FROM SUBJECT_EXAM A, SCORE B
+		WHERE A.SUB_EXAM_ID = B.SUB_EXAM_ID
+          AND A.EXAM_GROUP = #{examGroup}
+          AND A.EXAM_GRADE = #{examGrade}
+          AND A.EXAM_SEMESTER = #{examSemester}
+          AND A.EXAM_QUARTER = #{examQuarter}
+          AND B.STUDENT_ID = #{studentId}
+          AND A.EXAM_DATE = #{examDate}
+	</select>
+	
+	<select id="selectFeedBack" parameterType="java.util.Map" resultMap="feedbackMap">
+		SELECT A.FEED_ID,
+		       A.FEED_CONTENT,
+		       A.EXAM_DATE,
+		       A.EXAM_GROUP,
+		       A.EXAM_GRADE,
+		       A.EXAM_SEMESTER,
+		       A.EXAM_QUARTER,
+		       A.STUDENT_ID,
+		       A.MNG_ID,
+		       A.MNG_NAME,
+               B.MNG_PICTURE
+		FROM FEEDBACK A, MANAGER B
+		WHERE STUDENT_ID = #{studentId}
+		  AND EXAM_DATE = #{examDate}
+		  AND EXAM_GROUP = #{examGroup}
+		  AND EXAM_GRADE = #{examGrade}
+		  AND EXAM_SEMESTER = #{examSemester}
+		  AND EXAM_QUARTER = #{examQuarter}
+		  AND A.MNG_ID = B.MNG_ID
+	</select>
+	
+	<update id="insertFeedback" parameterType="java.util.Map">
+		insert into FEEDBACK
+			(FEED_ID, FEED_CONTENT, EXAM_DATE, EXAM_GROUP, EXAM_GRADE, EXAM_SEMESTER, EXAM_QUARTER, STUDENT_ID, MNG_ID, MNG_NAME)
+		values
+			(FEEDBACK_SEQ.NEXTVAL, #{feedBackInfo.feedContent}, #{feedBackInfo.examDate}, #{feedBackInfo.examGroup}, #{feedBackInfo.examGrade}, #{feedBackInfo.examSemester}, #{feedBackInfo.examQuarter}, #{feedBackInfo.studentId}, #{feedBackInfo.loginId}, #{feedBackInfo.loginName})
+	</update>
+	
+	<update id="updateAttach" parameterType="score">
+	 	UPDATE SUBJECT_EXAM
+			SET ATTACH_GROUP_ID = #{attachGroupId}
+			WHERE SUB_EXAM_ID = #{subExamId}
+	</update>
+	
+	<select id="selectChart1" parameterType="str" resultMap="examMap">
+		SELECT A.EXAM_DATE 
+			  ,A.EXAM_GROUP 
+		   	  ,AVG(B.SCORE_SCORED) as SCORE_SCORED 
+			FROM SUBJECT_EXAM A, SCORE B 
+			WHERE A.SUB_EXAM_ID = B.SUB_EXAM_ID 
+			AND B.STUDENT_ID = #{studentId}
+			AND A.EXAM_DATE LIKE #{year}||'%'
+			GROUP BY A.EXAM_DATE, A.EXAM_GROUP
+	</select>
+	
+	<select id="selectChart2" parameterType="java.util.Map" resultMap="examMap">
+		SELECT A.EXAM_DATE
+		      ,A.EXAM_GROUP
+		      ,B.SCORE_SCORED
+		      ,A.SUB_EXAM_ID
+		      ,A.SUB_SEG
+		  FROM SUBJECT_EXAM A, SCORE B
+		 WHERE A.SUB_EXAM_ID = B.SUB_EXAM_ID
+		   AND B.STUDENT_ID = #{studentId}
+		   AND SUB_SEG = #{subject}
+		   AND A.EXAM_DATE LIKE #{year}||'%'
+	</select>
+	
+	<select id="selectTotalNum" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(*)
+			FROM MARK A, QUESTION B
+			WHERE A.SUB_EXAM_ID = #{examId}
+			 AND A.QUES_ID = B.QUES_ID
+			 AND a.student_id = #{studentId}
+	</select>
+	
+	<select id="selectGetNum" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(*)
+		 FROM MARK A, QUESTION B
+			WHERE A.SUB_EXAM_ID = #{examId}
+			  AND A.QUES_ID = B.QUES_ID
+			  AND A.MARK_ISCORRECT='Y'
+			   AND a.student_id = #{studentId}
+	</select>
+	
+	<select id="selectGoodTotalNum" parameterType="java.util.Map" resultType="int">
+		 SELECT COUNT(*)
+			FROM MARK A, QUESTION B
+			WHERE A.SUB_EXAM_ID = #{examId}
+			 AND A.QUES_ID = B.QUES_ID
+			 AND B.QUES_DIFFICULT='상'
+			  AND a.student_id = #{studentId}
+	</select>
+	
+	<select id="selectFairTotalNum" parameterType="java.util.Map" resultType="int">
+		 SELECT COUNT(*)
+			FROM MARK A, QUESTION B
+			WHERE A.SUB_EXAM_ID = #{examId}
+			 AND A.QUES_ID = B.QUES_ID
+			 AND B.QUES_DIFFICULT='중'
+			  AND a.student_id = #{studentId}
+	</select>
+	
+	<select id="selectPoorTotalNum" parameterType="java.util.Map" resultType="int">
+		 SELECT COUNT(*)
+			FROM MARK A, QUESTION B
+			WHERE A.SUB_EXAM_ID = #{examId}
+			 AND A.QUES_ID = B.QUES_ID
+			 AND B.QUES_DIFFICULT='하'
+			  AND a.student_id = #{studentId}
+	</select>
+	
+	<select id="selectGoodNum" parameterType="java.util.Map" resultType="int">
+		  SELECT COUNT(*)
+			FROM MARK A, QUESTION B
+			WHERE A.SUB_EXAM_ID = #{examId}
+			 AND A.QUES_ID = B.QUES_ID
+			 AND B.QUES_DIFFICULT='상'
+			 AND A.MARK_ISCORRECT = 'Y'
+			  AND a.student_id = #{studentId}
+	</select>
+	
+	<select id="selectFairNum" parameterType="java.util.Map" resultType="int">
+		  SELECT COUNT(*)
+			FROM MARK A, QUESTION B
+			WHERE A.SUB_EXAM_ID = #{examId}
+			 AND A.QUES_ID = B.QUES_ID
+			 AND B.QUES_DIFFICULT='중'
+			 AND A.MARK_ISCORRECT = 'Y'
+			  AND a.student_id = #{studentId}
+	</select>
+	
+	<select id="selectPoorNum" parameterType="java.util.Map" resultType="int">
+		  SELECT COUNT(*)
+			FROM MARK A, QUESTION B
+			WHERE A.SUB_EXAM_ID = #{examId}
+			 AND A.QUES_ID = B.QUES_ID
+			 AND B.QUES_DIFFICULT='하'
+			 AND A.MARK_ISCORRECT = 'Y'
+			  AND a.student_id = #{studentId}
+	</select>
+	
+	<select id="selectchart4" parameterType="java.util.Map" resultType="exam">
+		SELECT U.SUB_EXAM_ID as examId, 
+		       U.QUES_AREA as examGroup, 
+		       NVL(MAX(U.Y),0) as examDate, 
+		       NVL(MAX(U.N),0) as examGrade, 
+		       NVL(MAX(U.Y),0) +NVL(MAX(U.N),0) as examSemester
+			FROM
+			(
+			    SELECT T.SUB_EXAM_ID
+			         , T.QUES_AREA
+			         , CASE WHEN T.MARK_ISCORRECT = 'Y' THEN T.CNT END Y
+			         , CASE WHEN T.MARK_ISCORRECT = 'N' THEN T.CNT END N
+			    FROM
+			        (SELECT A.MARK_ISCORRECT, A.SUB_EXAM_ID, B.QUES_AREA, COUNT(*) CNT
+			        FROM MARK A, QUESTION B
+			        WHERE 1 = 1
+			         AND A.SUB_EXAM_ID = #{examId}
+			         AND A.QUES_ID = B.QUES_ID
+			           and a.student_id = #{studentId}
+			         GROUP BY A.SUB_EXAM_ID, B.QUES_AREA, A.MARK_ISCORRECT, A.STUDENT_ID
+			    ) T
+			) U
+			GROUP BY U.SUB_EXAM_ID, U.QUES_AREA
+	</select>
+	
+	
+	<select id="selectAttachList" parameterType="int" resultMap="attachMap">
+		SELECT ATTACH_ID,
+		       ATTACH_NAME,
+		       ATTACH_GROUP_ID,
+		       ATTACH_DATE,
+		       ATTACH_PATH
+		FROM ATTACH
+		WHERE ATTACH_GROUP_ID = (SELECT ATTACH_GROUP_ID
+		                            FROM SUBJECT_EXAM
+		                            WHERE SUB_EXAM_ID = #{examId})
+	</select>
+	
+	<delete id="deleteScore" parameterType="score">
+		delete from SCORE
+		 where SUB_EXAM_ID = #{subExamId}
+		   and STUDENT_ID = #{studentId}
+	</delete>
+	
+	<insert id="insertScore" parameterType="java.util.Map">
+		INSERT INTO score (
+				    score_id,
+				    score_scored,
+				    sub_exam_id,
+				    student_id
+				) VALUES (
+				    SCORE_SEQ.NEXTVAL,
+				    #{sumScore},
+				    #{examId},
+				    #{studentId}
+				)
+	</insert>
+	
+	<update id="updateExam" parameterType="exam">
+		UPDATE SUBJECT_EXAM
+		   SET SUB_EXAM_NAME = #{examName},
+		       EXAM_DATE = #{examDate}
+		 WHERE SUB_EXAM_ID = #{examId}
+	</update>
+	
+	<select id="selectScore" parameterType="mark" resultType="score">
+		select score_id as scoreId,
+		       score_scored as scoreScored,
+		       sub_exam_id as examId,
+		       student_id as studentId
+		  from score
+		 where student_id = #{studentId}
+		   and sub_exam_id= #{examId}
+	</select>
+	
+	
+	
+</mapper>

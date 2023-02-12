@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+
+ <mapper namespace="SubjectAttendance-Mapper">
+ 	
+ 	<resultMap type="subjectAttendance" id="subjectAttendanceMap">
+ 		<result property="sattId" column="SATT_ID" />
+ 		<result property="lessonAssignmentId" column="LESSONASSIGNMENT_ID" />
+ 		<result property="studentId" column="STUDENT_ID" />
+ 		<result property="sattTime" column="SATT_TIME" />
+ 		<result property="sattYN" column="SATT_YN" />
+ 		
+ 		
+ 	</resultMap>
+ 	
+ 	
+	
+	
+	<sql id="search">
+		<if test="search != null">
+			and (a.SATT_ID like '%'||#{search}||'%'
+			or a.LESSONASSIGNMENT_ID like '%'||#{search}||'%'
+			or a.STUDENT_ID like '%'||#{search}||'%'
+			or a.SATT_YN like '%'||#{search}||'%'
+			or c.STUDENT_NAME like '%'||#{search}||'%'
+			or c.STUDENT_HP like '%'||#{search}||'%'
+			or e.SCHOOL_NAME like '%'||#{search}||'%'
+			or d.LESSON_NAME like '%'||#{search}||'%')
+		</if>	
+	</sql>
+	
+	
+ 
+ 	<select id="selectBySubjectListSearch" resultType="subjectAttendance">
+			
+					 select
+					    a.SATT_ID as sattId,
+					    a.LESSONASSIGNMENT_ID as lessonAssignmentId,
+					    a.STUDENT_ID as studentId,
+					    a.SATT_TIME as sattTime,
+					    a.SATT_YN as sattYN,
+					    d.LESSON_NAME as lessonName,
+					    c.STUDENT_NAME as studentName,
+					    c.STUDENT_HP as phone,
+					    e.SCHOOL_NAME as schoolName
+					 from SUBJECTATTENDANCE a,
+					      LESSONASSIGNMENT b,
+					      STUDENT c,
+					      LESSON d,     
+					      SCHOOL e
+					      
+					      where a.LESSONASSIGNMENT_ID = b.LESSONASSIGNMENT_ID
+					      	and (TO_CHAR(TO_DATE(a.SATT_TIME),'YY/MM/DD')) = (SELECT TO_CHAR(SYSDATE, 'YY/MM/DD') FROM DUAL)
+					        and a.STUDENT_ID = c.STUDENT_ID
+					        and b.LESSON_ID = d.LESSON_ID
+					        and c.SCHOOL_NO = e.SCHOOL_ID
+					        and b.MNG_ID = #{mngId}
+       						<include refid="search"/>
+			 
+ 	</select>
+ 	<select id="selectBySubjectList" resultMap="subjectAttendanceMap">
+ 		SELECT SATT_ID,
+ 				LESSONASSIGNMENT_ID,
+ 				STUDENT_ID,
+ 				SATT_TIME,
+ 				SATT_YN
+ 				
+ 		FROM SUBJECTATTENDANCE
+ 		
+ 		WHERE LESSONASSIGNMENT_ID = #{lessonAssignmentId}
+ 		
+ 		and (TO_CHAR(TO_DATE(SATT_TIME),'YY/MM/DD')) = (SELECT TO_CHAR(SYSDATE, 'YY/MM/DD') FROM DUAL)
+ 		order by SATT_ID desc
+ 		
+ 	</select>
+ 	
+ 	<insert id="inserSubjectAttList" parameterType="java.util.Map">
+		<!-- <foreach collection="subjectAttendanceList" item="item" index="index" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
+			INTO SUBJECTATTENDANCE(SATT_ID,LESSONASSIGNMENT_ID,STUDENT_ID,SATT_TIME,SATT_YN)
+			VALUES (SUBJECTATTENDANCE_SEQ.nextval+#{index}, #{item.lessonAssignmentId},#{item.studentId},sysdate,'N')
+		</foreach> -->
+		
+		insert into SUBJECTATTENDANCE(SATT_ID,LESSONASSIGNMENT_ID,STUDENT_ID,SATT_TIME,SATT_YN)
+				select SUBJECTATTENDANCE_SEQ.nextval, A.* from(
+ 			<foreach item="item" collection="subjectAttendanceList" separator="UNION ALL " >
+   					select #{item.lessonAssignmentId},
+          					#{item.studentId},
+          					sysdate,
+          					'N'
+   					from dual
+ 			</foreach>) A
+
+
+		
+	</insert>
+	
+	
+	<update id="updateSubjectAttandance" parameterType="subjectAttendance" >
+		  UPDATE SUBJECTATTENDANCE
+          SET SATT_YN = 'Y'
+          	
+          where STUDENT_ID = #{studentId}
+          and LESSONASSIGNMENT_ID =#{lessonAssignmentId}
+         and (TO_CHAR(TO_DATE(SATT_TIME),'YY/MM/DD')) = (SELECT TO_CHAR(SYSDATE, 'YY/MM/DD') FROM DUAL)
+	</update>
+	
+	<update id="updateSubjectOutAttandance" parameterType="subjectAttendance" >
+		  UPDATE SUBJECTATTENDANCE
+          SET SATT_YN = 'N'
+          	
+          where STUDENT_ID = #{studentId}
+           and LESSONASSIGNMENT_ID =#{lessonAssignmentId}
+         and (TO_CHAR(TO_DATE(SATT_TIME),'YY/MM/DD')) = (SELECT TO_CHAR(SYSDATE, 'YY/MM/DD') FROM DUAL)
+	</update>
+	
+	<update id="updateSubjectAll" parameterType="java.util.Map">
+ 			
+	  
+		  <foreach collection="schoolVOList" index="index" item="item2" separator=";" open="DECLARE BEGIN" close="; END;">
+		  		
+				UPDATE SUBJECTATTENDANCE 
+				SET
+				      SATT_YN = 'Y'    	
+				WHERE
+					STUDENT_ID = #{item2.schoolId}
+			  	 AND LESSONASSIGNMENT_ID = #{item2.lessonAssignmentId}
+				
+		   </foreach>
+	  
+	</update>
+	
+	<update id="updateSubjectAllCancle" parameterType="java.util.Map">
+ 			
+	  
+		  <foreach collection="schoolVOList" index="index" item="item2" separator=";" open="DECLARE BEGIN" close="; END;">
+		  		
+				UPDATE SUBJECTATTENDANCE 
+				SET
+				      SATT_YN = 'N'    	
+				WHERE
+					STUDENT_ID = #{item2.schoolId}
+			  	 AND LESSONASSIGNMENT_ID = #{item2.lessonAssignmentId}
+
+		   </foreach>
+	  
+	</update>
+	
+	
+	<select id="selectForMainAjax" parameterType="java.util.Map" resultType="subjectAttendance">
+			 SELECT a.SATT_ID as sattId,
+ 				a.LESSONASSIGNMENT_ID as lessonAssignmentId,
+ 				a.STUDENT_ID as studentId,
+ 				a.SATT_TIME as sattTime,
+ 				a.SATT_YN as sattYN,
+                c.STUDENT_NAME as studentName,
+                c.STUDENT_HP as phone,
+                d.SCHOOL_NAME as schoolName,
+                f.LESSON_NAME as lessonName 
+ 				
+ 		FROM SUBJECTATTENDANCE A,
+             LESSONASSIGNMENT B,
+             STUDENT C,
+             SCHOOL D,
+             LESSON F
+ 		
+ 		WHERE a.LESSONASSIGNMENT_ID = b.LESSONASSIGNMENT_ID 
+          and  a.LESSONASSIGNMENT_ID = #{lessonAssignmentId}
+          and b.MNG_ID = #{mngId}
+          and a.STUDENT_ID = c.STUDENT_ID
+          and c.SCHOOL_NO = d.SCHOOL_ID
+          and b.LESSON_ID = f.LESSON_ID
+ 		 and (TO_CHAR(TO_DATE(SATT_TIME),'YY/MM/DD')) = (SELECT TO_CHAR(SYSDATE, 'YY/MM/DD') FROM DUAL)
+         order by SATT_ID desc
+      
+	</select>
+	
+	
+ </mapper>

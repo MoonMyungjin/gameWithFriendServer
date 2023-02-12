@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Refund-Mapper">
+
+  <resultMap type="refund" id="refundMap">
+  
+       <result property="studentName" column="STUDENT_NAME"/>
+       <result property="taApllydate" column="TA_APLLYDATE"/>
+       <result property="laStartDate" column="LA_START_DATE"/>
+       <result property="lessonHours" column="LESSON_HOURS"/>
+       <result property="taCancledate" column="TA_CANCLEDATE"/>
+       <result property="lessonPrice" column="LESSON_PRICE"/>
+       <result property="laEndDate" column="LA_END_DATE"/>
+       <result property="studentId" column="STUDENT_ID"/>
+       <result property="lessonAssignmentId" column="LESSONASSIGNMENT_ID"/>
+  </resultMap>
+  
+
+
+	<select id="selectRefundList" resultMap="refundMap">
+	SELECT D.STUDENT_NAME,
+	       A.TA_APLLYDATE,
+	       B.LA_START_DATE,
+	       C.LESSON_HOURS,
+	       A.TA_CANCLEDATE,
+	       C.LESSON_PRICE,
+	       B.LA_END_DATE,
+	       D.STUDENT_ID,
+           B.LESSONASSIGNMENT_ID
+      FROM TAKE_LESSON A,LESSONASSIGNMENT B,LESSON C, STUDENT D
+     WHERE A.LESSONASSIGNMENT_ID = B.LESSONASSIGNMENT_ID
+       AND B.LESSON_ID = C.LESSON_ID
+       AND A.STUDENT_ID = D.STUDENT_ID
+       AND A.TA_CANCLEDATE IS NOT NULL
+    </select> 
+    
+    <delete id="deleteTakeLessonInfo" parameterType="refund">
+    	DELETE
+		  FROM TAKE_LESSON
+		 WHERE LESSONASSIGNMENT_ID = #{lessonAssignmentId}
+		   AND STUDENT_ID = #{studentId}
+    </delete>
+    
+   
+   
+   
+</mapper>

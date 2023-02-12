@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="Consulting-Mapper">
+
+  <resultMap type="consulting" id="consultingMap">
+       <result property="cnsltId" column="CNSLT_ID"/>
+       <result property="cnsltSchDate" column="CNSLT_SCH_DATE"/>
+       <result property="cnsltSchTime" column="CNSLT_SCH_TIME"/>
+       <result property="cnsltConfirmYn" column="CNSLT_CONFIRM_YN"/>
+       <result property="cnsltCompletionYn" column="CNSLT_COMPLETION_YN"/>
+       <result property="cnsltApplyContent" column="CNSLT_APPLY_CONTENT"/>
+       <result property="cnsltContent" column="CNSLT_CONTENT"/>
+       <result property="cnsltApplyer" column="CNSLT_APPLYER"/>
+       <result property="cnsltTarget" column="CNSLT_TARGET"/>
+       <result property="cnsltType" column="CNSLT_TYPE"/>
+       <result property="studentId" column="STUDENT_ID"/>
+       <result property="studentName" column="STUDENT_NAME"/>
+       <result property="studentHp" column="STUDENT_HP"/>
+       <result property="mngId" column="MNG_ID"/>
+       <result property="mngName" column="MNG_NAME"/>
+       <result property="parentId" column="PARENT_ID"/>
+       <result property="parentName" column="PARENT_NAME"/>
+       <result property="parentHp" column="PARENT_HP"/>
+       <result property="scodeKey" column="SCODE_KEY"/>
+       <result property="scodeValue" column="SCODE_VALUE"/>
+       <result property="scodeCategory" column="SCODE_CATEGORY"/>
+       <result property="cnslttId" column="CNSLTT_ID"/>
+       <result property="scheduleId" column="SCHEDULE_ID"/>
+       <result property="schoolName" column="SCHOOL_NAME"/>
+       <result property="grade" column="GRADE"/>
+       <result property="className" column="CLASS_NAME"/>
+       <result property="tarketId" column="TARKET_ID"/>
+       <result property="applyerId" column="APPLYER_ID"/>
+       <result property="cnsltAs" column="CNSLT_AS"/>
+  </resultMap>
+  
+
+	<select id="selectDivision" resultMap="consultingMap">
+			SELECT SCODE_KEY
+				  ,SCODE_VALUE
+ 			  FROM standardcode
+ 		     WHERE SCODE_CATEGORY = 'CNSLT_TYPE'
+    </select>
+  		      
+	<select id="selectTeacher" resultMap="consultingMap">
+			SELECT MNG_NAME
+			       ,MNG_ID
+ 			  FROM MANAGER
+ 			  ORDER BY MNG_NAME ASC
+ 			  
+    </select>
+  	
+  	<select id="selectStudent" parameterType="str" resultMap="consultingMap">
+			SELECT A.STUDENT_NAME
+      			  ,A.STUDENT_ID
+   			 FROM STUDENT A, PARENT B
+			WHERE A.PARENT_ID = B.PARENT_ID
+  		      AND A.PARENT_ID = #{parentId}
+  		    ORDER BY A.STUDENT_GRADE DESC
+    </select>
+    
+    <update id="insertRequest" parameterType="consulting">
+		INSERT INTO
+        CONSULTING(CNSLT_ID,CNSLT_TYPE,MNG_ID,CNSLT_APPLYER,CNSLT_TARGET,CNSLT_SCH_DATE,CNSLT_SCH_TIME,CNSLT_APPLY_CONTENT)
+        VALUES(CONSULTING_SEQ.nextval,#{cnsltType},#{mngId},#{cnsltApplyer},#{cnsltTarget},#{cnsltSchDate},#{cnsltSchTime},#{cnsltApplyContent})
+	</update>
+
+    
+ <!--   멤버 상담 내역 부분 -->
+    <select id="selectRequestList" parameterType="str" resultMap="consultingMap">
+	    SELECT CNSLT_ID,
+           CNSLT_SCH_DATE,
+           CNSLT_SCH_TIME,
+           CNSLT_TYPE,
+           MNG_ID
+      FROM CONSULTING
+     WHERE CNSLT_APPLYER = #{parentId} OR CNSLT_APPLYER = #{studentId}
+    </select>
+    
+    <select id="getManagerSchedule" parameterType="java.util.Map" resultType="consulting">
+		SELECT CNSLT_SCH_TIME AS DISABLETIME
+      		 ,'CONSULT' AS CATEGORY
+      		   FROM CONSULTING
+		 WHERE CNSLT_SCH_DATE LIKE #{date}||'%'
+		<!-- AND CNSLT_CONFIRM_YN = 'Y' -->
+UNION
+		SELECT TIMETABLE_START_TIME AS DISABLETIME
+			  ,'LESSON' AS CATEGORY
+		  FROM TIMETABLE
+		 WHERE TIMETABLE_ID IN ( SELECT TIMETABLE_ID AS TIMETABLEID
+	   							   FROM LESSONTIME
+								  WHERE LESSONASSIGNMENT_ID IN (SELECT LESSONASSIGNMENT_ID
+								                                  FROM LESSONASSIGNMENT
+								                                 WHERE MNG_ID = #{managerId}
+								                                   AND LA_STATE_CODE IN('WAIT','NOSYL','GOING')))
+		   AND TIMETABLE_DAY_OF_WEEK = #{day}
+    </select>
+    
+
+    
+    <!--   매니저  상담 일정관리 부분 -->
+    
+    <select id="selectSchedule" parameterType="str" resultMap="consultingMap">
+      SELECT CNSLT_ID,
+	         CNSLT_SCH_DATE,
+	         CNSLT_SCH_TIME,
+	         CNSLT_CONFIRM_YN,
+	         CNSLT_APPLY_CONTENT,
+	         CNSLT_APPLYER,
+	         CNSLT_TARGET,
+	         CNSLT_TYPE
+     FROM CONSULTING
+     WHERE MNG_ID =  #{mngId}
+    </select>    
+    
+    <select id="selectConsultingSimpleInfo" parameterType="str" resultMap="consultingMap">
+    
+		SELECT CNSLT_APPLYER,
+		       CNSLT_TARGET
+		  FROM CONSULTING
+		 WHERE CNSLT_ID = #{cnsltId}
+		 
+    </select>    
+    
+     <!-- 부모가 선택 (신청자 - 신청대상자가 다름) -->
+     
+  <select id="selectScheduleDetailParentVer" parameterType="str" resultMap="consultingMap">
+      SELECT A.CNSLT_ID,
+	         A.CNSLT_SCH_DATE,
+	         A.CNSLT_SCH_TIME,
+	         A.CNSLT_CONFIRM_YN,
+	         A.CNSLT_APPLY_CONTENT,
+	         A.CNSLT_APPLYER,
+	         A.CNSLT_TARGET,
+	         A.CNSLT_TYPE,
+             B.SCODE_VALUE,
+             C.STUDENT_NAME,
+             C.STUDENT_HP,
+             D.PARENT_NAME,
+             D.PARENT_HP,
+             E.SCHOOL_NAME,
+             F.SCODE_VALUE || C.STUDENT_GRADE AS GRADE,
+             H.CLASS_NAME
+     FROM CONSULTING A, 
+         (SELECT *
+		        FROM STANDARDCODE
+		       WHERE SCODE_CATEGORY = 'CNSLT_TYPE'
+		 ) B, STUDENT C, PARENT D, SCHOOL E,
+         (SELECT *
+		        FROM STANDARDCODE
+		       WHERE SCODE_CATEGORY = 'STUDENT_GRADE_CATEGORY_CODE'
+		 ) F, BELONG G, CLASS H
+     WHERE CNSLT_ID =  #{cnsltId}
+       AND A.CNSLT_TYPE = B.SCODE_KEY
+       AND A.CNSLT_TARGET=C.STUDENT_ID
+       AND A.CNSLT_APPLYER=D.PARENT_ID
+       AND C.SCHOOL_NO=E.SCHOOL_ID
+       AND C.STUDENT_GRADE_CATEGORY_CODE = F.SCODE_KEY
+       AND C.STUDENT_ID = G.STUDENT_ID
+       AND G.CLASS_ID = H.CLASS_ID
+    </select>  
+    
+    
+    
+        <!-- 학생이 선택 (신청자 - 신청대상자가 같음) -->
+     
+  <select id="selectScheduleDetailStudentVer" parameterType="str" resultMap="consultingMap">
+      SELECT A.CNSLT_ID,
+	         A.CNSLT_SCH_DATE,
+	         A.CNSLT_SCH_TIME,
+	         A.CNSLT_CONFIRM_YN,
+	         A.CNSLT_APPLY_CONTENT,
+	         A.CNSLT_APPLYER,
+	         A.CNSLT_TARGET,
+	         A.CNSLT_TYPE,
+             B.SCODE_VALUE,
+             C.STUDENT_NAME,
+             C.STUDENT_HP,
+             E.SCHOOL_NAME,
+             F.SCODE_VALUE || C.STUDENT_GRADE AS GRADE,
+             H.CLASS_NAME
+     FROM CONSULTING A, 
+         (SELECT *
+		        FROM STANDARDCODE
+		       WHERE SCODE_CATEGORY = 'CNSLT_TYPE'
+		 ) B, STUDENT C, SCHOOL E,
+         (SELECT *
+		        FROM STANDARDCODE
+		       WHERE SCODE_CATEGORY = 'STUDENT_GRADE_CATEGORY_CODE'
+		 ) F, BELONG G, CLASS H
+     WHERE CNSLT_ID =  #{cnsltId}
+       AND A.CNSLT_TYPE = B.SCODE_KEY
+       AND A.CNSLT_TARGET=C.STUDENT_ID
+       AND C.SCHOOL_NO=E.SCHOOL_ID
+       AND C.STUDENT_GRADE_CATEGORY_CODE = F.SCODE_KEY
+       AND C.STUDENT_ID = G.STUDENT_ID
+       AND G.CLASS_ID = H.CLASS_ID
+       AND A.CNSLT_APPLYER = A.CNSLT_TARGET
+    </select>   
+    
+    
+    <update id="updateConfirmY" parameterType="str">
+	     UPDATE CONSULTING
+      	 SET CNSLT_CONFIRM_YN = 'Y'
+      	 WHERE CNSLT_ID = #{value}
+	</update>
+	
+	  <update id="updateConfirmN" parameterType="str">
+	     UPDATE CONSULTING
+      	 SET CNSLT_CONFIRM_YN = 'N'
+      	 WHERE CNSLT_ID = #{value}
+	</update>
+    
+    
+    
+    <!-- 상담내용 -->
+    <select id="parentSelectCNSLTBeforList" parameterType="str" resultMap="consultingMap">
+           SELECT D.PARENT_ID AS APPLYER_ID,         
+             A.CNSLT_ID,
+	         A.CNSLT_SCH_DATE,
+             A.CNSLT_SCH_TIME,
+	         A.CNSLT_TYPE,
+             B.SCODE_VALUE,
+             D.PARENT_NAME AS CNSLT_APPLYER,
+             A.MNG_ID,
+             E.MNG_NAME
+     FROM CONSULTING A, 
+         (SELECT *
+		        FROM STANDARDCODE
+		       WHERE SCODE_CATEGORY = 'CNSLT_TYPE'
+		 ) B, PARENT D, MANAGER E
+     WHERE D.PARENT_ID = #{parentId}
+     AND CNSLT_TARGET IN (SELECT STUDENT_ID
+                               FROM STUDENT
+                              WHERE PARENT_ID =#{parentId} )
+       AND A.CNSLT_TYPE = B.SCODE_KEY
+       AND A.CNSLT_APPLYER=D.PARENT_ID
+       AND A.MNG_ID = E.MNG_ID
+       AND A.CNSLT_SCH_DATE > SYSDATE
+
+union
+                
+     SELECT  C.STUDENT_ID AS APPLYER_ID,
+             A.CNSLT_ID,
+	         A.CNSLT_SCH_DATE,
+            A.CNSLT_SCH_TIME,
+	         A.CNSLT_TYPE,
+             B.SCODE_VALUE,
+             C.STUDENT_NAME AS CNSLT_APPLYER,
+              A.MNG_ID,
+             E.MNG_NAME
+     FROM CONSULTING A, 
+         (SELECT *
+		        FROM STANDARDCODE
+		       WHERE SCODE_CATEGORY = 'CNSLT_TYPE'
+		 ) B, STUDENT C, PARENT D,  MANAGER E
+     WHERE D.PARENT_ID = #{parentId}
+       AND CNSLT_TARGET IN (SELECT STUDENT_ID
+                               FROM STUDENT
+                              WHERE PARENT_ID =#{parentId} )
+       AND A.CNSLT_TYPE = B.SCODE_KEY
+       AND A.CNSLT_APPLYER=C.STUDENT_ID
+       AND C.PARENT_ID= D.PARENT_ID
+       AND A.MNG_ID = E.MNG_ID
+       AND A.CNSLT_SCH_DATE > SYSDATE
+       ORDER BY CNSLT_SCH_DATE ASC
+    </select> 
+    	
+        <select id="studentSelectCNSLTBeforList" parameterType="str" resultMap="consultingMap">
+       SELECT A.CNSLT_APPLYER,
+              C.STUDENT_NAME,
+              A.CNSLT_ID,
+              D.PARENT_NAME,
+              A.CNSLT_SCH_DATE,
+              A.CNSLT_SCH_TIME,
+              A.CNSLT_TYPE,
+              B.SCODE_VALUE,
+              A.MNG_ID,
+              E.MNG_NAME
+       FROM CONSULTING A, 
+            (SELECT *
+		        FROM STANDARDCODE
+		       WHERE SCODE_CATEGORY = 'CNSLT_TYPE'
+		   ) B,STUDENT C, PARENT D, MANAGER E
+     WHERE CNSLT_TARGET  = #{studentId}
+       AND CNSLT_APPLYER = #{studentId}             
+       AND A.CNSLT_TYPE = B.SCODE_KEY
+       AND A.CNSLT_TARGET= C.STUDENT_ID
+       AND C.PARENT_ID= D.PARENT_ID
+       AND A.MNG_ID = E.MNG_ID
+       AND A.CNSLT_SCH_DATE > SYSDATE
+       ORDER BY CNSLT_SCH_DATE ASC
+    </select> 
+    
+    
+         <select id="selectCNSLTBeforDetail" parameterType="str" resultMap="consultingMap">
+       SELECT A.CNSLT_TARGET,
+              C.STUDENT_NAME,
+              A.CNSLT_ID,
+              D.PARENT_NAME,
+              A.CNSLT_SCH_DATE,
+              A.CNSLT_SCH_TIME,
+              A.CNSLT_TYPE,
+              B.SCODE_VALUE,
+              A.MNG_ID,
+              E.MNG_NAME,
+              A.CNSLT_APPLY_CONTENT,
+              A.CNSLT_CONFIRM_YN
+       FROM CONSULTING A, 
+            (SELECT *
+		        FROM STANDARDCODE
+		       WHERE SCODE_CATEGORY = 'CNSLT_TYPE'
+		   ) B,STUDENT C, PARENT D, MANAGER E
+     WHERE A.CNSLT_TYPE = B.SCODE_KEY
+       AND A.CNSLT_TARGET= C.STUDENT_ID
+       AND C.PARENT_ID= D.PARENT_ID
+       AND A.MNG_ID = E.MNG_ID
+        AND A.CNSLT_ID = #{cnsltId}
+    </select> 
+    
+      <update id="studentUpdateConfirmN" parameterType="str">
+         UPDATE CONSULTING
+      	 SET CNSLT_CONFIRM_YN = 'N'
+      	 WHERE CNSLT_ID = #{value}
+      	 AND CNSLT_CONFIRM_YN != 'Y'
+ 	</update>
+    
+ 	<!-- <select id="memberSelectCNSLTfinishList" parameterType="str" resultMap="consultingMap">
+    SELECT A.CNSLT_SCH_DATE,
+              A.CNSLT_APPLYER,
+              C.STUDENT_NAME,
+              A.CNSLT_ID,
+              D.PARENT_NAME,
+              A.CNSLT_SCH_DATE,          
+              A.CNSLT_TYPE,
+              B.SCODE_VALUE,
+              A.CNSLT_COMPLETION_YN
+       FROM CONSULTING A, 
+            (SELECT *
+		        FROM STANDARDCODE
+		       WHERE SCODE_CATEGORY = 'CNSLT_TYPE'
+		   ) B,STUDENT C, PARENT D
+     WHERE MNG_ID  = #{mngId}         
+       AND A.CNSLT_TYPE = B.SCODE_KEY
+       AND A.CNSLT_TARGET= C.STUDENT_ID
+       AND C.PARENT_ID= D.PARENT_ID
+       AND SYSDATE > A.CNSLT_SCH_DATE
+       ORDER BY A.CNSLT_SCH_DATE ASC
+      </select> 
+     -->
+    
+    
+    
+    
+        <!--  매니저 LIST 페이지  -->
+               
+     
+  <select id="managerSelectFinishList" parameterType="consulting" resultMap="consultingMap">
+     SELECT C.STUDENT_ID AS TARKET_ID,
+            D.PARENT_ID AS APPLYER_ID,         
+             A.CNSLT_ID,
+	         A.CNSLT_SCH_DATE,
+	         A.CNSLT_TYPE,
+             B.SCODE_VALUE,
+             C.STUDENT_NAME AS CNSLT_TARGET,
+             D.PARENT_NAME AS CNSLT_APPLYER,
+             A.CNSLT_COMPLETION_YN,
+             A.CNSLT_AS
+     FROM CONSULTING A, 
+         (SELECT *
+		        FROM STANDARDCODE
+		       WHERE SCODE_CATEGORY = 'CNSLT_TYPE'
+		 ) B, STUDENT C, PARENT D
+     WHERE A.MNG_ID = #{mngId}
+       AND A.CNSLT_TYPE = B.SCODE_KEY
+       AND A.CNSLT_TARGET=C.STUDENT_ID
+       AND A.CNSLT_APPLYER=D.PARENT_ID
+       AND SYSDATE > A.CNSLT_SCH_DATE
+       AND A.CNSLT_CONFIRM_YN ='Y'
+
+union
+                
+     SELECT  C.STUDENT_ID AS TARKET_ID,
+             C.STUDENT_ID AS APPLYER_ID,
+             A.CNSLT_ID,
+	         A.CNSLT_SCH_DATE,
+	         A.CNSLT_TYPE,
+             B.SCODE_VALUE,
+             C.STUDENT_NAME AS CNSLT_TARGET,
+             C.STUDENT_NAME AS CNSLT_APPLYER,
+             A.CNSLT_COMPLETION_YN,
+             A.CNSLT_AS
+     FROM CONSULTING A, 
+         (SELECT *
+		        FROM STANDARDCODE
+		       WHERE SCODE_CATEGORY = 'CNSLT_TYPE'
+		 ) B, STUDENT C
+     WHERE A.MNG_ID = #{mngId}
+       AND A.CNSLT_TYPE = B.SCODE_KEY
+       AND A.CNSLT_TARGET=C.STUDENT_ID
+       AND A.CNSLT_APPLYER = A.CNSLT_TARGET
+       AND SYSDATE > A.CNSLT_SCH_DATE
+       AND A.CNSLT_CONFIRM_YN ='Y'
+       ORDER BY CNSLT_SCH_DATE DESC
+
+    </select>  
+    
+    
+         <select id="managerSelectFinishDetailParentVer" parameterType="str" resultMap="consultingMap">
+      SELECT A.CNSLT_ID,
+	         A.CNSLT_SCH_DATE,
+	         A.CNSLT_SCH_TIME,
+	         A.CNSLT_COMPLETION_YN,
+	         A.CNSLT_APPLY_CONTENT,
+             A.CNSLT_AS,
+	         A.CNSLT_APPLYER,
+	         A.CNSLT_TARGET,
+	         A.CNSLT_TYPE,
+             B.SCODE_VALUE,
+             C.STUDENT_NAME,
+             C.STUDENT_HP,
+             D.PARENT_NAME,
+             D.PARENT_HP,
+             E.SCHOOL_NAME,
+             F.SCODE_VALUE || C.STUDENT_GRADE AS GRADE,
+             H.CLASS_NAME
+     FROM CONSULTING A, 
+         (SELECT *
+		        FROM STANDARDCODE
+		       WHERE SCODE_CATEGORY = 'CNSLT_TYPE'
+		 ) B, STUDENT C, PARENT D, SCHOOL E,
+         (SELECT *
+		        FROM STANDARDCODE
+		       WHERE SCODE_CATEGORY = 'STUDENT_GRADE_CATEGORY_CODE'
+		 ) F, BELONG G, CLASS H
+     WHERE CNSLT_ID =  #{cnsltId}
+       AND A.CNSLT_TYPE = B.SCODE_KEY
+       AND A.CNSLT_TARGET=C.STUDENT_ID
+       AND A.CNSLT_APPLYER=D.PARENT_ID
+       AND C.SCHOOL_NO=E.SCHOOL_ID
+       AND C.STUDENT_GRADE_CATEGORY_CODE = F.SCODE_KEY
+       AND C.STUDENT_ID = G.STUDENT_ID
+       AND G.CLASS_ID = H.CLASS_ID
+    </select> 
+    
+    
+    
+    
+    
+    
+  <select id="managerSelectFinishDetailStudentVer" parameterType="str" resultMap="consultingMap">
+         SELECT A.CNSLT_ID,
+	         A.CNSLT_SCH_DATE,
+	         A.CNSLT_SCH_TIME,
+             A.CNSLT_COMPLETION_YN,
+	         A.CNSLT_APPLY_CONTENT,
+	         A.CNSLT_CONTENT,
+             A.CNSLT_AS,
+	         A.CNSLT_APPLYER,
+	         A.CNSLT_TARGET,
+	         A.CNSLT_TYPE,
+             B.SCODE_VALUE,
+             C.STUDENT_NAME,
+             C.STUDENT_HP,
+             E.SCHOOL_NAME,
+             F.SCODE_VALUE || C.STUDENT_GRADE AS GRADE,
+             H.CLASS_NAME
+     FROM CONSULTING A, 
+         (SELECT *
+		        FROM STANDARDCODE
+		       WHERE SCODE_CATEGORY = 'CNSLT_TYPE'
+		 ) B, STUDENT C, SCHOOL E,
+         (SELECT *
+		        FROM STANDARDCODE
+		       WHERE SCODE_CATEGORY = 'STUDENT_GRADE_CATEGORY_CODE'
+		 ) F, BELONG G, CLASS H
+     WHERE CNSLT_ID =  #{cnsltId}
+       AND A.CNSLT_TYPE = B.SCODE_KEY
+       AND A.CNSLT_TARGET=C.STUDENT_ID
+       AND C.SCHOOL_NO=E.SCHOOL_ID
+       AND C.STUDENT_GRADE_CATEGORY_CODE = F.SCODE_KEY
+       AND C.STUDENT_ID = G.STUDENT_ID
+       AND G.CLASS_ID = H.CLASS_ID
+       AND A.CNSLT_APPLYER = A.CNSLT_TARGET
+    </select> 
+    
+
+     <update id="updateRegist" parameterType="consulting">
+    	 UPDATE CONSULTING
+      	 SET CNSLT_CONTENT = #{cnsltContent},
+             CNSLT_AS = #{cnsltAs},
+             CNSLT_COMPLETION_YN = 'Y'
+       WHERE CNSLT_ID = #{cnsltId}
+    	</update>  
+    
+    
+      <select id="memberSelectFinishDetailParentVer" parameterType="str" resultMap="consultingMap">
+       SELECT A.CNSLT_TARGET,
+              C.STUDENT_NAME,
+              A.CNSLT_ID,
+              D.PARENT_NAME,
+              A.CNSLT_SCH_DATE,
+              A.CNSLT_SCH_TIME,
+              A.CNSLT_TYPE,
+              B.SCODE_VALUE,
+              A.MNG_ID,
+              E.MNG_NAME,
+              A.CNSLT_COMPLETION_YN
+       FROM CONSULTING A, 
+            (SELECT *
+		        FROM STANDARDCODE
+		       WHERE SCODE_CATEGORY = 'CNSLT_TYPE'
+		   ) B,STUDENT C, PARENT D, MANAGER E
+     WHERE CNSLT_TARGET IN (SELECT STUDENT_ID
+                               FROM STUDENT
+                              WHERE PARENT_ID = #{parentId} ) 
+       AND A.CNSLT_TYPE = B.SCODE_KEY
+       AND A.CNSLT_TARGET= C.STUDENT_ID
+       AND C.PARENT_ID= D.PARENT_ID
+       AND A.MNG_ID = E.MNG_ID
+       AND SYSDATE > A.CNSLT_SCH_DATE
+       ORDER BY CNSLT_SCH_DATE ASC
+    </select>  
+    
+    <select id="memberSelectFinishDetailStudentVer" parameterType="str" resultMap="consultingMap">
+       SELECT A.CNSLT_TARGET,
+              C.STUDENT_NAME,
+              A.CNSLT_ID,
+              A.CNSLT_SCH_DATE,
+              A.CNSLT_SCH_TIME,
+              A.CNSLT_TYPE,
+              B.SCODE_VALUE,
+              A.MNG_ID,
+              E.MNG_NAME,
+              A.CNSLT_COMPLETION_YN
+       FROM CONSULTING A, 
+            (SELECT *
+		        FROM STANDARDCODE
+		       WHERE SCODE_CATEGORY = 'CNSLT_TYPE'
+		   ) B,STUDENT C, PARENT D, MANAGER E
+     WHERE CNSLT_TARGET  = #{studentId}
+       AND CNSLT_APPLYER = #{studentId}
+       AND A.CNSLT_TYPE = B.SCODE_KEY
+       AND A.CNSLT_TARGET= C.STUDENT_ID
+       AND C.PARENT_ID= D.PARENT_ID
+       AND A.MNG_ID = E.MNG_ID
+       AND SYSDATE > A.CNSLT_SCH_DATE
+       ORDER BY CNSLT_SCH_DATE DESC
+    </select> 
+    
+    
+   
+</mapper>

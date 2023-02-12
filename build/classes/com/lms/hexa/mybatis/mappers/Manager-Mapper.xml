@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Manager-Mapper">
+	
+	<resultMap type="manager" id="managerMap">
+		<result property="id" column="mng_id"/>
+		<result property="pw" column="mng_pw"/>
+		<result property="mngName" column="MNG_NAME"/>
+		<result property="mngGender" column="MNG_GENDER"/>
+		<result property="mngEmail" column="MNG_EMAIL"/>
+		<result property="mngAddress2" column="MNG_ADDRESS2"/>
+		<result property="mngAddress" column="MNG_ADDRESS"/>
+		<result property="mngZipCode" column="MNG_ZIP_CODE"/>
+		<result property="mngPicture" column="MNG_PICTURE"/>
+		<result property="mngBirthDate" column="MNG_BIRTH_DATE"/>
+		<result property="mngDelete" column="MNG_DELETE"/>
+		<result property="mngDeleteDate" column="MNG_DELETE_DATE"/>
+		<result property="deptId" column="DEPT_ID"/>
+		<result property="mngEducation" column="MNG_EDUCATION"/>
+		<result property="mngMajor" column="MNG_MAJOR"/>
+		<result property="mngGraduatedYear" column="MNG_GRADUATED_YEAR"/>
+		<result property="mngCarrerYear" column="MNG_CARRER_YEAR"/>
+		<result property="mngCertificate" column="MNG_CERTIFICATE"/>
+		<result property="mngAccountNo" column="MNG_ACCOUNT_NO"/>
+		<result property="mngSubject" column="MNG_SUBJECT"/>
+		<result property="mngHp" column="MNG_HP"/>
+	</resultMap>
+	
+	<select id="selectManagerById" parameterType="str" resultMap="managerMap">
+		select
+		*
+		from manager
+		where mng_id=#{id}
+	</select>
+	
+	<select id="selectManagerByIdForMain" parameterType="str" resultType="manager">
+	
+		  SELECT A.MNG_NAME AS MNGNAME,
+		         C.DEPTID2 AS DEPTID,
+		         B.SCODE_VALUE AS MNGSUBJECT,
+		         NVL(D.CLASS_NAME,'-') AS SCHOOLNAME
+            FROM MANAGER A
+            LEFT OUTER JOIN STANDARDCODE B ON A.MNG_SUBJECT = B.SCODE_KEY 
+ 			LEFT OUTER JOIN CLASS D ON A.MNG_ID = D.MNG_ID 
+ 			LEFT OUTER JOIN ( SELECT B.SCODE_VALUE AS DEPTID2,
+			                  		 B.SCODE_KEY AS SKEY
+			                    FROM MANAGER A, STANDARDCODE B
+			                   WHERE A.MNG_ID=#{id}
+			                     AND A.DEPT_ID = B.SCODE_KEY
+			                 ) C ON A.DEPT_ID = C.SKEY
+           WHERE A.MNG_ID=#{id}
+	</select>
+	
+	<select id="selectManagerListForGoWork" resultType="manager">
+		select
+		mng_id as id
+		from manager
+	</select>
+	
+	<sql id="search">	
+		<if test="searchType == 'n'.toString()">
+			and MNG_NAME like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'd'.toString()">
+			and <![CDATA[d.SCODE_VALUE]]> like '%'||#{keyword}||'%'		
+		</if>
+		<if test="searchType == 'p'.toString()">
+			and MNG_HP like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'i'.toString()">
+			and mng_id like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'g'.toString()">
+			and <![CDATA[b.SCODE_VALUE]]> like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 's'.toString()">
+			and <![CDATA[c.SCODE_VALUE]]> like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'u'.toString()">
+			and <![CDATA[e.SCODE_VALUE]]> like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'm'.toString()">
+			and MNG_MAJOR like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'e'.toString()">
+			and MNG_EMAIL like '%'||#{keyword}||'%'			
+		</if>
+	</sql>	
+	
+	<select id="selectManagerList" parameterType="str" resultMap="managerMap">
+		 select a.MNG_ID
+				, b.SCODE_VALUE as MNG_GENDER
+				, a.MNG_NAME
+				, a.MNG_EMAIL 
+				, c.SCODE_VALUE as MNG_DELETE
+				, d.SCODE_VALUE as DEPT_ID
+				, e.SCODE_VALUE as MNG_SUBJECT
+				, a.MNG_HP
+				, a.MNG_MAJOR
+				from MANAGER a, STANDARDCODE b, STANDARDCODE c, STANDARDCODE d, STANDARDCODE e
+				where MNG_ID is not null
+				    and a.MNG_GENDER = b.SCODE_KEY
+				    and b.SCODE_CATEGORY = 'MNG_GENDER' 
+				    and a.MNG_DELETE = c.SCODE_KEY
+				    and c.SCODE_CATEGORY = 'MNG_DELETE'
+				    and a.DEPT_ID = d.SCODE_KEY
+				    and d.SCODE_CATEGORY = 'DEPT_ID'
+				    and a.MNG_SUBJECT = e.SCODE_KEY
+				    and e.SCODE_CATEGORY = 'MNG_SUBJECT'
+				    <if test="searchType == 'n'.toString()">
+						and MNG_NAME like '%'||#{keyword}||'%'			
+					</if>
+					<if test="searchType == 'd'.toString()">
+						and <![CDATA[d.SCODE_VALUE]]> like '%'||#{keyword}||'%'		
+					</if>
+					<if test="searchType == 'p'.toString()">
+						and MNG_HP like '%'||#{keyword}||'%'			
+					</if>
+					<if test="searchType == 'i'.toString()">
+						and mng_id like '%'||#{keyword}||'%'			
+					</if>
+					<if test="searchType == 'g'.toString()">
+						and <![CDATA[b.SCODE_VALUE]]> like '%'||#{keyword}||'%'			
+					</if>
+					<if test="searchType == 's'.toString()">
+						and <![CDATA[c.SCODE_VALUE]]> like '%'||#{keyword}||'%'			
+					</if>
+					<if test="searchType == 'u'.toString()">
+						and <![CDATA[e.SCODE_VALUE]]> like '%'||#{keyword}||'%'			
+					</if>
+					<if test="searchType == 'm'.toString()">
+						and MNG_MAJOR like '%'||#{keyword}||'%'			
+					</if>
+					<if test="searchType == 'e'.toString()">
+						and MNG_EMAIL like '%'||#{keyword}||'%'			
+					</if>
+					<if test="searchType == 't'.toString()">
+						and(MNG_EMAIL like '%'||#{keyword}||'%'
+							or MNG_NAME like '%'||#{keyword}||'%'
+							or <![CDATA[d.SCODE_VALUE]]> like '%'||#{keyword}||'%'	
+							or MNG_HP like '%'||#{keyword}||'%'
+							or mng_id like '%'||#{keyword}||'%'
+							or <![CDATA[b.SCODE_VALUE]]> like '%'||#{keyword}||'%'
+							or <![CDATA[c.SCODE_VALUE]]> like '%'||#{keyword}||'%'
+							or <![CDATA[e.SCODE_VALUE]]> like '%'||#{keyword}||'%'
+							or MNG_MAJOR like '%'||#{keyword}||'%')			
+					</if>
+					order by MNG_NAME
+	</select>
+	
+	<select id="selectManagerListCount" resultType="int">
+		select count(*)
+		from ( select a.MNG_ID
+				, b.SCODE_VALUE as MNG_GENDER
+				, a.MNG_NAME
+				, a.MNG_EMAIL 
+				, c.SCODE_VALUE as MNG_DELETE
+				, d.SCODE_VALUE as DEPT_ID
+				, e.SCODE_VALUE as MNG_SUBJECT
+				, a.MNG_HP
+				, a.MNG_MAJOR
+				from MANAGER a, STANDARDCODE b, STANDARDCODE c, STANDARDCODE d, STANDARDCODE e
+				where MNG_ID is not null
+				    and a.MNG_GENDER = b.SCODE_KEY
+				    and b.SCODE_CATEGORY = 'MNG_GENDER' 
+				    and a.MNG_DELETE = c.SCODE_KEY
+				    and c.SCODE_CATEGORY = 'MNG_DELETE'
+				    and a.DEPT_ID = d.SCODE_KEY
+				    and d.SCODE_CATEGORY = 'DEPT_ID'
+				    and a.MNG_SUBJECT = e.SCODE_KEY
+				    and e.SCODE_CATEGORY = 'MNG_SUBJECT'
+				    <if test="searchType == 'n'.toString()">
+						and MNG_NAME like '%'||#{keyword}||'%'			
+					</if>
+					<if test="searchType == 'd'.toString()">
+						and <![CDATA[d.SCODE_VALUE]]> like '%'||#{keyword}||'%'		
+					</if>
+					<if test="searchType == 'p'.toString()">
+						and MNG_HP like '%'||#{keyword}||'%'			
+					</if>
+					<if test="searchType == 'i'.toString()">
+						and mng_id like '%'||#{keyword}||'%'			
+					</if>
+					<if test="searchType == 'g'.toString()">
+						and <![CDATA[b.SCODE_VALUE]]> like '%'||#{keyword}||'%'			
+					</if>
+					<if test="searchType == 's'.toString()">
+						and <![CDATA[c.SCODE_VALUE]]> like '%'||#{keyword}||'%'			
+					</if>
+					<if test="searchType == 'u'.toString()">
+						and <![CDATA[e.SCODE_VALUE]]> like '%'||#{keyword}||'%'			
+					</if>
+					<if test="searchType == 'm'.toString()">
+						and MNG_MAJOR like '%'||#{keyword}||'%'			
+					</if>
+					<if test="searchType == 'e'.toString()">
+						and MNG_EMAIL like '%'||#{keyword}||'%'			
+					</if>)
+	</select>
+	
+	
+	<select id="selectWorkingTeacherListSearchByName" parameterType="manager" resultType="manager">
+	
+		  SELECT A.MNG_ID AS id,
+		        A.MNG_NAME AS mngName,
+		        A.MNG_GENDER AS mngGender,
+		        A.MNG_EMAIL AS mngEmail,
+		        A.MNG_ADDRESS2 AS mngAddress2,
+		        A.MNG_ADDRESS AS mngAddress,
+		        A.MNG_ZIP_CODE AS mngZipCode,
+		        A.MNG_PICTURE AS mngPicture,
+		        A.MNG_BIRTH_DATE AS mngBirthDate,
+		        C.SCODE_VALUE AS mngDelete,
+		        A.MNG_PW AS pw,
+		        A.MNG_DELETE_DATE AS mngDeleteDate,
+		        A.DEPT_ID AS deptId,
+		        A.MNG_EDUCATION AS mngEducation,
+		        A.MNG_MAJOR AS mngMajor,
+		        A.MNG_GRADUATED_YEAR AS mngGraduatedYear,
+		        A.MNG_CARRER_YEAR AS mngCarrerYear,
+		        A.MNG_CERTIFICATE AS mngCertificate,
+		        A.MNG_ACCOUNT_NO AS mngAccountNo,
+		        B.SCODE_VALUE AS mngSubjectKor,
+		        B.SCODE_KEY AS mngSubject
+		   FROM MANAGER A,
+                (SELECT *
+                   FROM STANDARDCODE
+                  WHERE SCODE_CATEGORY = 'MNG_SUBJECT')B,
+                (SELECT *
+                   FROM STANDARDCODE
+                  WHERE SCODE_CATEGORY = 'MNG_DELETE')C 
+          WHERE A.MNG_SUBJECT = B.SCODE_KEY
+            AND A.MNG_DELETE = C.SCODE_KEY
+		    AND A.MNG_DELETE = 'SRVD'
+		    AND A.DEPT_ID = 'TEA'
+		    AND A.MNG_SUBJECT = #{mngSubject}
+		  <if test="mngName != null">
+		    AND MNG_NAME like '%'||#{mngName}||'%'
+		  </if>
+		  
+	</select>
+	<select id="selectWorkingTeacherList" resultType="manager">
+	
+		  SELECT A.MNG_ID AS id,
+		        A.MNG_NAME AS mngName,
+		        A.MNG_GENDER AS mngGender,
+		        A.MNG_EMAIL AS mngEmail,
+		        A.MNG_ADDRESS2 AS mngAddress2,
+		        A.MNG_ADDRESS AS mngAddress,
+		        A.MNG_ZIP_CODE AS mngZipCode,
+		        A.MNG_PICTURE AS mngPicture,
+		        A.MNG_BIRTH_DATE AS mngBirthDate,
+		        C.SCODE_VALUE AS mngDelete,
+		        A.MNG_PW AS pw,
+		        A.MNG_DELETE_DATE AS mngDeleteDate,
+		        A.DEPT_ID AS deptId,
+		        A.MNG_EDUCATION AS mngEducation,
+		        A.MNG_MAJOR AS mngMajor,
+		        A.MNG_GRADUATED_YEAR AS mngGraduatedYear,
+		        A.MNG_CARRER_YEAR AS mngCarrerYear,
+		        A.MNG_CERTIFICATE AS mngCertificate,
+		        A.MNG_ACCOUNT_NO AS mngAccountNo,
+		        B.SCODE_VALUE AS mngSubjectKor,
+		        B.SCODE_KEY AS mngSubject
+		   FROM MANAGER A,
+                (SELECT *
+                   FROM STANDARDCODE
+                  WHERE SCODE_CATEGORY = 'MNG_SUBJECT')B,
+                (SELECT *
+                   FROM STANDARDCODE
+                  WHERE SCODE_CATEGORY = 'MNG_DELETE')C 
+          WHERE A.MNG_SUBJECT = B.SCODE_KEY
+            AND A.MNG_DELETE = C.SCODE_KEY
+		    AND A.MNG_DELETE = 'SRVD'
+		    AND A.DEPT_ID = 'TEA'
+		  
+	</select>
+	
+	<select id="selectManagerDetailById" parameterType="str" resultType="manager">
+	
+		SELECT A.MNG_ID AS id,
+		        A.MNG_NAME AS mngName,
+		        A.MNG_GENDER AS mngGender,
+		        A.MNG_EMAIL AS mngEmail,
+		        A.MNG_ADDRESS2 AS mngAddress2,
+		        A.MNG_ADDRESS AS mngAddress,
+		        A.MNG_ZIP_CODE AS mngZipCode,
+		        A.MNG_PICTURE AS mngPicture,
+		        A.MNG_BIRTH_DATE AS mngBirthDate,
+		        C.SCODE_VALUE AS mngDelete,
+		        A.MNG_PW AS pw,
+		        A.MNG_DELETE_DATE AS mngDeleteDate,
+		        A.DEPT_ID AS deptId,
+		        A.MNG_EDUCATION AS mngEducation,
+		        A.MNG_MAJOR AS mngMajor,
+		        A.MNG_GRADUATED_YEAR AS mngGraduatedYear,
+		        A.MNG_CARRER_YEAR AS mngCarrerYear,
+		        A.MNG_CERTIFICATE AS mngCertificate,
+		        A.MNG_ACCOUNT_NO AS mngAccountNo,
+		        B.SCODE_VALUE AS mngSubjectKor,
+		        B.SCODE_KEY AS mngSubject
+		   FROM MANAGER A,
+                (SELECT *
+                   FROM STANDARDCODE
+                  WHERE SCODE_CATEGORY = 'MNG_SUBJECT')B,
+                (SELECT *
+                   FROM STANDARDCODE
+                  WHERE SCODE_CATEGORY = 'MNG_DELETE')C 
+          WHERE A.MNG_SUBJECT = B.SCODE_KEY
+            AND A.MNG_DELETE = C.SCODE_KEY
+		    AND MNG_ID = #{value}
+		    
+	</select>
+	
+	<update id="updatePwd" parameterType="str">
+		UPDATE MANAGER
+		SET MNG_PW = #{emailAddress}
+			WHERE MNG_ID = #{emailAddress}
+	</update>
+	
+	<update id="insertManager" parameterType="manager">
+		MERGE INTO manager
+		USING dual
+		ON (mng_id = #{id})
+ 		WHEN MATCHED THEN
+      		UPDATE SET 
+	      		MNG_NAME = #{mngName},
+				MNG_GENDER = #{mngGender},
+				MNG_EMAIL = #{mngEmail},
+				MNG_ADDRESS2 = #{mngAddress2},
+				MNG_ADDRESS = #{mngAddress},
+				MNG_ZIP_CODE = #{mngZipCode},
+				MNG_PICTURE = #{mngPicture},
+				MNG_BIRTH_DATE = #{mngBirthDate},
+				MNG_DELETE = #{mngDelete},
+				MNG_DELETE_DATE = #{mngDeleteDate},
+				DEPT_ID = #{deptId},
+				MNG_EDUCATION = #{mngEducation},
+				MNG_MAJOR = #{mngMajor},
+				MNG_GRADUATED_YEAR = #{mngGraduatedYear},
+				MNG_CARRER_YEAR = #{mngCarrerYear},
+				MNG_CERTIFICATE = #{mngCertificate},
+				MNG_ACCOUNT_NO = #{mngAccountNo},
+				MNG_SUBJECT = #{mngSubject}, 
+				MNG_HP = #{mngHp}
+ 		WHEN NOT MATCHED THEN
+      		INSERT
+      		(MNG_ID,MNG_NAME,MNG_GENDER,MNG_EMAIL,MNG_ADDRESS2,MNG_ADDRESS,MNG_ZIP_CODE,MNG_PICTURE,MNG_BIRTH_DATE,MNG_DELETE,MNG_PW,MNG_DELETE_DATE,
+			DEPT_ID,MNG_EDUCATION,MNG_MAJOR,MNG_GRADUATED_YEAR,MNG_CARRER_YEAR,MNG_CERTIFICATE,MNG_ACCOUNT_NO,MNG_SUBJECT,MNG_HP) 
+			
+			VALUES (#{id},#{mngName},#{mngGender},#{mngEmail},#{mngAddress2},#{mngAddress},#{mngZipCode},
+			#{mngPicture},#{mngBirthDate},#{mngDelete},#{pw},#{mngDeleteDate},#{deptId},#{mngEducation},#{mngMajor},#{mngGraduatedYear},#{mngCarrerYear},#{mngCertificate},#{mngAccountNo},#{mngSubject},#{mngHp})
+	</update>
+	
+	<update id="modifyPwd" parameterType="manager">
+		UPDATE manager
+		SET mng_pw = #{pw}
+			WHERE mng_id = #{id}
+	</update>
+	
+	<select id="selectMngGenderList" resultType="manager">
+		select SCODE_KEY as sCodeKey,
+			   SCODE_VALUE as sCodeValue
+		  from STANDARDCODE
+		  where SCODE_CATEGORY = 'MNG_GENDER' 
+	</select>
+	
+	<select id="selectMngDeleteList" resultType="manager">
+		select SCODE_KEY as sCodeKey,
+			   SCODE_VALUE as sCodeValue
+		  from STANDARDCODE
+		  where SCODE_CATEGORY = 'MNG_DELETE'
+		  order by SCODE_KEY desc
+	</select>
+	
+	<select id="selectDeptIdList" resultType="manager">
+		select SCODE_KEY as sCodeKey,
+			   SCODE_VALUE as sCodeValue
+		  from STANDARDCODE
+		  where SCODE_CATEGORY = 'DEPT_ID'
+	</select>
+	
+	<select id="selectMngSubjectList" resultType="manager">
+		select SCODE_KEY as sCodeKey,
+			   SCODE_VALUE as sCodeValue
+		  from STANDARDCODE
+		  where SCODE_CATEGORY = 'MNG_SUBJECT'
+	</select>
+	
+	
+	<select id="managerForDetail" parameterType="str" resultType="manager">
+		  
+     select a.MNG_NAME as mngName,
+            c.deptId2 as deptId,
+            a.MNG_ID as id,
+            a.MNG_EDUCATION as mngEducation,
+            a.MNG_MAJOR as mngMajor,
+            a.MNG_CARRER_YEAR as mngCarrerYear,
+            b.SCODE_VALUE as mngSubject,
+            nvl(d.CLASS_NAME,'담임반 없음') as className  
+       from manager A
+       left outer join STANDARDCODE B on a.MNG_SUBJECT = b.SCODE_KEY
+       left outer join 
+            (select b.SCODE_VALUE as deptId2,
+                    a.mng_id as mid
+               from manager A, STANDARDCODE B
+              where a.mng_id=#{id}
+                and a.DEPT_ID = b.SCODE_KEY
+            ) C on c.mid = a.mng_id
+       left outer join CLASS D on a.MNG_ID = d.MNG_ID
+      where a.mng_id=#{id}
+	
+	</select>
+</mapper>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="User-Mapper">
+	
+	<resultMap type="user" id="userMap">
+		<result property="id" column="user_id"/>
+		<result property="pw" column="user_pw"/>
+		<result property="category" column="user_category"/>
+		<result property="isFirstLogin" column="user_is_first_login"/>
+	</resultMap>
+	
+	<select id="selectUserById" parameterType="str" resultMap="userMap">
+		select
+		*
+		from "USER"
+		where user_id=#{id}
+	</select>
+	
+	<select id="selectUserList" parameterType="str" resultType="user">
+		
+		select id,
+		replace(replace(REPLACE(category, 's', '학생'),'p','부모'),'m','직원') as category
+		,isFirstLogin
+		,name
+		,hp
+		from(select b.user_id as id
+		       ,b.user_category as category
+		       ,b.USER_IS_FIRST_LOGIN as isFirstLogin
+		       ,a.student_name as name
+		       ,a.student_hp as hp
+		from student a, "USER" b
+		where a.student_id = b.user_id
+	union
+		select b.user_id as id
+		       ,b.user_category as category
+		       ,b.USER_IS_FIRST_LOGIN as isFirstLogin
+		       ,a.parent_name as name
+		       ,a.parent_hp as hp
+		from parent a, "USER" b
+	  	where a.parent_id = b.user_id
+	union
+		select b.user_id as id
+		       ,b.user_category as category
+		       ,b.USER_IS_FIRST_LOGIN as isFirstLogin
+		       ,a.mng_name as name
+		       ,a.mng_hp as hp
+		from manager a, "USER" b
+		where a.mng_id = b.user_id)
+		where id is not null
+		<if test="keyword != null">
+			and (id like '%'||#{keyword}||'%'
+				or category like '%'||#{keyword}||'%'
+				or isFirstLogin like '%'||#{keyword}||'%'
+				or name like '%'||#{keyword}||'%'
+				or hp like '%'||#{keyword}||'%')
+		</if>
+		order by category, name
+	</select>
+	
+	<select id="selectUserListTotalCount" resultType="int">
+		select count(*)
+		from (select id,category,isFirstLogin,name,hp
+		from(select b.user_id as id
+		       ,b.user_category as category
+		       ,b.USER_IS_FIRST_LOGIN as isFirstLogin
+		       ,a.student_name as name
+		       ,a.student_hp as hp
+		from student a, "USER" b
+		where a.student_id = b.user_id
+	union
+		select b.user_id as id
+		       ,b.user_category as category
+		       ,b.USER_IS_FIRST_LOGIN as isFirstLogin
+		       ,a.parent_name as name
+		       ,a.parent_hp as hp
+		from parent a, "USER" b
+	  	where a.parent_id = b.user_id
+	union
+		select b.user_id as id
+		       ,b.user_category as category
+		       ,b.USER_IS_FIRST_LOGIN as isFirstLogin
+		       ,a.mng_name as name
+		       ,a.mng_hp as hp
+		from manager a, "USER" b
+		where a.mng_id = b.user_id)
+		where id is not null
+		<if test="keyword != null">
+			and (id like '%'||#{keyword}||'%'
+				or category like '%'||#{keyword}||'%'
+				or isFirstLogin like '%'||#{keyword}||'%'
+				or name like '%'||#{keyword}||'%'
+				or hp like '%'||#{keyword}||'%')
+		</if>
+		)
+	</select>
+	
+	<update id="insertUser" parameterType="user">
+		MERGE INTO "USER"
+		USING dual
+		ON (user_id = #{id})
+ 		WHEN MATCHED THEN
+      		UPDATE SET
+      			USER_CATEGORY = #{category} 
+      	WHEN NOT MATCHED THEN
+      		INSERT (USER_ID, USER_PW, USER_CATEGORY, USER_IS_FIRST_LOGIN)
+      		VALUES (#{id},#{pw},#{category},#{isFirstLogin})	 
+	</update>
+	
+	<select id="selectUserByEmailAddress" parameterType="str" resultType="int">
+		select count(*)
+  		from "USER"
+ 			where USER_ID = #{emailAddress}
+	</select>
+	
+	<select id="selectUserCategory" parameterType="str" resultType="str">
+		select USER_CATEGORY 
+			from "USER"
+			WHERE USER_ID = #{emailAddress}
+	</select>
+	
+	<update id="updatePwd" parameterType="str">
+		UPDATE "USER"
+		SET USER_PW = #{emailAddress}
+			WHERE USER_ID = #{emailAddress}
+	</update>
+	
+	<update id="modifyPwd" parameterType="user">
+		UPDATE "USER"
+		SET USER_PW = #{pw}
+			WHERE USER_ID = #{id}
+	</update>
+</mapper>

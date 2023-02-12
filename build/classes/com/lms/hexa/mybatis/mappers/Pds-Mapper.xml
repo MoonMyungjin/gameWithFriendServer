@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="Pds-Mapper">
+  
+  
+  <resultMap type="pds" id="pdsMap">
+		<result property="pdsId" column="PDS_ID"/>
+		<result property="pdsTitle" column="PDS_TITLE"/>
+		<result property="mngId" column="MNG_ID"/>
+		<result property="pdsContent" column="PDS_CONTENT"/>
+		<result property="pdsViews" column="PDS_VIEWS"/>
+		<result property="pdsWriteDate" column="PDS_WRITE_DATE"/>
+		<result property="pdsModifyDate" column="PDS_MODIFY_DATE"/>
+		<result property="pdsStartDate" column="PDS_START_DATE"/>
+		<result property="pdsEndDate" column="PDS_END_DATE"/>
+		<result property="pdsPoint" column="PDS_POINT"/>
+		<result property="pdsDist" column="PDS_DIST"/>
+		<result property="mngName" column="MNG_NAME" />
+<!-- 		<collection property="managerMap" resultMap="manager"/> -->
+	</resultMap>
+  
+  	<sql id="search">
+		<if test="searchType == 't'.toString()">
+			and PDS_TITLE like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'c'.toString()">
+			and PDS_CONTENT like '%'||#{keyword}||'%'			
+		</if>
+		<if test="searchType == 'tcw'.toString()">
+			and (
+			PDS_TITLE like '%'||#{keyword}||'%'
+			or
+			PDS_CONTENT like '%'||#{keyword}||'%'						
+			)			
+		</if>
+	</sql>
+  
+  
+  <select id="selectSearchPdsList" parameterType="str" resultMap="pdsMap">
+
+		SELECT PDS.PDS_ID,
+		       MANAGER.MNG_NAME,
+		       MANAGER.MNG_ID,
+		       PDS.PDS_TITLE,
+		       PDS.PDS_WRITE_DATE,
+		       PDS.PDS_VIEWS
+		FROM PDS, MANAGER
+		WHERE 
+        MANAGER.MNG_ID = PDS.MNG_ID AND
+        PDS_ID IS NOT NULL
+        <include refid="search" />
+		ORDER BY PDS_ID DESC
+	</select>
+	
+	<select id="selectSearchPdsListCount"  resultType="int">
+		select
+		count(*)
+		from
+		pds
+		where PDS_ID is not null  			  	
+		<include refid="search" />
+		order by PDS_ID desc
+	</select>
+	
+	<select id="selectPdsByPno"  parameterType="pds" resultMap="pdsMap">
+		SELECT PDS.PDS_TITLE,
+			   PDS.PDS_ID,
+      		   MANAGER.MNG_NAME,
+       		   PDS.PDS_WRITE_DATE,
+      		   PDS.PDS_CONTENT,
+      		   PDS.MNG_ID,
+      		   PDS.PDS_VIEWS
+		FROM PDS, MANAGER
+			WHERE PDS_ID = #{pdsId}
+        		AND PDS.MNG_ID = MANAGER.MNG_ID
+	</select>
+	
+	<update id="insertPds" parameterType="pds">
+		insert 
+		into 
+		pds(pds_id,pds_title,mng_id,pds_content, pds_write_date)
+		values
+		(#{pdsId},#{pdsTitle},#{mngId},#{pdsContent},sysdate)
+	</update>
+	
+	<update id="updatePds" parameterType="pds">
+		UPDATE pds
+		   SET pds_title=#{pdsTitle}, 
+		       pds_content=#{pdsContent}, 
+		       pds_modify_date=SYSDATE 
+		WHERE pds_id = #{pdsId}
+	</update>
+	
+	<update id="deletePds" parameterType="int">
+		delete 
+		from pds 
+		where pds_id=#{pdsId}
+	</update>
+	
+	<update id="increaseViewCnt" parameterType="int">
+		update 
+		pds 
+		set 
+		pds_views = pds_views+1 
+		where pds_id = #{pdsId}
+	</update>
+	
+	<select id="selectPdsSeqNext" resultType="int">
+		select pds_seq.nextval as pds_id from dual
+	</select>
+</mapper>

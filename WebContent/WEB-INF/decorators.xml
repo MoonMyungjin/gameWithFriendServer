@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<decorators defaultdir="/WEB-INF/decorator">
+
+	<decorator name="member_main" page="member_main_decorator.jsp">
+		<pattern>/member/*.do</pattern>
+		
+	</decorator>
+	
+	<decorator name="manager_main" page="manager_main_decorator.jsp">
+		<pattern>/manager/*.do</pattern>
+	</decorator>
+	
+	<decorator name="parent_main" page="member_main_decorator.jsp">
+		<pattern>/parent/*.do</pattern>
+	</decorator>
+	
+	<decorator name="openWindow" page="open_decorator.jsp">
+		<!-- <pattern>/**/*.do</pattern> -->
+		<!-- 대시보드 -->
+		<pattern>/member/main.do</pattern>
+		<pattern>/manager/main.do</pattern>
+		<pattern>/parent/main.do</pattern>
+		<pattern>/member/**/*.do</pattern>
+		<pattern>/member/modify.do</pattern>
+		<pattern>/manager/**/*.do</pattern>
+		<pattern>/parent/**/*.do</pattern>
+		<pattern>*.do</pattern>
+	</decorator>
+	
+	<excludes>		
+		<pattern>/resources/*</pattern>
+	</excludes>	
+</decorators>	

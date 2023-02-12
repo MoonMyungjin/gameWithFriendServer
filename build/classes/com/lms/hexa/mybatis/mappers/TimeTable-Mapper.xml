@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="TimeTable-Mapper">
+
+	<select id="selectWeekDaySettingvalue" resultType="timetablesetting">
+	
+		SELECT TTSETTING_CATEGORY AS ttsettingCategory,
+		       TTSETTING_START_TIME AS ttsettingStartTime,
+		       TTSETTING_CLASS_TIME AS ttsettingClassTime,
+		       TTSETTING_BREAK_TERM AS ttsettingBreakTerm,
+		       TTSETTING_PERIOD_COUNT AS ttsettingPeriodCount 
+		  FROM TIMETABLESETTING
+		 WHERE TTSETTING_CATEGORY = 'WEEKDAY'
+		 
+	</select>
+
+	<select id="selectWeekEndSettingvalue" resultType="timetablesetting">
+	
+		SELECT TTSETTING_CATEGORY AS ttsettingCategory,
+		       TTSETTING_START_TIME AS ttsettingStartTime,
+		       TTSETTING_CLASS_TIME AS ttsettingClassTime,
+		       TTSETTING_BREAK_TERM AS ttsettingBreakTerm,
+		       TTSETTING_PERIOD_COUNT AS ttsettingPeriodCount 
+		  FROM TIMETABLESETTING
+		 WHERE TTSETTING_CATEGORY = 'WEEKEND'
+		 
+	</select>
+	
+	<select id="selectWeekDayTimeTableValue" resultType="timetable">
+	
+		SELECT TIMETABLE_ID as timetableId,
+		       TIMETABLE_DAY_OF_WEEK as timetableDayOfWeek,
+		       TIMETABLE_START_TIME as timetableStartTime,
+		       TIMETABLE_END_TIME as timetableEndTime,
+		       TIMETABLE_CATEGORY as timetableCategory,
+		       TIMETABLE_PERIOD as timetablePeriod
+		  FROM TIMETABLE
+		 WHERE TIMETABLE_DAY_OF_WEEK = 'mon'  
+		 ORDER BY TIMETABLE_PERIOD
+		 
+	</select>
+	
+	<select id="selectWeekEndTimeTableValue" resultType="timetable">
+	
+		SELECT TIMETABLE_ID as timetableId,
+		       TIMETABLE_DAY_OF_WEEK as timetableDayOfWeek,
+		       TIMETABLE_START_TIME as timetableStartTime,
+		       TIMETABLE_END_TIME as timetableEndTime,
+		       TIMETABLE_CATEGORY as timetableCategory,
+		       TIMETABLE_PERIOD as timetablePeriod
+		  FROM TIMETABLE
+		 WHERE TIMETABLE_DAY_OF_WEEK = 'sat'  
+		 ORDER BY TIMETABLE_PERIOD
+		 
+	</select>
+	
+	
+	<delete id="deleteTimeTableValues" parameterType="timetable">
+	
+		DELETE TIMETABLE
+ 		WHERE TIMETABLE_CATEGORY = #{id}
+ 		
+	</delete>
+	
+	<insert id="insertWeekDayNewTimeTableValues" parameterType="java.util.Map">
+		<foreach collection="timeTableList" item="item" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
+			INTO TIMETABLE(TIMETABLE_ID, TIMETABLE_DAY_OF_WEEK, TIMETABLE_START_TIME, TIMETABLE_END_TIME, TIMETABLE_CATEGORY, TIMETABLE_PERIOD)
+			VALUES (#{item.timetableId}, #{item.timetableDayOfWeek}, #{item.timetableStartTime}, #{item.timetableEndTime}, 'weekDay', #{item.timetablePeriod})
+		</foreach>
+	</insert>
+	
+	<update id="updateWeekDayTimeTableSetting" parameterType="timetablesetting">
+	
+		 UPDATE TIMETABLESETTING
+		    SET TTSETTING_START_TIME = #{ttsettingStartTime},
+		        TTSETTING_BREAK_TERM = #{ttsettingBreakTerm},
+		        TTSETTING_PERIOD_COUNT = #{ttsettingPeriodCount},
+		        TTSETTING_CLASS_TIME = #{ttsettingClassTime}
+		  WHERE TTSETTING_CATEGORY = 'WEEKDAY'
+		  
+	</update>
+	
+	<insert id="insertWeekEndNewTimeTableValues" parameterType="java.util.Map">
+		<foreach collection="timeTableList" item="item" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
+			INTO TIMETABLE(TIMETABLE_ID, TIMETABLE_DAY_OF_WEEK, TIMETABLE_START_TIME, TIMETABLE_END_TIME, TIMETABLE_CATEGORY, TIMETABLE_PERIOD)
+			VALUES (#{item.timetableId}, #{item.timetableDayOfWeek}, #{item.timetableStartTime}, #{item.timetableEndTime}, 'weekEnd', #{item.timetablePeriod})
+		</foreach>
+	</insert>
+	<update id="updateWeekEndTimeTableSetting" parameterType="timetablesetting">
+	
+		 UPDATE TIMETABLESETTING
+		    SET TTSETTING_START_TIME = #{ttsettingStartTime},
+		        TTSETTING_BREAK_TERM = #{ttsettingBreakTerm},
+		        TTSETTING_PERIOD_COUNT = #{ttsettingPeriodCount},
+		        TTSETTING_CLASS_TIME = #{ttsettingClassTime}
+		  WHERE TTSETTING_CATEGORY = 'WEEKEND'
+		  
+	</update>
+	
+</mapper>

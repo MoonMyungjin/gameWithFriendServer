@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="imgPath" class="java.lang.String">
+		<constructor-arg value="${summernote.img}" />      
+	</bean>
+
+	<bean id="picturePath" class="java.lang.String">
+		<constructor-arg value="${manager.picture.upload}" />      
+	</bean>
+
+	<bean id="fileUploadPath" class="java.lang.String">
+		<constructor-arg value="${pds.upload}"/>
+	</bean>
+		
+	<!-- student.picture -->
+	<bean id="studentPicturePath" class="java.lang.String">
+		<constructor-arg value="${student.picture.upload}" />
+	</bean>	
+	
+	<!-- manager.picture -->
+	<bean id="managerPicturePath" class="java.lang.String">
+		<constructor-arg value="${manager.picture.upload}" />
+	</bean>
+	
+	<!-- homework.upload -->	
+	<bean id="homeworkUploadPath" class="java.lang.String">
+		<constructor-arg value="${homework.upload}" />
+	</bean>	
+	
+	<bean id="scoreUploadPath" class="java.lang.String">
+		<constructor-arg value="${score.upload}" />
+	</bean>	
+		
+	<!-- Repository -->
+	<bean id="menuDAO" class="com.lms.hexa.dao.MenuDAOImpl" 
+		p:session-ref="sqlSession"
+	/>
+	
+	<bean id="managerAttandanceDAO" class="com.lms.hexa.dao.ManagerAttandanceDAOImpl" 
+		p:session-ref="sqlSession"
+	/>
+	
+	<bean id="userDAO" class="com.lms.hexa.dao.UserDAOImpl" 
+		p:session-ref="sqlSession"
+	/>
+	<bean id="managerDAO" class="com.lms.hexa.dao.ManagerDAOImpl" 
+		p:session-ref="sqlSession"
+	/>
+	<bean id="studentDAO" class="com.lms.hexa.dao.StudentDAOImpl" 
+		p:session-ref="sqlSession"
+	/>
+	<bean id="parentDAO" class="com.lms.hexa.dao.ParentDAOImpl" 
+		p:session-ref="sqlSession"
+	/>
+	
+	<bean id="favoritesDAO" class="com.lms.hexa.dao.FavoritesDAOImpl" 
+		p:session-ref="sqlSession"
+	/>
+	
+	
+	<bean id="timetableDAO" class="com.lms.hexa.dao.TimetableDAOImpl" 
+		p:session-ref="sqlSession"
+	/>
+	<bean id="pdsDAO" class="com.lms.hexa.dao.PdsDAOImpl" 
+		p:session-ref="sqlSession"
+	/>
+	
+	<bean id="attachDAO" class="com.lms.hexa.dao.AttachDAOImpl"
+		p:session-ref="sqlSession"
+	 />
+	
+	<bean id="noticeDAO" class="com.lms.hexa.dao.NoticeDAOImpl" 
+		p:session-ref="sqlSession"
+		p:mariaSession-ref="sqlSessionMaria"
+    />
+    
+
+    
+	<bean id="schoolDAO" class="com.lms.hexa.dao.SchoolDAOImpl" 
+		p:session-ref="sqlSession"
+    />
+	
+	<bean id="noteDAO" class="com.lms.hexa.dao.NoteDAOImpl" 
+		p:session-ref="sqlSession"
+	/>
+	<bean id="subjectAttandanceDAO" class="com.lms.hexa.dao.SubjectAttandanceDAOImpl" 
+		p:session-ref="sqlSession"
+	/>
+	
+	<bean id="academyinfoDAO" class="com.lms.hexa.dao.AcademyinfoDAOImpl" 
+		p:session-ref="sqlSession"
+	/>
+	
+	<bean id="academyScheDAO" class="com.lms.hexa.dao.AcademyScheDAOImpl" 
+		p:session-ref="sqlSession"
+	/>
+	<bean id="academyHomepageUseDAO" class="com.lms.hexa.dao.AcademyHomepageUseDAOImpl" 
+		p:session-ref="sqlSessionMaria"
+	/>
+	
+	<bean id="classDAO" class="com.lms.hexa.dao.ClassDAOImpl" 
+		p:session-ref="sqlSession"
+	/>
+	
+	<!-- 시험, 성적 DAO -->
+	<bean id="scoreDAO" class="com.lms.hexa.dao.ScoreDAOImpl" 
+		p:session-ref="sqlSession"
+	/>
+
+	<bean id="lessonDAO" class="com.lms.hexa.dao.LessonDAOImpl"
+		p:session-ref="sqlSession"	
+	/>
+
+
+
+     <bean id="studyPlanDAO" class="com.lms.hexa.dao.StudyPlanDAOImpl"
+		p:session-ref="sqlSession"	
+	/>
+	
+	    <bean id="paymentDAO" class="com.lms.hexa.dao.PaymentDAOImpl" 
+		p:session-ref="sqlSession"
+    />
+    
+    <bean id="unPaymentDAO" class="com.lms.hexa.dao.UnPaymentDAOImpl" 
+		p:session-ref="sqlSession"
+    />
+    
+     <bean id="consultingDAO" class="com.lms.hexa.dao.ConsultingDAOImpl" 
+		p:session-ref="sqlSession"
+    />
+    
+         <bean id="refundDAO" class="com.lms.hexa.dao.RefundDAOImpl" 
+		p:session-ref="sqlSession"
+    />
+    
+	
+	
+	<bean id="authorityDAO" class="com.lms.hexa.dao.AuthorityDAOImpl"
+		p:session-ref="sqlSession"
+	/>
+	
+	<bean id="homeworkDAO" class="com.lms.hexa.dao.HomeworkDAOImpl"
+		p:session-ref="sqlSession"
+	/>
+	
+	<bean id="goWorkDAO" class="com.lms.hexa.dao.GoWorkDAOImpl"
+		p:session-ref="sqlSession"
+	/>
+	
+	<bean id="templateDAO" class="com.lms.hexa.dao.TemplateDAOImpl"
+		p:session-ref="sqlSession"
+	/>
+	
+	<bean id="messageGroupDAO" class="com.lms.hexa.dao.MessageGroupDAOImpl"
+		p:session-ref="sqlSession"
+	/>
+	
+	<bean id="kakaoSendDAO" class="com.lms.hexa.dao.KakaoSendDAOImpl"
+		p:session-ref="sqlSession"
+	/>
+	
+	 
+	<!-- Service -->
+	
+	<bean id="templateService" class="com.lms.hexa.service.TemplateServiceImpl" 
+		p:templateDAO-ref="templateDAO"
+	/>
+	<bean id="messageGroupService" class="com.lms.hexa.service.MessageGroupServiceImpl" 
+		p:messageGroupDAO-ref="messageGroupDAO"
+	/>
+	<bean id="kakaoSendService" class="com.lms.hexa.service.KakaoSendServiceImpl" 
+		p:kakaoSendDAO-ref="kakaoSendDAO"
+	/>
+	
+	<bean id="favoritesService" class="com.lms.hexa.service.FavoritesServiceImpl" 
+		p:favoritesDAO-ref="favoritesDAO"
+	/>
+	
+	
+	
+	<bean id="menuService" class="com.lms.hexa.service.MenuServiceImpl" 
+		p:menuDAO-ref="menuDAO"
+	/>
+	
+	<bean id="parentService" class="com.lms.hexa.service.ParentServiceImpl" 
+		p:parentDAO-ref="parentDAO"
+		p:studentDAO-ref="studentDAO"
+		p:noticeDAO-ref="noticeDAO"
+		p:lessonDAO-ref="lessonDAO"
+		p:classDAO-ref="classDAO"
+		p:managerAttandanceDAO-ref="managerAttandanceDAO"
+		p:timetableDAO-ref="timetableDAO"
+		p:scoreDAO-ref="scoreDAO"
+	/>
+	
+	<bean id="userService" class="com.lms.hexa.service.UserServiceImpl" 
+		p:managerDAO-ref="managerDAO"
+		p:studentDAO-ref="studentDAO"
+		p:parentDAO-ref="parentDAO"		
+		p:userDAO-ref="userDAO"
+	/>
+	<bean id="loginUserService" class="com.lms.hexa.service.LoginUserServiceImpl" 
+		p:managerDAO-ref="managerDAO"
+		p:studentDAO-ref="studentDAO"
+		p:parentDAO-ref="parentDAO"
+		p:userDAO-ref="userDAO"
+	/>
+	<bean id="managerService" class="com.lms.hexa.service.ManagerServiceImpl" 
+		p:managerDAO-ref="managerDAO"
+		p:goWorkDAO-ref="goWorkDAO"
+		p:academyScheDAO-ref="academyScheDAO"
+		p:noticeDAO-ref="noticeDAO"
+		p:noteDAO-ref="noteDAO"
+		p:lessonDAO-ref="lessonDAO"
+	/>
+	<bean id="studentService" class="com.lms.hexa.service.StudentServiceImpl" 
+		p:studentDAO-ref="studentDAO"
+		p:managerAttandanceDAO-ref="managerAttandanceDAO"
+		p:lessonDAO-ref="lessonDAO"
+		p:classDAO-ref="classDAO"
+		p:timetableDAO-ref="timetableDAO"
+		p:scoreDAO-ref="scoreDAO"
+		p:noticeDAO-ref="noticeDAO"
+	/>
+	
+	<bean id="managerAttandanceService" class="com.lms.hexa.service.ManagerAttandanceServiceImpl" 
+		p:managerAttandanceDAO-ref="managerAttandanceDAO"
+		p:studentDAO-ref="studentDAO"
+		p:schoolDAO-ref="schoolDAO"
+		p:classDAO-ref="classDAO"
+	/>
+	
+ 	<bean id="TimeTableService" class="com.lms.hexa.service.TimeTableServiceImpl" 
+		p:timeTableDAO-ref="timetableDAO"
+	/>
+	
+	<bean id="pdsService" class="com.lms.hexa.service.PdsServiceImpl" 
+		p:pdsDAO-ref="pdsDAO"
+		p:attachDAO-ref="attachDAO"
+		
+	/>
+
+	<bean id="noteService" class="com.lms.hexa.service.NoteServiceImpl"
+		p:noteDAO-ref="noteDAO"
+	 />
+	
+	<bean id="noticeService" class="com.lms.hexa.service.NoticeServiceImpl" 
+		p:noticeDAO-ref="noticeDAO"
+	/>
+	
+	<bean id="schoolService" class="com.lms.hexa.service.SchoolServiceImpl" 
+		p:schoolDAO-ref="schoolDAO"
+	/>
+	
+	<bean id="academyinfoService" class="com.lms.hexa.service.AcademyinfoServiceImpl" 
+		p:academyinfoDAO-ref="academyinfoDAO"
+		p:menuDAO-ref="menuDAO"
+	/>
+	
+	<bean id="academyScheService" class="com.lms.hexa.service.AcademyScheServiceImpl" 
+		p:academyScheDAO-ref="academyScheDAO"
+	/>
+	<bean id="academyHomepageUseService" class="com.lms.hexa.service.AcademyHomepageUseServiceImpl" 
+		p:academyHomepageUseDAO-ref="academyHomepageUseDAO"
+	/>
+	<bean id="classService" class="com.lms.hexa.service.ClassServiceImpl" 
+		p:classDAO-ref="classDAO"
+	/>
+
+	
+	<!-- 시험, 성적 Service -->
+	<bean id="scoreService" class="com.lms.hexa.service.ScoreServiceImpl" 
+		p:scoreDAO-ref="scoreDAO"
+		p:attachDAO-ref="attachDAO"
+	/>
+	
+	<bean id="lessonService" class="com.lms.hexa.service.LessonServiceImpl"
+		p:lessonDAO-ref="lessonDAO"
+	/>
+	
+	
+	<bean id="studyPlanService" class="com.lms.hexa.service.StudyPlanServiceImpl"
+		p:studyPlanDAO-ref="studyPlanDAO"
+	/>
+	
+	<bean id="paymentService" class="com.lms.hexa.service.PaymentServiceImpl"
+		p:paymentDAO-ref="paymentDAO"
+	/>
+	
+	<bean id="goWorkService" class="com.lms.hexa.service.GoWorkServiceImpl"
+		p:goWorkDAO-ref="goWorkDAO"
+		p:managerDAO-ref="managerDAO"
+	/>
+
+	<bean id="unPaymentService" class="com.lms.hexa.service.UnPaymentServiceImpl"
+		p:unPaymentDAO-ref="unPaymentDAO"
+    />
+	
+
+	<bean id="consultingService" class="com.lms.hexa.service.ConsultingServiceImpl"
+		p:consultingDAO-ref="consultingDAO"
+    />
+    
+    	<bean id="RefundService" class="com.lms.hexa.service.RefundServiceImpl"
+		p:refundDAO-ref="refundDAO"
+    />
+
+	<bean id="subjectAttendanceService" class="com.lms.hexa.service.SubjectAttendanceServiceImpl"
+		p:subjectAttandanceDAO-ref="subjectAttandanceDAO"
+		p:lessonDAO-ref="lessonDAO"
+		p:studentDAO-ref="studentDAO"
+	/>
+	
+	<bean id="authorityService" class="com.lms.hexa.service.AuthorityServiceImpl"
+		p:authorityDAO-ref="authorityDAO"
+	/>
+	
+	<bean id="HomeworkService" class="com.lms.hexa.service.HomeworkServiceImpl"
+		p:homeworkDAO-ref="homeworkDAO"
+		p:attachDAO-ref="attachDAO"
+	/>
+	
+	<bean id="execFileRunTime" class="com.lms.hexa.util.ExecFileRunTime"
+		
+	/>
+	
+	<bean id="AttachService" class="com.lms.hexa.service.AttachServiceImpl"
+		p:attachDAO-ref="attachDAO"
+	/>
+	
+	
+	
+	<bean id="jobTask" class="com.lms.hexa.scheduler.TestScheduler"
+		p:managerAttandanceService-ref="managerAttandanceService"
+		p:subjectAttendanceService-ref="subjectAttendanceService"
+		p:execFileRunTime-ref="execFileRunTime"
+		p:lessonService-ref="lessonService"
+
+		/>
+		
+		<task:scheduler id="printScheduler"/>
+		
+		<task:scheduled-tasks scheduler="printScheduler">
+			<task:scheduled ref="jobTask" 
+							method="testMessage"
+							cron= "0 10 09 * * *  "
+							/>
+			<task:scheduled ref="jobTask" 
+							method="insertSubjectAtt"
+							cron= "0 53 00 * * *  "
+							/>
+
+			<task:scheduled ref="jobTask" 
+							method="pythonscraping"
+							cron= "0 04 20 * * *  "
+							/>
+
+			<task:scheduled ref="jobTask" 
+							method="updateLessonState"
+							cron= "0 30 10 * * *  "
+							/>
+
+		</task:scheduled-tasks>	
+	<bean id="commonInterceptor" class="com.lms.hexa.interceptor.CommonInterceptor"
+		p:academyHomepageUseService-ref="academyHomepageUseService"
+		p:menuService-ref="menuService"
+	/>
+
+</beans>

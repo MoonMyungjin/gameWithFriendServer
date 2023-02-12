@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Template-Mapper">
+	
+	<resultMap type="template" id="templateMap">
+		<result property="templateId" column="TEMPLATE_ID"/>
+		<result property="templateName" column="TPL_NAME"/>
+		<result property="templateContent" column="TPL_CONTENT"/>
+		<result property="templateTitle" column="TPL_TITLE"/>
+	</resultMap>
+	
+	<select id="selectTemplateByTemplateName" parameterType="str" resultType="template">
+		select  TEMPLATE_ID as templateId
+				,TPL_NAME as templateName
+				,TPL_CONTENT as templateContent
+				,TPL_TITLE as templateTitle
+		 from TEMPLATE
+		where TEMPLATE_ID = #{templateId}
+	</select>
+	
+	<select id="selectTemplateList" resultType="template">
+		select TPL_NAME as templateName	
+				,TEMPLATE_ID as templateId
+    	from TEMPLATE
+	</select>
+	
+	<select id="selectTemplateListCheck" parameterType="str" resultType="template">
+		select TPL_NAME as templateName		
+    	from TEMPLATE
+    	where TPL_NAME = #{templateName}
+	</select>
+	
+	<insert id="insertTemplate" parameterType="template">
+		insert into TEMPLATE(TEMPLATE_ID, TPL_NAME,TPL_CONTENT,TPL_TITLE)
+		values (TEMPLATE_SEQ.nextval, #{templateName}, #{templateContent}, #{templateTitle})
+	</insert>
+	
+	<delete id="deleteTemplate" parameterType="str">
+		delete from TEMPLATE
+		where TEMPLATE_ID = #{templateId}
+	</delete>
+	
+	<update id="updateTemplate" parameterType="template">
+		update TEMPLATE 
+		set TPL_NAME = #{templateName}
+			,TPL_CONTENT = #{templateContent}
+			,TPL_TITLE = #{templateTitle}
+		where TEMPLATE_ID = #{templateId}	
+	</update>
+	
+</mapper>

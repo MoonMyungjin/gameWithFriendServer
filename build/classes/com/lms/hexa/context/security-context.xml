@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<beans:bean id="customAuthenticationProvider" 
+				class="com.lms.hexa.security.CustomAuthenticationProvider"
+				p:userService-ref="loginUserService"
+	/>
+	<beans:bean id="managerLoginSuccessHandler"
+			 	class="com.lms.hexa.security.ManagerLoginSuccessHandler"
+			 	p:defaultTargetUrl="/manager/index.do"
+	/>
+	
+	<beans:bean id="parentLoginSuccessHandler"
+			 	class="com.lms.hexa.security.ParentLoginSuccessHandler"
+			 	p:defaultTargetUrl="/parent/index.do"
+	/>
+	
+	<beans:bean id="studentLoginSuccessHandler"
+			 	class="com.lms.hexa.security.StudentLoginSuccessHandler"
+			 	p:defaultTargetUrl="/member/index.do"
+	/>
+	<beans:bean id="studentLoginSuccessHandler2"
+			 	class="com.lms.hexa.security.StudentLoginSuccessHandler2"
+			 	p:defaultTargetUrl="/member/index.do"
+	/>
+	<beans:bean id="loginFailureHandler"
+	            class="com.lms.hexa.security.LoginFailureHandler"
+	            />	            
+	<beans:bean id="sessionRegistry" 
+ 			class="org.springframework.security.core.session.SessionRegistryImpl"
+ 	/>
+ 	
+ 	<!-- 인증 -->
+	<authentication-manager>
+		<authentication-provider ref="customAuthenticationProvider"></authentication-provider>
+	</authentication-manager>
+	
+	<!-- 인허가 -->
+	<http pattern="/resources/**" security="none" />
+	
+	<http use-expressions="true" pattern="/manager/**">
+		
+		<intercept-url pattern="/manager/index.do" access="isAuthenticated()"/>
+		
+		<form-login login-page="/common/loginForm.do?error=1"
+					login-processing-url="/manager/login.do"
+					username-parameter="id"
+					password-parameter="pw"
+					authentication-success-handler-ref="managerLoginSuccessHandler"
+					authentication-failure-handler-ref="loginFailureHandler"
+		/>
+		<logout logout-url="/common/logout.do"	
+				logout-success-url="/"
+				invalidate-session="true"
+				delete-cookies="JSESSIONID"
+		/>
+				
+		<session-management invalid-session-url="/common/loginTimeOut" >
+			<concurrency-control					
+				expired-url="/common/loginExpired"
+				max-sessions="30"
+				session-registry-ref="sessionRegistry"
+			/>		
+		</session-management>
+		
+	</http>
+	
+	<http use-expressions="true" pattern="/member/**">
+	
+		<intercept-url pattern="/member/index.do" access="isAuthenticated()"/>
+			
+		<form-login login-page="/common/loginForm.do?error=1"
+					login-processing-url="/member/login.do"
+					username-parameter="id"
+					password-parameter="pw"
+					authentication-success-handler-ref="studentLoginSuccessHandler"
+					authentication-failure-handler-ref="loginFailureHandler"
+		/>
+		
+		<logout logout-url="/common/logout.do"	
+				logout-success-url="/"
+				invalidate-session="true"
+				delete-cookies="JSESSIONID"
+		/>
+				
+		<session-management invalid-session-url="/common/loginTimeOut" >
+			<concurrency-control					
+				expired-url="/common/loginExpired"
+				max-sessions="30"
+				session-registry-ref="sessionRegistry"
+			/>		
+		</session-management>
+	</http>
+	
+	<http use-expressions="true" pattern="/memberq/**">
+	
+		<intercept-url pattern="/member/index.do" access="isAuthenticated()"/>
+			
+		<form-login login-page="/common/loginForm.do?error=1"
+					login-processing-url="/memberq/loginq.do"
+					username-parameter="id"
+					password-parameter="pw"
+					authentication-success-handler-ref="studentLoginSuccessHandler2"
+					authentication-failure-handler-ref="loginFailureHandler"
+		/>
+		
+		<logout logout-url="/common/logout.do"	
+				logout-success-url="/"
+				invalidate-session="true"
+				delete-cookies="JSESSIONID"
+		/>
+				
+		<session-management invalid-session-url="/common/loginTimeOut" >
+			<concurrency-control					
+				expired-url="/common/loginExpired"
+				max-sessions="30"
+				session-registry-ref="sessionRegistry"
+			/>		
+		</session-management>
+	</http>
+	
+	
+	<http use-expressions="true" pattern="/parent/**">
+	
+		<intercept-url pattern="/parent/index.do" access="isAuthenticated()"/>
+			
+		<form-login login-page="/common/loginForm.do?error=1"
+					login-processing-url="/parent/login.do"
+					username-parameter="id"
+					password-parameter="pw"
+					authentication-success-handler-ref="parentLoginSuccessHandler"
+					authentication-failure-handler-ref="loginFailureHandler"
+		/>
+		<logout logout-url="/common/logout.do"	
+				logout-success-url="/"
+				invalidate-session="true"
+				delete-cookies="JSESSIONID"
+		/>
+				
+		<session-management invalid-session-url="/common/loginTimeOut" >
+			<concurrency-control					
+				expired-url="/common/loginExpired"
+				max-sessions="30"
+				session-registry-ref="sessionRegistry"
+			/>		
+		</session-management>
+	</http>
+
+</beans:beans>
