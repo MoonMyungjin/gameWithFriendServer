@@ -38,6 +38,11 @@
 	</bean>	
 		
 	<!-- Repository -->
+	
+	<bean id="testDAO" class="test.dao.TestDAOImpl" 
+		p:session-ref="sqlSession"
+	/>
+	
 	<bean id="menuDAO" class="com.lms.hexa.dao.MenuDAOImpl" 
 		p:session-ref="sqlSession"
 	/>
@@ -167,6 +172,15 @@
 	
 	 
 	<!-- Service -->
+		<bean id="testService" class="test.service.TestServiceImpl"
+		p:testDAO-ref="testDAO"
+	 />
+	
+	
+	
+	
+	
+	
 	
 	<bean id="templateService" class="com.lms.hexa.service.TemplateServiceImpl" 
 		p:templateDAO-ref="templateDAO"

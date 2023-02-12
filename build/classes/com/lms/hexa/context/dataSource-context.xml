@@ -8,10 +8,10 @@
 	
 	<bean id="dataSource" 
 		  class="org.apache.commons.dbcp2.BasicDataSource"		  
-		  p:driverClassName="oracle.jdbc.driver.OracleDriver"
-		  p:url="jdbc:oracle:thin:@112.220.114.130:1521:XE"
-		  p:username="team1_202110F"
-		  p:password="java"
+		  p:driverClassName="org.mariadb.jdbc.Driver"
+		  p:url="jdbc:mariadb://43.200.177.240:3306/test"
+		  p:username="root"
+		  p:password="gamewithfriend"
 		  p:maxIdle="10"
 	      p:maxTotal="10"
 	/>
@@ -49,10 +49,15 @@
 		</property>
 	</bean>
 	
+<!-- 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" -->
+<!-- 		  p:dataSource-ref="dataSourceSpied" -->
+<!-- 		  p:configLocation="classpath:com/lms/hexa/mybatis/config/sqlConfig.xml" -->
+<!-- 		  p:mapperLocations="classpath:com/lms/hexa/mybatis/mappers/*-Mapper.xml" -->
+<!-- 	/>	 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
 		  p:dataSource-ref="dataSourceSpied"
 		  p:configLocation="classpath:com/lms/hexa/mybatis/config/sqlConfig.xml"
-		  p:mapperLocations="classpath:com/lms/hexa/mybatis/mappers/*-Mapper.xml"
+		  p:mapperLocations="classpath:*/dao/*-Mapper.xml"
 	/>	
 	<bean id="sqlSessionFactory2" class="org.mybatis.spring.SqlSessionFactoryBean"
 		  p:dataSource-ref="dataSourceSpied2"
@@ -63,6 +68,9 @@
 	
 	
 	
+<!-- 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" -->
+<!-- 		  c:sqlSessionFactory-ref="sqlSessionFactory" -->
+<!-- 		  /> -->
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate"
 		  c:sqlSessionFactory-ref="sqlSessionFactory"
 		  />
