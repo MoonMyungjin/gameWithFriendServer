@@ -30,7 +30,7 @@
 	</beans:bean>
 	
 	<context:component-scan base-package="test" />
-	
+	<context:component-scan base-package="gameMatching" />
 
  	<beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
       <beans:property name="order" value="0"/>

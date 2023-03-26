@@ -39,37 +39,21 @@
 		
 	<!-- Repository -->
 	
-<!-- 	<bean id="jobTask" class="com.lms.hexa.scheduler.TestScheduler"
-		p:managerAttandanceService-ref="managerAttandanceService"
-		p:subjectAttendanceService-ref="subjectAttendanceService"
-		p:execFileRunTime-ref="execFileRunTime"
-		p:lessonService-ref="lessonService"
-
-		/>
+	<!-- Scheduler -->
+<!-- 	<bean id="jobTask" class="gameMatching.scheduler.Scheduler"/>
 		
-		<task:scheduler id="printScheduler"/>
-		
-		<task:scheduled-tasks scheduler="printScheduler">
-			<task:scheduled ref="jobTask" 
-							method="testMessage"
-							cron= "0 10 09 * * *  "
-							/>
-			<task:scheduled ref="jobTask" 
-							method="insertSubjectAtt"
-							cron= "0 53 00 * * *  "
-							/>
+	<task:scheduler id="printScheduler"/>
+	
+	<task:scheduled-tasks scheduler="printScheduler">
+		<task:scheduled ref="jobTask" 
+						method="inserUserGameInfoScheduler"
+						cron= "0 47 14 * * *"
+						/>
+	
 
-			<task:scheduled ref="jobTask" 
-							method="pythonscraping"
-							cron= "0 04 20 * * *  "
-							/>
-
-			<task:scheduled ref="jobTask" 
-							method="updateLessonState"
-							cron= "0 30 10 * * *  "
-							/>
-
-		</task:scheduled-tasks>	 -->
+	</task:scheduled-tasks> -->
+	
+	<!-- Interceptor -->	 
 <!-- 	<bean id="commonInterceptor" class="com.lms.hexa.interceptor.CommonInterceptor"
 		p:academyHomepageUseService-ref="academyHomepageUseService"
 		p:menuService-ref="menuService"
