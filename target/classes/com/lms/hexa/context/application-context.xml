@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="imgPath" class="java.lang.String">
+		<constructor-arg value="${summernote.img}" />      
+	</bean>
+
+	<bean id="picturePath" class="java.lang.String">
+		<constructor-arg value="${manager.picture.upload}" />      
+	</bean>
+
+	<bean id="fileUploadPath" class="java.lang.String">
+		<constructor-arg value="${pds.upload}"/>
+	</bean>
+		
+	<!-- student.picture -->
+	<bean id="studentPicturePath" class="java.lang.String">
+		<constructor-arg value="${student.picture.upload}" />
+	</bean>	
+	
+	<!-- manager.picture -->
+	<bean id="managerPicturePath" class="java.lang.String">
+		<constructor-arg value="${manager.picture.upload}" />
+	</bean>
+	
+	<!-- homework.upload -->	
+	<bean id="homeworkUploadPath" class="java.lang.String">
+		<constructor-arg value="${homework.upload}" />
+	</bean>	
+	
+	<bean id="scoreUploadPath" class="java.lang.String">
+		<constructor-arg value="${score.upload}" />
+	</bean>	
+		
+	<!-- Repository -->
+	
+	<!-- Scheduler -->
+<!-- 	<bean id="jobTask" class="gameMatching.scheduler.Scheduler"/>
+		
+	<task:scheduler id="printScheduler"/>
+	
+	<task:scheduled-tasks scheduler="printScheduler">
+		<task:scheduled ref="jobTask" 
+						method="inserUserGameInfoScheduler"
+						cron= "0 47 14 * * *"
+						/>
+	
+
+	</task:scheduled-tasks> -->
+	
+	<!-- Interceptor -->	 
+<!-- 	<bean id="commonInterceptor" class="com.lms.hexa.interceptor.CommonInterceptor"
+		p:academyHomepageUseService-ref="academyHomepageUseService"
+		p:menuService-ref="menuService"
+	/> -->
+
+</beans>
