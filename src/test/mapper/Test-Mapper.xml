@@ -19,7 +19,9 @@
 <!-- 	</resultMap> -->
 	
 	<select id="selectTest" resultType="test.vo.UserVO">
-		SELECT *
+		SELECT U_INTG_ID AS id
+		,U_PASS AS pw
+		,U_NAME AS name
 		  FROM USER
 	</select>
 	
