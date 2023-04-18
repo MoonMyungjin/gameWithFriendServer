@@ -4,7 +4,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="test.mapper">
+<mapper namespace="gameMatching.mapper">
 	
 <!-- 	<resultMap type="academyinfo" id="academyinfoMap"> -->
 <!-- 		<result property="id" column="id"/> -->
@@ -18,11 +18,12 @@
 <!-- 		<result property="acaIpoCopy" column="ACA_IPO_COPY"/> -->
 <!-- 	</resultMap> -->
 	
-	<select id="selectTest" resultType="test.vo.UserVO">
-		SELECT U_INTG_ID AS id
-		,U_PASS AS pw
-		,U_NAME AS name
-		  FROM USER
+	<select id="selectChampion" resultType="gameMatching.vo.GameVO">
+		SELECT 
+				CH_INDEX AS chIndex,
+				CH_NAME AS  chName,
+				CH_NAME_K AS chNameK
+		FROM CHAMPION
 	</select>
 	
 </mapper>

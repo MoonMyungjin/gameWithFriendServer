@@ -29,6 +29,8 @@ import com.datastax.oss.driver.api.core.cql.Row;
 
 import gameMatching.cassandra.CassandraConnector;
 import gameMatching.cassandra.CassandraMapper;
+import gameMatching.service.GameMatchingService;
+import gameMatching.vo.GameVO;
 import gameMatching.vo.UserGameInfoVO;
 import test.service.TestService;
 import test.vo.UserVO;
@@ -38,6 +40,10 @@ public class GameMatchingController {
 	CassandraMapper cassandra = new CassandraMapper();
 	
 	UserGameInfoVO userGameInfo = new UserGameInfoVO();
+	GameVO game = new GameVO();
+	
+	@Resource(name="gameMatchingService")
+	private GameMatchingService gameMatchingService;
 	
 	@CrossOrigin("http://localhost:3000")	
 	@RequestMapping("/gameMatching/pullRiotApi")	
@@ -84,4 +90,20 @@ public class GameMatchingController {
 		
 		return entity;
 	}
+	
+	@CrossOrigin("http://localhost:3000")
+	@RequestMapping("/gameMatching/selectChampion")
+	public ResponseEntity<Map<String,Object>> selectChampion(
+		HttpServletRequest req,HttpMethod httpMethod) throws Exception{
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		
+		List<GameVO> gameVO = gameMatchingService.selectChampion();
+		dataMap.put("gameVO", gameVO);
+		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
+		
+		return entity;
+	}
+	
+	
+	
 }
