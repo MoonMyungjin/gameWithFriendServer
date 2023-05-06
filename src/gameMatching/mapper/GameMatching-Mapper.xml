@@ -26,4 +26,39 @@
 		FROM CHAMPION
 	</select>
 	
+	<select id="selectSummonerlist" resultType="gameMatching.vo.GameVO">
+		SELECT 
+				GL_SUMMONER AS glSummoner,
+				GL_SEQ AS glSeq
+		FROM GAME_LOL
+		WHERE GL_NICK IN (
+										SELECT 
+												U_NICKNAME 
+										FROM USER
+										WHERE U_NICKNAME IS NOT NULL
+						  )
+		AND GL_SUMMONER IS NOT NULL
+	</select>
+	
+	<select id="selectMostChampionlist" parameterType="java.util.List" resultType="java.lang.String">
+		SELECT CH_NAME_K FROM CHAMPION
+		WHERE CH_KEY IN 
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+        	#{item}
+    	</foreach>
+	</select>
+	
+	<update id="updateUserGameInfo" parameterType="java.util.List" >
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			<![CDATA[
+			UPDATE GAME_LOL SET
+					GL_RANK = #{item.glRank},
+					GL_CHAMPION = #{item.glChampion},
+					GL_POSITION = #{item.glPosition}
+			WHERE  GL_SEQ = #{item.glSeq}
+			]]>
+		</foreach>
+	</update>
+	
+	
 </mapper>

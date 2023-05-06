@@ -9,7 +9,7 @@
 	<bean id="dataSource" 
 		  class="org.apache.commons.dbcp2.BasicDataSource"		  
 		  p:driverClassName="org.mariadb.jdbc.Driver"
-		  p:url="jdbc:mariadb://3.37.211.126:5578/gamewithfriend"
+		  p:url="jdbc:mariadb://3.37.211.126:5578/gamewithfriend?allowMultiQueries=true"
 		  p:username="gamewithfriend"
 		  p:password="gamewithfriend"
 		  p:maxIdle="10"

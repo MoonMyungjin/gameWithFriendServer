@@ -45,6 +45,21 @@ public class GameMatchingController {
 	@Resource(name="gameMatchingService")
 	private GameMatchingService gameMatchingService;
 	
+	@CrossOrigin("http://localhost:3000")
+	@RequestMapping("/gameMatching/selectGameMatchingUser")
+	public ResponseEntity<Map<String,Object>> selectGameMatchingUser(HttpServletRequest req
+			,HttpMethod httpMethod) throws Exception{
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		
+		List<GameVO> testMethod = gameMatchingService.selectSummonerlist();
+		gameMatchingService.findSummonerData(testMethod);
+		dataMap.put("userInfo", testMethod);
+		
+		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
+		
+		return entity;
+	}
+	
 	@CrossOrigin("http://localhost:3000")	
 	@RequestMapping("/gameMatching/pullRiotApi")	
 	public UserGameInfoVO pullRiotApi() throws Exception {
