@@ -18,5 +18,7 @@ public interface GameMatchingService {
 	
 	List<GameVO> selectSummonerlist() throws SQLException;
 	
-	List<GameVO> findSummonerData(List<GameVO> summonerList) throws SQLException, ParseException, UnsupportedEncodingException, FileNotFoundException, IOException, InterruptedException;
+	void findSummonerData(List<GameVO> summonerList) throws SQLException, ParseException, UnsupportedEncodingException, FileNotFoundException, IOException, InterruptedException;
+
+	List<GameVO> selectGameMatchingUserTop3 () throws SQLException;
 }

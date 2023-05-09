@@ -43,9 +43,32 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 		return gameMatchingDAO.selectSummonerlist();
 	}
 	
+	@Override
+	public List<GameVO> selectGameMatchingUserTop3() throws SQLException {
+		List<String> selectGameOption = gameMatchingDAO.selectGameOption();
+		int optionNumber = selectGameOption.size();
+	    int tempOptionValue = 0;
+	    for(int i =1; i-1<optionNumber; i++){
+	        tempOptionValue = i+tempOptionValue;
+	    }
+	    float perOptionPlusPoint= (float)((float)100/(float)tempOptionValue);
+	    System.out.println(perOptionPlusPoint);
+	    List<Integer> gameOptionPointList = new ArrayList<>();
+	    for(int i =1; i-1<optionNumber; i++){
+	        float tempPointArrContent = perOptionPlusPoint*i;
+	        gameOptionPointList.add(i-1, (int)tempPointArrContent);
+	    }
+        for(int i =0; i<gameOptionPointList.size(); i++){
+        	System.out.println(gameOptionPointList.get(i));     
+        }
+
+		
+		return gameMatchingDAO.selectSummonerlist();
+	}
+	
 
 	@Override
-	public List<GameVO> findSummonerData(List<GameVO> summonerList) throws SQLException, ParseException, FileNotFoundException, IOException, InterruptedException {
+	public void findSummonerData(List<GameVO> summonerList) throws SQLException, ParseException, FileNotFoundException, IOException, InterruptedException {
 		System.out.println(summonerList.get(0).getGlSummoner());
 		String summonerNameUser = "";
 		ArrayList<GameVO> updateList = new ArrayList<GameVO>();
@@ -65,11 +88,16 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 			String url2 ="https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/"+lolSummonerId+"?api_key="+apiKey;
 			String jsonString2 = restTemplate.getForObject(url2, String.class);
 			JSONArray jsonObject2 = (JSONArray) jsonParser.parse(jsonString2);
-			JSONObject jsonResponse2 = (JSONObject) jsonObject2.get(0);
-			System.out.println("--------------------------data2------------------------------------------------");
-			System.out.println(jsonResponse2);
-			Object objectTier = jsonResponse2.get("tier");
-			String lolTier = String.valueOf(objectTier);
+			System.out.println("--------------------------테스트하는부분-------------------------------------------");
+			System.out.println(jsonObject2.size());
+			String lolTier = "unRank";
+			if(jsonObject2.size() !=0) {
+				JSONObject jsonResponse2 = (JSONObject) jsonObject2.get(0);
+				System.out.println("--------------------------data2------------------------------------------------");
+				System.out.println(jsonResponse2);
+				Object objectTier = jsonResponse2.get("tier");
+				lolTier = String.valueOf(objectTier);
+			}
 			String url3 ="https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/"+lolSummonerId+"/top?api_key="+apiKey;
 			String jsonString3 = restTemplate.getForObject(url3, String.class);
 			JSONArray jsonObject3 = (JSONArray) jsonParser.parse(jsonString3);
@@ -114,29 +142,45 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 			for (int i = 0; i < jsonObject4.size(); i++) {
 				objectTemp = jsonObject4.get(i);
 				matchIdTemp = String.valueOf(objectTemp);
+				System.out.println(matchIdTemp);
 				urlPositionTempUrl = "https://asia.api.riotgames.com/lol/match/v5/matches/"+matchIdTemp+"?api_key="+apiKey;
-				urlPositionTempObject = restTemplate.getForObject(urlPositionTempUrl, JSONObject.class);
-				Map<String, List<Map<String,String>>> urlPositionTempObject2 = (Map<String, List<Map<String,String>>>) urlPositionTempObject.get("info");
-				List<Map<String,String>> listTemp = urlPositionTempObject2.get("participants");
-				for (int t = 0; t < listTemp.size(); t++) {
-					if(t%30 ==0) {
-						Thread.sleep(1000);
-					}
-					if(listTemp.get(t).get("summonerName").equals(summonerNameUser)){
-						lineNameTemp = listTemp.get(t).get("role");
-						if(lineNameTemp.equals("TOP")) {
-							top = 1+top;
-						}else if(lineNameTemp.equals("JUNGGLE")) {
-							junggle = 1+junggle;
-						}else if(lineNameTemp.equals("MIDDLE")) {
-							mid = 1+mid;
-						}else if(lineNameTemp.equals("CARRY")) {
-							carry = 1+carry;
-						}else if(lineNameTemp.equals("SUPPORT")) {
-							support = 1+support;
+				try {
+					urlPositionTempObject = restTemplate.getForObject(urlPositionTempUrl, JSONObject.class);
+					Map<String, List<Map<String,String>>> urlPositionTempObject2 = (Map<String, List<Map<String,String>>>) urlPositionTempObject.get("info");
+					List<Map<String,String>> listTemp = urlPositionTempObject2.get("participants");
+					for (int t = 0; t < listTemp.size(); t++) {
+						if(t%30 ==0) {
+							Thread.sleep(1000);
 						}
-					}	
-				}
+						if(listTemp.get(t).get("summonerName").equals(summonerNameUser)){
+							
+							System.out.println(t);
+							System.out.println(listTemp.get(t));
+							if(listTemp.get(t).get("teamPosition") !=null) {
+								lineNameTemp = listTemp.get(t).get("teamPosition");
+							}
+							if(lineNameTemp.equals("BOTTOM")) {
+								lineNameTemp = listTemp.get(t).get("role");
+							}
+							if(lineNameTemp.equals("TOP")) {
+								top = 1+top;
+							}else if(lineNameTemp.equals("JUNGLE")) {
+								junggle = 1+junggle;
+							}else if(lineNameTemp.equals("MIDDLE")) {
+								mid = 1+mid;
+							}else if(lineNameTemp.equals("CARRY")) {
+								carry = 1+carry;
+							}else if(lineNameTemp.equals("UTILITY")) {
+								support = 1+support;
+							}else if(lineNameTemp.equals("SUPPORT")) {
+								support = 1+support;
+							}
+							System.out.println(lineNameTemp);
+						}	
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+				}			
 			}
 			System.out.println(top);
 			System.out.println(junggle);
@@ -159,7 +203,11 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 			    }
 			}
 			if(maxIndex == 0) {
-				lineNameTemp = "TOP";
+				if(max ==0) {
+					lineNameTemp = "측정불가";
+				}else {
+					lineNameTemp = "TOP";
+				}
 			}else if(maxIndex == 1) {
 				lineNameTemp = "JUNGGLE";
 			}else if(maxIndex == 2) {
@@ -183,7 +231,6 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 		}
 		gameMatchingDAO.updateUserGameInfo(updateList);
 		
-		return gameMatchingDAO.selectSummonerlist();
 		
 	}
 

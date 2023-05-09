@@ -34,6 +34,10 @@ public class GameMatchingDAO {
 	public void updateUserGameInfo(List<GameVO> list) throws SQLException {
 		session.update("gameMatching.mapper.updateUserGameInfo", list);
 	}
+	
+	public List<String> selectGameOption() throws SQLException {
+		return session.selectList("gameMatching.mapper.selectGameOption");
+	}
 
 
 }

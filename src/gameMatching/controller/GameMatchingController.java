@@ -45,6 +45,19 @@ public class GameMatchingController {
 	@Resource(name="gameMatchingService")
 	private GameMatchingService gameMatchingService;
 	
+	@RequestMapping("/gameMatching/selectGameMatchingUserTop3")
+	public ResponseEntity<Map<String,Object>> selectGameMatchingUserTop3(HttpServletRequest req
+			,HttpMethod httpMethod) throws Exception{
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		
+		List<GameVO> testMethod = gameMatchingService.selectGameMatchingUserTop3();
+		dataMap.put("userInfo", testMethod);
+		
+		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
+		
+		return entity;
+	}
+	
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping("/gameMatching/selectGameMatchingUser")
 	public ResponseEntity<Map<String,Object>> selectGameMatchingUser(HttpServletRequest req

@@ -31,13 +31,15 @@
 				GL_SUMMONER AS glSummoner,
 				GL_SEQ AS glSeq
 		FROM GAME_LOL
-		WHERE GL_NICK IN (
+		WHERE 
+		<!-- GL_NICK IN (
 										SELECT 
 												U_NICKNAME 
 										FROM USER
 										WHERE U_NICKNAME IS NOT NULL
 						  )
-		AND GL_SUMMONER IS NOT NULL
+		AND  -->
+		GL_SUMMONER IS NOT NULL
 	</select>
 	
 	<select id="selectMostChampionlist" parameterType="java.util.List" resultType="java.lang.String">
@@ -60,5 +62,11 @@
 		</foreach>
 	</update>
 	
+	<select id="selectGameOption" resultType="java.lang.String">
+			SELECT 
+			CD_DTL_NAME AS cdDtlName
+			FROM CODE_DTL
+			WHERE CD_DTL_PARENT_ID = '101'
+	</select>
 	
 </mapper>
