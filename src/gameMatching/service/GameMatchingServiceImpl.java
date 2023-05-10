@@ -8,6 +8,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +23,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.datastax.oss.driver.shaded.guava.common.collect.Comparators;
 import com.fasterxml.jackson.databind.JsonSerializer;
 
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
@@ -45,59 +48,113 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 	
 	@Override
 	public List<GameVO> selectGameMatchingUserTop3() throws SQLException {
+		/* 100점 기준 옵션 갯수에 따른 옵션마다 차등 점수 배분 시작 */
+		
 		List<String> selectGameOption = gameMatchingDAO.selectGameOption();
-		int optionNumber = selectGameOption.size();
+		
+		List<String> userSelectOptionList = new ArrayList<>();
+		
+		userSelectOptionList.add("rank");
+        userSelectOptionList.add("position");
+        userSelectOptionList.add("time");
+        userSelectOptionList.add("champion");
+        
+		int optionNumber = userSelectOptionList.size();
 	    int tempOptionValue = 0;
 	    for(int i =1; i-1<optionNumber; i++){
 	        tempOptionValue = i+tempOptionValue;
 	    }
 	    float perOptionPlusPoint= (float)((float)100/(float)tempOptionValue);
-	    System.out.println(perOptionPlusPoint);
 	    List<Integer> gameOptionPointList = new ArrayList<>();
 	    for(int i =1; i-1<optionNumber; i++){
 	        float tempPointArrContent = perOptionPlusPoint*i;
 	        gameOptionPointList.add(i-1, (int)tempPointArrContent);
 	    }
-        for(int i =0; i<gameOptionPointList.size(); i++){
-        	System.out.println(gameOptionPointList.get(i));     
+        gameOptionPointList.sort(Comparator.reverseOrder());
+        /* 100점 기준 옵션 갯수에 따른 옵션마다 차등 점수 배분 끝*/
+        
+        /* 각 옵션에 따른 매칭 포인트 부여 부분*/
+        String iRankChoice = "SILVER";
+        String iPositionChoice = "TOP";
+        String iTimeChoice = "평일";
+        String iChampionChoice = "리븐";
+        
+        List<GameVO> selectUserList = gameMatchingDAO.selectUserlist();
+        for(int i=0; i<userSelectOptionList.size(); i++) {
+        	if(userSelectOptionList.get(i).equals("rank")) {
+	    		int optionSelectNumber =i;
+	    	    int optionSelectNumberPoint =gameOptionPointList.get(optionSelectNumber);
+	    	    selectUserList = optionRankPointGet(optionSelectNumber,optionSelectNumberPoint,selectUserList,iRankChoice);
+        	}else if(userSelectOptionList.get(i).equals("position")) {
+        		int optionSelectNumber =i;
+       	     	int optionSelectNumberPoint =gameOptionPointList.get(optionSelectNumber);
+       	     	selectUserList = optionPositionPointGet(optionSelectNumber, optionSelectNumberPoint, selectUserList, iPositionChoice);
+        	}else if(userSelectOptionList.get(i).equals("champion")) {
+        		int optionSelectNumber =i;
+       	     	int optionSelectNumberPoint =gameOptionPointList.get(optionSelectNumber);
+       	     	selectUserList = optionChampionPointGet(optionSelectNumber, optionSelectNumberPoint, selectUserList, iChampionChoice);
+        	}else if(userSelectOptionList.get(i).equals("time")) {
+        		int optionSelectNumber =i;
+       	     	int optionSelectNumberPoint =gameOptionPointList.get(optionSelectNumber);
+       	     	selectUserList = optionTimePointGet(optionSelectNumber, optionSelectNumberPoint, selectUserList, iTimeChoice);
+        	}
+        	
+        	
         }
-
-		
-		return gameMatchingDAO.selectSummonerlist();
+        for(int i=0; i<selectUserList.size(); i++) {
+        	float postionScore = selectUserList.get(i).getPostionScore();
+        	float championScore = selectUserList.get(i).getChampionScore();
+        	float timeScore = selectUserList.get(i).getTimeScore();
+        	float rankScore = selectUserList.get(i).getRankScore();
+        	float matchingScore = postionScore + championScore + timeScore + rankScore;
+        	selectUserList.get(i).setMatchingScore(matchingScore);
+        	System.out.println(selectUserList.get(i).getGlSummoner());
+        	System.out.println("포지션"+postionScore);
+        	System.out.println("랭크"+rankScore);
+        	System.out.println("시간"+timeScore);
+        	System.out.println("챔프"+championScore);
+        	System.out.println("종합"+matchingScore);
+        }
+        
+        
+       
+		return selectUserList;
 	}
 	
 
 	@Override
 	public void findSummonerData(List<GameVO> summonerList) throws SQLException, ParseException, FileNotFoundException, IOException, InterruptedException {
+		
 		System.out.println(summonerList.get(0).getGlSummoner());
 		String summonerNameUser = "";
+		JSONParser jsonParser = new JSONParser();
+		RestTemplate restTemplate = new RestTemplate();
 		ArrayList<GameVO> updateList = new ArrayList<GameVO>();
-		for (int j = 0; j < summonerList.size(); j++) {
+		String apiKey = "RGAPI-bf3aae46-e466-4d08-a414-27304f984e77";
+		for (int j = 39; j < summonerList.size(); j++) {/* 인증한 유저리스트만큼 돌리기*/
 			summonerNameUser = summonerList.get(j).getGlSummoner();
-			RestTemplate restTemplate = new RestTemplate();
-			String apiKey = "RGAPI-8fa2fc9e-2745-4290-94fe-068f86d86ede";
+			
+			/* --------------------------서머너 아이디 얻기 시작--------------------------*/
 			String url = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+summonerNameUser+"?api_key="+apiKey;
 			String jsonString = restTemplate.getForObject(url, String.class);
-			System.out.println(jsonString);
-			JSONParser jsonParser = new JSONParser();
 			JSONObject jsonObject = (JSONObject) jsonParser.parse(jsonString);
-			System.out.println("--------------------------data1------------------------------------------------");
-			System.out.println(jsonObject);
 			Object object = jsonObject.get("id");
 			String lolSummonerId = String.valueOf(object);
+			/* --------------------------서머너 아이디 얻기 끝--------------------------*/
+			
+			/* --------------------------티어 얻기 시작--------------------------*/
 			String url2 ="https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/"+lolSummonerId+"?api_key="+apiKey;
 			String jsonString2 = restTemplate.getForObject(url2, String.class);
 			JSONArray jsonObject2 = (JSONArray) jsonParser.parse(jsonString2);
-			System.out.println("--------------------------테스트하는부분-------------------------------------------");
-			System.out.println(jsonObject2.size());
 			String lolTier = "unRank";
 			if(jsonObject2.size() !=0) {
 				JSONObject jsonResponse2 = (JSONObject) jsonObject2.get(0);
-				System.out.println("--------------------------data2------------------------------------------------");
-				System.out.println(jsonResponse2);
 				Object objectTier = jsonResponse2.get("tier");
 				lolTier = String.valueOf(objectTier);
 			}
+			/* --------------------------티어 얻기 끝--------------------------*/
+			
+			/* --------------------------챔피언 Top3  얻기 시작--------------------------*/
 			String url3 ="https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/"+lolSummonerId+"/top?api_key="+apiKey;
 			String jsonString3 = restTemplate.getForObject(url3, String.class);
 			JSONArray jsonObject3 = (JSONArray) jsonParser.parse(jsonString3);
@@ -114,22 +171,21 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 			champList.add(lolChampionId1);
 			champList.add(lolChampionId2);
 			champList.add(lolChampionId3);
-			System.out.println(champList);
 			List<String> selectMostChampionlist = gameMatchingDAO.selectMostChampionlist(champList);
 			String champName1 = selectMostChampionlist.get(0);
 			String champName2 = selectMostChampionlist.get(1);
 			String champName3 = selectMostChampionlist.get(2);
 			String champNameTop3 = champName1+"@"+champName2+"@"+champName3;
+			/* --------------------------챔피언 Top3  얻기 끝 --------------------------*/
+			
+			/* --------------------------포지션 분류하기  시작 --------------------------*/
 			Object puuid = jsonObject.get("puuid");
 			String lolPuuid = String.valueOf(puuid);
 			String url4 ="https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/"+lolPuuid+"/ids?start=0&count=100&api_key="+apiKey;
 			String jsonString4 = restTemplate.getForObject(url4, String.class);
 			JSONArray jsonObject4 = (JSONArray) jsonParser.parse(jsonString4);
-			System.out.println("--------------------------data4------------------------------------------------");
-			System.out.println(jsonObject4.size());
 			Object objectTemp = new Object();
 			String matchIdTemp = "";
-			ArrayList<String> arrayList = new ArrayList<>();
 			String urlPositionTempUrl = "";
 			JSONObject urlPositionTempObject = new JSONObject();
 			String lineNameTemp = "";
@@ -182,6 +238,7 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 					// TODO: handle exception
 				}			
 			}
+
 			System.out.println(top);
 			System.out.println(junggle);
 			System.out.println(mid);
@@ -217,6 +274,8 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 			}else if(maxIndex == 4) {
 				lineNameTemp = "SUPPORT";
 			}
+			/* --------------------------포지션 분류하기 끝 --------------------------*/
+			
 			System.out.println("-----------------------Find-----------------------");
 			System.out.println("랭크 티어");
 			System.out.println(lolTier);
@@ -232,6 +291,82 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 		gameMatchingDAO.updateUserGameInfo(updateList);
 		
 		
+	}
+
+	@Override
+	public List<GameVO> optionRankPointGet(int optionSelectNumber,int optionSelectNumberPoint,List<GameVO> selectUserList,String iRankChoice) throws SQLException {
+	 	List<String> selectRankList = gameMatchingDAO.selectRankList();
+	 	
+        for(int j=0; j<selectUserList.size(); j++) {
+        	
+            String userRank =selectUserList.get(j).getGlRank();
+            int indexGap =0;
+            int iChoiceIndex=0;
+            int userChoiceIndex=0;
+            for(int i =0; i<selectRankList.size(); i++){
+            	if(selectRankList.get(i).equals(iRankChoice)) {
+            		iChoiceIndex=i;
+            	}
+            	if(selectRankList.get(i).equals(userRank)) {
+            		userChoiceIndex=i;
+            	}  
+            }
+            if(userChoiceIndex>iChoiceIndex) {
+            	indexGap =userChoiceIndex-iChoiceIndex;
+        	}else if(userChoiceIndex<iChoiceIndex) {
+        		indexGap =iChoiceIndex-userChoiceIndex;
+        	}
+            float optionPoint =((float)optionSelectNumberPoint/(float)selectRankList.size());
+            float userPoint =(float)optionSelectNumberPoint-((float)indexGap*(float)optionPoint);
+            selectUserList.get(j).setRankScore(userPoint);
+        }
+	 	
+        
+        
+		return selectUserList;
+	}
+
+	
+	@Override
+	public List<GameVO> optionPositionPointGet(int optionSelectNumber,int optionSelectNumberPoint,List<GameVO> selectUserList, String iPositionChoice) throws SQLException {
+
+		for(int j=0; j<selectUserList.size(); j++) {
+			String userRank =selectUserList.get(j).getGlPosition();
+			if(userRank.equals(iPositionChoice)) {
+				selectUserList.get(j).setPostionScore(optionSelectNumberPoint);
+			}else {
+				selectUserList.get(j).setPostionScore(0);
+			}
+		}
+		return selectUserList;
+	}
+	
+	@Override
+	public List<GameVO> optionTimePointGet(int optionSelectNumber,int optionSelectNumberPoint,List<GameVO> selectUserList, String iTimeChoice) throws SQLException {
+		for(int j=0; j<selectUserList.size(); j++) {
+			String userTime =selectUserList.get(j).getGlTime();
+			if(userTime.equals(iTimeChoice)) {
+				selectUserList.get(j).setTimeScore(optionSelectNumberPoint);
+			}else {
+				selectUserList.get(j).setTimeScore(0);
+			}
+		}
+		return selectUserList;
+	}
+	@Override
+	public List<GameVO> optionChampionPointGet(int optionSelectNumber,int optionSelectNumberPoint,List<GameVO> selectUserList, String iChampionChoice) throws SQLException {
+		for(int j=0; j<selectUserList.size(); j++) {
+			String userCmapion =selectUserList.get(j).getGlChampion();
+			String[] split = userCmapion.split("@");
+			float ChampionScore =0;
+			for(int i=0; i<split.length; i++) {
+				if(split[i].equals(iChampionChoice)) {	
+					ChampionScore = (float) optionSelectNumberPoint-(((float)optionSelectNumberPoint/(float)split.length)*(float)(i)); 
+				}
+			}
+			selectUserList.get(j).setChampionScore(ChampionScore);
+		}
+		return selectUserList;
 	}
 
 }

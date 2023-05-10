@@ -38,6 +38,20 @@ public class GameMatchingDAO {
 	public List<String> selectGameOption() throws SQLException {
 		return session.selectList("gameMatching.mapper.selectGameOption");
 	}
-
-
+	
+	public List<String> selectRankList() throws SQLException {
+		return session.selectList("gameMatching.mapper.selectRankList");
+	}
+	
+	public List<String> selectPositionList() throws SQLException {
+		return session.selectList("gameMatching.mapper.selectPositionList");
+	}
+	
+	public List<String> selectTimeList() throws SQLException {
+		return session.selectList("gameMatching.mapper.selectTimeList");
+	}
+	
+	public List<GameVO> selectUserlist() throws SQLException {
+		return session.selectList("gameMatching.mapper.selectUserlist");
+	}
 }

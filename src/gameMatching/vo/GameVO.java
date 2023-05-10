@@ -11,8 +11,43 @@ public class GameVO {
 	private String glChampion;
 	private String glPosition;
 	private String glTime;
+	private float matchingScore;
+	private float rankScore;
+	private float timeScore;
+	private float postionScore;
+	private float championScore;
 	
 	
+	public float getMatchingScore() {
+		return matchingScore;
+	}
+	public void setMatchingScore(float matchingScore) {
+		this.matchingScore = matchingScore;
+	}
+	public float getRankScore() {
+		return rankScore;
+	}
+	public void setRankScore(float rankScore) {
+		this.rankScore = rankScore;
+	}
+	public float getTimeScore() {
+		return timeScore;
+	}
+	public void setTimeScore(float timeScore) {
+		this.timeScore = timeScore;
+	}
+	public float getPostionScore() {
+		return postionScore;
+	}
+	public void setPostionScore(float postionScore) {
+		this.postionScore = postionScore;
+	}
+	public float getChampionScore() {
+		return championScore;
+	}
+	public void setChampionScore(float championScore) {
+		this.championScore = championScore;
+	}
 	public String getGlRank() {
 		return glRank;
 	}

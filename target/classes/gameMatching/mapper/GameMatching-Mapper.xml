@@ -69,4 +69,31 @@
 			WHERE CD_DTL_PARENT_ID = '101'
 	</select>
 	
+	<select id="selectUserlist" resultType="gameMatching.vo.GameVO">
+			SELECT GL_SUMMONER as glSummoner,
+					GL_RANK as glRank,
+					GL_CHAMPION as glChampion,
+					GL_POSITION as glPosition,
+					GL_TIME as glTime
+			FROM GAME_LOL
+	</select>
+	
+	<select id="selectRankList" resultType="java.lang.String">
+			SELECT CD_DTL_NAME
+			FROM CODE_DTL
+			WHERE CD_DTL_PARENT_ID ='102'
+	</select>
+	
+	<select id="selectPositionList" resultType="java.lang.String">
+			SELECT CD_DTL_NAME
+			FROM CODE_DTL
+			WHERE CD_DTL_PARENT_ID ='103'
+	</select>
+	
+	<select id="selectTimeList" resultType="java.lang.String">
+			SELECT CD_DTL_NAME
+			FROM CODE_DTL
+			WHERE CD_DTL_PARENT_ID ='104'
+	</select>
+	
 </mapper>
