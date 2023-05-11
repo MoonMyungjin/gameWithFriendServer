@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,12 +46,15 @@ public class GameMatchingController {
 	@Resource(name="gameMatchingService")
 	private GameMatchingService gameMatchingService;
 	
+	@CrossOrigin("http://localhost:3000")
 	@RequestMapping("/gameMatching/selectGameMatchingUserTop3")
 	public ResponseEntity<Map<String,Object>> selectGameMatchingUserTop3(HttpServletRequest req
-			,HttpMethod httpMethod) throws Exception{
+			,HttpMethod httpMethod
+			,@RequestBody HashMap<String, Object> optionInfo) throws Exception{
 		Map<String, Object> dataMap = new HashMap<String, Object>();
-		
-		List<GameVO> testMethod = gameMatchingService.selectGameMatchingUserTop3();
+		System.out.println(optionInfo);
+		System.out.println(optionInfo.size());
+		List<GameVO> testMethod = gameMatchingService.selectGameMatchingUserTop3(optionInfo);
 		dataMap.put("userInfo", testMethod);
 		
 		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);

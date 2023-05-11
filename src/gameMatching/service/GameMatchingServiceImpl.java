@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,17 +48,26 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 	}
 	
 	@Override
-	public List<GameVO> selectGameMatchingUserTop3() throws SQLException {
+	public List<GameVO> selectGameMatchingUserTop3(HashMap<String, Object> optionInfo) throws SQLException {
 		/* 100점 기준 옵션 갯수에 따른 옵션마다 차등 점수 배분 시작 */
 		
 		List<String> selectGameOption = gameMatchingDAO.selectGameOption();
 		
 		List<String> userSelectOptionList = new ArrayList<>();
+		List<String> userSelectOptionDetailList = new ArrayList<>();
+		int userSelectOptionSize = optionInfo.size()-1;
 		
-		userSelectOptionList.add("rank");
-        userSelectOptionList.add("position");
-        userSelectOptionList.add("time");
-        userSelectOptionList.add("champion");
+		for(int i=0; i<userSelectOptionSize; i++) {
+			Object object = optionInfo.get(""+i);
+			System.out.println(object.toString());
+			if((i+1)%2 == 0) {
+				String option = optionInfo.get(""+(i-1)).toString();
+				userSelectOptionList.add(option);
+				String optionDetail = optionInfo.get(""+(i)).toString();
+				userSelectOptionDetailList.add(optionDetail);	
+			}
+			
+		}
         
 		int optionNumber = userSelectOptionList.size();
 	    int tempOptionValue = 0;
@@ -74,33 +84,40 @@ public class GameMatchingServiceImpl implements GameMatchingService {
         /* 100점 기준 옵션 갯수에 따른 옵션마다 차등 점수 배분 끝*/
         
         /* 각 옵션에 따른 매칭 포인트 부여 부분*/
-        String iRankChoice = "SILVER";
-        String iPositionChoice = "TOP";
-        String iTimeChoice = "평일";
-        String iChampionChoice = "리븐";
         
         List<GameVO> selectUserList = gameMatchingDAO.selectUserlist();
         for(int i=0; i<userSelectOptionList.size(); i++) {
         	if(userSelectOptionList.get(i).equals("rank")) {
 	    		int optionSelectNumber =i;
 	    	    int optionSelectNumberPoint =gameOptionPointList.get(optionSelectNumber);
-	    	    selectUserList = optionRankPointGet(optionSelectNumber,optionSelectNumberPoint,selectUserList,iRankChoice);
+	    	    String choice  = userSelectOptionDetailList.get(i);
+	    	    selectUserList = optionRankPointGet(optionSelectNumber,optionSelectNumberPoint,selectUserList,choice);
         	}else if(userSelectOptionList.get(i).equals("position")) {
         		int optionSelectNumber =i;
        	     	int optionSelectNumberPoint =gameOptionPointList.get(optionSelectNumber);
-       	     	selectUserList = optionPositionPointGet(optionSelectNumber, optionSelectNumberPoint, selectUserList, iPositionChoice);
+       	     	String choice  = userSelectOptionDetailList.get(i);
+       	     	selectUserList = optionPositionPointGet(optionSelectNumber, optionSelectNumberPoint, selectUserList, choice);
         	}else if(userSelectOptionList.get(i).equals("champion")) {
         		int optionSelectNumber =i;
        	     	int optionSelectNumberPoint =gameOptionPointList.get(optionSelectNumber);
-       	     	selectUserList = optionChampionPointGet(optionSelectNumber, optionSelectNumberPoint, selectUserList, iChampionChoice);
+       	     	String choice  = userSelectOptionDetailList.get(i);
+       	     	selectUserList = optionChampionPointGet(optionSelectNumber, optionSelectNumberPoint, selectUserList, choice);
         	}else if(userSelectOptionList.get(i).equals("time")) {
         		int optionSelectNumber =i;
        	     	int optionSelectNumberPoint =gameOptionPointList.get(optionSelectNumber);
-       	     	selectUserList = optionTimePointGet(optionSelectNumber, optionSelectNumberPoint, selectUserList, iTimeChoice);
+       	     	String choice  = userSelectOptionDetailList.get(i);
+       	     	selectUserList = optionTimePointGet(optionSelectNumber, optionSelectNumberPoint, selectUserList, choice);
         	}
         	
         	
         }
+        List<GameVO> top3UserList = new ArrayList<>();
+        float top1 =0;
+        int top1Index = 0;
+        float top2 =0;
+        int top2Index = 0;
+        float top3 =0;
+        int top3Index = 0;
         for(int i=0; i<selectUserList.size(); i++) {
         	float postionScore = selectUserList.get(i).getPostionScore();
         	float championScore = selectUserList.get(i).getChampionScore();
@@ -114,11 +131,23 @@ public class GameMatchingServiceImpl implements GameMatchingService {
         	System.out.println("시간"+timeScore);
         	System.out.println("챔프"+championScore);
         	System.out.println("종합"+matchingScore);
+        	
+        	if(top1<matchingScore) {
+        		top1 = matchingScore;
+        		top1Index = i;
+        	}else if(top2<matchingScore) {
+        		top2 = matchingScore;
+        		top2Index = i;
+        	}else if(top3<matchingScore) {
+        		top3 = matchingScore;
+        		top3Index = i;
+        	}
         }
         
-        
-       
-		return selectUserList;
+        top3UserList.add(selectUserList.get(top1Index));
+        top3UserList.add(selectUserList.get(top2Index));
+        top3UserList.add(selectUserList.get(top3Index));
+		return top3UserList;
 	}
 	
 
