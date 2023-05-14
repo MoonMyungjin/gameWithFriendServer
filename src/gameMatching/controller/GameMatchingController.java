@@ -136,6 +136,19 @@ public class GameMatchingController {
 		return entity;
 	}
 	
+	@CrossOrigin("http://localhost:3000")
+	@RequestMapping("/gameMatching/selectSearchChampion")
+	public ResponseEntity<Map<String,Object>> selectSearchChampion(@RequestParam(required = true) String keyWord,
+		HttpServletRequest req,HttpMethod httpMethod) throws Exception{
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		
+		List<GameVO> gameVO = gameMatchingService.selectSearchChampion(keyWord);
+		dataMap.put("gameVO", gameVO);
+		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
+		
+		return entity;
+	}
+	
 	
 	
 }

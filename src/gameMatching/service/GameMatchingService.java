@@ -17,6 +17,8 @@ public interface GameMatchingService {
 
 	List<GameVO> selectChampion() throws SQLException;
 	
+	List<GameVO> selectSearchChampion(String keyWord) throws SQLException;
+	
 	List<GameVO> selectSummonerlist() throws SQLException;
 	
 	/* findSummonerData: 인증한 유저 리스트를 받아와 테이블에 Update 한다*/

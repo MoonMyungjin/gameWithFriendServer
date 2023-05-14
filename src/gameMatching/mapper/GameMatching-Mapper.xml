@@ -26,6 +26,15 @@
 		FROM CHAMPION
 	</select>
 	
+	<select id="selectSearchChampion" parameterType="String" resultType="gameMatching.vo.GameVO">
+		SELECT 
+				CH_INDEX AS chIndex,
+				CH_NAME AS  chName,
+				CH_NAME_K AS chNameK
+		FROM CHAMPION
+		WHERE CH_NAME_K LIKE CONCAT('%',#{keyWord},'%')
+	</select>
+	
 	<select id="selectSummonerlist" resultType="gameMatching.vo.GameVO">
 		SELECT 
 				GL_SUMMONER AS glSummoner,

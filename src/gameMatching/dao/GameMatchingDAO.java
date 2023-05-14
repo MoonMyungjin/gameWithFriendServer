@@ -23,6 +23,11 @@ public class GameMatchingDAO {
 		return session.selectList("gameMatching.mapper.selectChampion");
 	}
 	
+	public List<GameVO> selectSearchChampion(String keyWord) throws SQLException {
+		return session.selectList("gameMatching.mapper.selectSearchChampion",keyWord);
+	}
+	
+	
 	public List<GameVO> selectSummonerlist() throws SQLException {
 		return session.selectList("gameMatching.mapper.selectSummonerlist");
 	}

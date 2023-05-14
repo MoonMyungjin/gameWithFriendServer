@@ -43,6 +43,11 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 	}
 	
 	@Override
+	public List<GameVO> selectSearchChampion(String keyWord) throws SQLException {
+		return gameMatchingDAO.selectSearchChampion(keyWord);
+	}
+	
+	@Override
 	public List<GameVO> selectSummonerlist() throws SQLException {
 		return gameMatchingDAO.selectSummonerlist();
 	}
@@ -326,6 +331,7 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 	public List<GameVO> optionRankPointGet(int optionSelectNumber,int optionSelectNumberPoint,List<GameVO> selectUserList,String iRankChoice) throws SQLException {
 	 	List<String> selectRankList = gameMatchingDAO.selectRankList();
 	 	
+	 	
         for(int j=0; j<selectUserList.size(); j++) {
         	
             String userRank =selectUserList.get(j).getGlRank();
@@ -358,7 +364,8 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 	
 	@Override
 	public List<GameVO> optionPositionPointGet(int optionSelectNumber,int optionSelectNumberPoint,List<GameVO> selectUserList, String iPositionChoice) throws SQLException {
-
+		
+		
 		for(int j=0; j<selectUserList.size(); j++) {
 			String userRank =selectUserList.get(j).getGlPosition();
 			if(userRank.equals(iPositionChoice)) {
