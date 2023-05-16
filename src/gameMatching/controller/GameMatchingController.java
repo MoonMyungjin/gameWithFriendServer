@@ -145,7 +145,7 @@ public class GameMatchingController {
 		List<GameVO> gameVO = gameMatchingService.selectSearchChampion(keyWord);
 		dataMap.put("gameVO", gameVO);
 		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
-		
+		System.out.println(dataMap);
 		return entity;
 	}
 	
