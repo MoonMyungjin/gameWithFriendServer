@@ -11,6 +11,6 @@ import gameMatching.vo.GameVO;
 @Repository("CodeService")
 public interface CodeService {
 
-	List<CodeVO> selectOption() throws SQLException;
+	List<CodeVO> selectCdDtlNm(CodeVO codeVO) throws SQLException;
 
 }

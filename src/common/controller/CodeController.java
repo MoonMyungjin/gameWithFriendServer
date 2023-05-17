@@ -52,9 +52,10 @@ public class CodeController {
 	public ResponseEntity<Map<String,Object>> selectOption(
 		HttpServletRequest req,HttpMethod httpMethod) throws Exception{
 		Map<String, Object> dataMap = new HashMap<String, Object>();
-		
-		List<CodeVO> codeVO = codeService.selectOption();
-		dataMap.put("codeVO", codeVO);
+		CodeVO codeVO = new CodeVO();
+		codeVO.setCdDtlParentId("101");
+		List<CodeVO> codeNmList = codeService.selectCdDtlNm(codeVO);
+		dataMap.put("codeVO", codeNmList);
 		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
 		
 		return entity;

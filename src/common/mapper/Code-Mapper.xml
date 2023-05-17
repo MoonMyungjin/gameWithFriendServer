@@ -18,10 +18,10 @@
 <!-- 		<result property="acaIpoCopy" column="ACA_IPO_COPY"/> -->
 <!-- 	</resultMap> -->
 	
-	<select id="selectOption" resultType="common.vo.CodeVO">
+	<select id="selectCdDtlNm" resultType="common.vo.CodeVO">
 		SELECT CD_DTL_NAME AS cdDtlName FROM CODE_DTL
 			WHERE 1=1 
-			AND CD_DTL_PARENT_ID = '101'
+			AND CD_DTL_PARENT_ID = #{cdDtlParentId}
 			AND CD_DTl_USE_YN = 'Y'
 	</select>
 	

@@ -19,8 +19,8 @@ public class CodeServiceImpl implements CodeService {
 	protected CodeDAO codeDAO;
 	
 	@Override
-	public List<CodeVO> selectOption() throws SQLException {
-		return codeDAO.selectOption();
+	public List<CodeVO> selectCdDtlNm(CodeVO codeVO) throws SQLException {
+		return codeDAO.selectCdDtlNm(codeVO);
 	}
 
 }
