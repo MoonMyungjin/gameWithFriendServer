@@ -11,6 +11,7 @@ public class GameVO {
 	private String glChampion;
 	private String glPosition;
 	private String glTime;
+	private String glNick;
 	private float matchingScore;
 	private float rankScore;
 	private float timeScore;
@@ -18,6 +19,12 @@ public class GameVO {
 	private float championScore;
 	
 	
+	public String getGlNick() {
+		return glNick;
+	}
+	public void setGlNick(String glNick) {
+		this.glNick = glNick;
+	}
 	public float getMatchingScore() {
 		return matchingScore;
 	}

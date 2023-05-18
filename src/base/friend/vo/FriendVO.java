@@ -4,57 +4,59 @@ import java.util.Date;
 
 public class FriendVO {
 
-	private String FMyId;
-	private String FYouId;
-	private String FStateCd;
-	private String FRegId;
-	private String FRegDate;
-	private String FModId;
-	private String FModDate;
+	private String fMyId;
+	private String fYouId;
+	private String fStateCd;
+	private String fRegId;
+	private String fRegDate;
+	private String fModId;
+	private String fModDate;
 	
 	
-	public String getFMyId() {
-		return FMyId;
+	public String getfMyId() {
+		return fMyId;
 	}
-	public void setFMyId(String fMyId) {
-		FMyId = fMyId;
+	public void setfMyId(String fMyId) {
+		this.fMyId = fMyId;
 	}
-	public String getFYouId() {
-		return FYouId;
+	public String getfYouId() {
+		return fYouId;
 	}
-	public void setFYouId(String fYouId) {
-		FYouId = fYouId;
+	public void setfYouId(String fYouId) {
+		this.fYouId = fYouId;
 	}
-	public String getFStateCd() {
-		return FStateCd;
+	public String getfStateCd() {
+		return fStateCd;
 	}
-	public void setFStateCd(String fStateCd) {
-		FStateCd = fStateCd;
+	public void setfStateCd(String fStateCd) {
+		this.fStateCd = fStateCd;
 	}
-	public String getFRegId() {
-		return FRegId;
+	public String getfRegId() {
+		return fRegId;
 	}
-	public void setFRegId(String fRegId) {
-		FRegId = fRegId;
+	public void setfRegId(String fRegId) {
+		this.fRegId = fRegId;
 	}
-	public String getFRegDate() {
-		return FRegDate;
+	public String getfRegDate() {
+		return fRegDate;
 	}
-	public void setFRegDate(String fRegDate) {
-		FRegDate = fRegDate;
+	public void setfRegDate(String fRegDate) {
+		this.fRegDate = fRegDate;
 	}
-	public String getFModId() {
-		return FModId;
+	public String getfModId() {
+		return fModId;
 	}
-	public void setFModId(String fModId) {
-		FModId = fModId;
+	public void setfModId(String fModId) {
+		this.fModId = fModId;
 	}
-	public String getFModDate() {
-		return FModDate;
+	public String getfModDate() {
+		return fModDate;
 	}
-	public void setFModDate(String fModDate) {
-		FModDate = fModDate;
+	public void setfModDate(String fModDate) {
+		this.fModDate = fModDate;
 	}
+	
+	
 	
 	
 

@@ -21,12 +21,18 @@ public class FriendServiceImpl implements FriendService {
 
 	@Override
 	public void friendAddSend(FriendVO friendVO) throws SQLException {
-		friendDAO.friendAddSend();
+		friendDAO.friendAddSend(friendVO);
 	}
 	
 	@Override
 	public void friendAddReceive(FriendVO friendVO) throws SQLException {
-		friendDAO.friendAddSend();
+		friendDAO.friendAddReceive(friendVO);
 	}
+	
+	@Override
+	public List<FriendVO> friendList(FriendVO friendVO) throws SQLException {
+		return friendDAO.selectFriendList(friendVO);
+	}
+
 
 }

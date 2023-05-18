@@ -79,11 +79,12 @@
 	</select>
 	
 	<select id="selectUserlist" resultType="gameMatching.vo.GameVO">
-			SELECT GL_SUMMONER as glSummoner,
+			SELECT 	GL_SUMMONER as glSummoner,
 					GL_RANK as glRank,
 					GL_CHAMPION as glChampion,
 					GL_POSITION as glPosition,
-					GL_TIME as glTime
+					GL_TIME as glTime,
+					GL_NICK as glNick
 			FROM GAME_LOL
 	</select>
 	

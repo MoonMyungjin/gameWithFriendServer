@@ -14,4 +14,6 @@ public interface FriendService {
 	void friendAddSend(FriendVO friendVO) throws SQLException;
 	
 	void friendAddReceive(FriendVO friendVO) throws SQLException;
+	
+	List<FriendVO> friendList(FriendVO friendVO) throws SQLException;
 }

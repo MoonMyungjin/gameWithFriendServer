@@ -9,6 +9,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import base.admin.vo.UserVO;
+import base.friend.vo.FriendVO;
 
 @Repository("FriendDAO")
 public class FriendDAO {
@@ -17,12 +18,16 @@ public class FriendDAO {
 	private SqlSession session;
 	
 	
-	public void friendAddSend() throws SQLException {
-		session.update("base.friend.mapper.friendAddSend");
+	public void friendAddSend(FriendVO friendVO) throws SQLException {
+		session.update("base.friend.mapper.friendAddSend",friendVO);
 	}
 	
-	public void friendAddReceive() throws SQLException {
-		session.update("base.friend.mapper.friendAddReceive");
+	public void friendAddReceive(FriendVO friendVO) throws SQLException {
+		session.update("base.friend.mapper.friendAddReceive",friendVO);
+	}
+	
+	public List<FriendVO> selectFriendList(FriendVO friendVO) throws SQLException {
+		return session.selectList("base.friend.mapper.selectFriendList", friendVO);
 	}
 
 }
