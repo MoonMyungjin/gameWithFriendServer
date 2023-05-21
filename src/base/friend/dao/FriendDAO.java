@@ -26,8 +26,13 @@ public class FriendDAO {
 		session.update("base.friend.mapper.friendAddReceive",friendVO);
 	}
 	
-	public List<FriendVO> selectFriendList(FriendVO friendVO) throws SQLException {
-		return session.selectList("base.friend.mapper.selectFriendList", friendVO);
+	public List<FriendVO> selectFriendList(String myNick) throws SQLException {
+		return session.selectList("base.friend.mapper.selectFriendList", myNick);
 	}
+	
 
+	public int selectFriendNum(String myNick) throws SQLException {
+		return session.selectOne("base.friend.mapper.selectFriendNum", myNick);
+	}
+	
 }

@@ -48,11 +48,11 @@ public class FriendController {
 	@RequestMapping(value = "/friend/findFriendList.do", method = RequestMethod.GET)
 	public ResponseEntity<Map<String,Object>> test(@RequestParam(required = true) String myNick,HttpServletRequest req
 			,HttpMethod httpMethod) throws Exception{
-		Map<String, Object> dataMap = new HashMap<String, Object>();
-		FriendVO friendVO = new FriendVO();
-		List<FriendVO> friendList = friendService.friendList(friendVO);
+		Map<String, Object> dataMap = new HashMap<String, Object>();		
+		List<FriendVO> friendList = friendService.friendList(myNick);
+		int friendNum = friendService.friendNum(myNick);
 		dataMap.put("friendList", friendList);
-		
+		dataMap.put("friendNum", friendNum);
 		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
 		
 		return entity;
