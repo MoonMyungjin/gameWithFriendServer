@@ -20,5 +20,9 @@ public class AdminDAO {
 	public List<UserVO> getUserList() throws SQLException {
 		return session.selectList("base.admin.mapper.getUserList");
 	}
+	
+	public UserVO getUserInfo(String myNick) throws SQLException {
+		return session.selectOne("base.admin.mapper.getUserInfo", myNick);
+	}
 
 }

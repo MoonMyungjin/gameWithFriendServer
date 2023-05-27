@@ -40,7 +40,7 @@
 	<div class="wrapper">
 		<%@ include file="/WEB-INF/include/header.jsp" %>
 		
-		<%@ include file="/WEB-INF/include/aside.jsp" %>
+<%-- 		<%@ include file="/WEB-INF/include/aside.jsp" %> --%>
 			
 			<div class="content-wrapper">
 				<decorator:body />
@@ -57,10 +57,14 @@
 	<!-- AdminLTE App -->
 	<script src="<%=request.getContextPath() %>/resources/bootstrap/dist/js/adminlte.min.js"></script>
 	<script>
+	window.onload = function(){
+		$('body').attr("class",'sidebar-collapse');
+	}
 	$('div.wrapper').css({
 		"max-width":"1280px",
 		"margin":"0 auto"		
 	});
+	
 	</script> 
 	
 	<script defer src="<%=request.getContextPath() %>/resources/js/common.js"></script>  
