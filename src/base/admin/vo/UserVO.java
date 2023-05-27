@@ -7,7 +7,7 @@ public class UserVO {
 	private String UIntgId;
 	private String UName;
 	private String UPass;
-	private String UNackname;
+	private String UNickname;
 	private Date URegDate;
 	private String ULlastLoginIp;
 	private Date ULastLoginDttm;
@@ -45,11 +45,11 @@ public class UserVO {
 	public void setUPass(String uPass) {
 		UPass = uPass;
 	}
-	public String getUNackname() {
-		return UNackname;
+	public String getUNickname() {
+		return UNickname;
 	}
-	public void setUNackname(String uNackname) {
-		UNackname = uNackname;
+	public void setUNickname(String uNickname) {
+		UNickname = uNickname;
 	}
 	public Date getURegDate() {
 		return URegDate;
