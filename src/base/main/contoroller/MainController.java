@@ -34,7 +34,7 @@ public class MainController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping(value = "/main/fameTop5.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String,Object>> fameTop5List(HttpServletRequest request,HttpMethod httpMethod,@RequestParam(required = true) String myNick,@RequestParam(required = true) String yourNick) throws Exception{
+	public ResponseEntity<Map<String,Object>> fameTop5List(HttpServletRequest request,HttpMethod httpMethod) throws Exception{
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		List<UserVO> selectLikeTop5List = mainService.selectLikeTop5List();
 		dataMap.put("selectLikeTop5List", selectLikeTop5List);
