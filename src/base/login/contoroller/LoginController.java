@@ -31,6 +31,8 @@ public class LoginController {
 		
 		returnMap = loginService.selectUserInfo(commandMap);
 		
+		System.out.println(returnMap.size());
+		
 		modelAndView.addObject("userInfo", returnMap);
 		
 		modelAndView.setViewName("jsonView");

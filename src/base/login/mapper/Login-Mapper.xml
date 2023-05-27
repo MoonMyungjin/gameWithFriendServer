@@ -15,6 +15,7 @@
 		     , U_LAST_TERMINAL_KIND
 		     , U_LOGIN_CATE
 		     , U_STATE_CD
+		     , U_TYPE_CD
 		     , U_GG_ID
 		  FROM USER
 		 WHERE 1=1
