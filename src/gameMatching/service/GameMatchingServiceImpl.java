@@ -61,7 +61,7 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 		List<String> userSelectOptionList = new ArrayList<>();
 		List<String> userSelectOptionDetailList = new ArrayList<>();
 		int userSelectOptionSize = optionInfo.size()-1;
-		
+		System.out.println(userSelectOptionSize);
 		for(int i=0; i<userSelectOptionSize; i++) {
 			Object object = optionInfo.get(""+i);
 			System.out.println(object.toString());

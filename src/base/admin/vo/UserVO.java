@@ -18,7 +18,15 @@ public class UserVO {
 	private String URegId;
 	private String UModId;
 	private Date UModDate;
+	private String ULike;
 	
+	
+	public String getULike() {
+		return ULike;
+	}
+	public void setULike(String uLike) {
+		ULike = uLike;
+	}
 	public String getUIntgId() {
 		return UIntgId;
 	}

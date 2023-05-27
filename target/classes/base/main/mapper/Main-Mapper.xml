@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="base.main.mapper">
+	
+	<select id="selectLikeTop5List" resultType="base.admin.vo.UserVO">
+		SELECT 
+			   U_NAME
+			  ,U_NACKNAME
+			  ,U_REG_DATE
+			  ,U_LOGIN_CATE
+			  ,U_STATE_CD
+			  ,U_LIKE
+		FROM USER
+		ORDER BY U_LIKE DESC
+		LIMIT 5
+		
+	</select>	
+
+	
+</mapper>
