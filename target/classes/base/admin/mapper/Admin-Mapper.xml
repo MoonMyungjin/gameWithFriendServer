@@ -8,9 +8,9 @@
 		SELECT U_INTG_ID
 			  ,U_NAME
 			  ,U_PASS
-			  ,U_NACKNAME
+			  ,U_NICKNAME
 			  ,U_REG_DATE
-			  ,U_LLAST_LOGIN_IP
+			  ,U_LAST_LOGIN_IP
 			  ,U_LAST_LOGIN_DTTM
 			  ,U_LAST_TERMINAL_KIND
 			  ,U_LOGIN_CATE

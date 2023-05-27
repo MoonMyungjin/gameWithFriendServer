@@ -7,9 +7,9 @@ public class UserVO {
 	private String UIntgId;
 	private String UName;
 	private String UPass;
-	private String UNackname;
+	private String UNickname;
 	private Date URegDate;
-	private String ULlastLoginIp;
+	private String ULastLoginIp;
 	private Date ULastLoginDttm;
 	private String ULastTerminalKind;
 	private String ULoginCate;
@@ -37,11 +37,11 @@ public class UserVO {
 	public void setUPass(String uPass) {
 		UPass = uPass;
 	}
-	public String getUNackname() {
-		return UNackname;
+	public String getUNickname() {
+		return UNickname;
 	}
-	public void setUNackname(String uNackname) {
-		UNackname = uNackname;
+	public void setUNickname(String uNickname) {
+		UNickname = uNickname;
 	}
 	public Date getURegDate() {
 		return URegDate;
@@ -49,11 +49,11 @@ public class UserVO {
 	public void setURegDate(Date uRegDate) {
 		URegDate = uRegDate;
 	}
-	public String getULlastLoginIp() {
-		return ULlastLoginIp;
+	public String getULastLoginIp() {
+		return ULastLoginIp;
 	}
-	public void setULlastLoginIp(String uLlastLoginIp) {
-		ULlastLoginIp = uLlastLoginIp;
+	public void setULastLoginIp(String uLastLoginIp) {
+		ULastLoginIp = uLastLoginIp;
 	}
 	public Date getULastLoginDttm() {
 		return ULastLoginDttm;
@@ -103,4 +103,5 @@ public class UserVO {
 	public void setUModDate(Date uModDate) {
 		UModDate = uModDate;
 	}
+	
 }
