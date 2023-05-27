@@ -165,7 +165,7 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 		RestTemplate restTemplate = new RestTemplate();
 		ArrayList<GameVO> updateList = new ArrayList<GameVO>();
 		String apiKey = "RGAPI-bf3aae46-e466-4d08-a414-27304f984e77";
-		for (int j = 39; j < summonerList.size(); j++) {/* 인증한 유저리스트만큼 돌리기*/
+		for (int j = 0; j < summonerList.size(); j++) {/* 인증한 유저리스트만큼 돌리기*/
 			summonerNameUser = summonerList.get(j).getGlSummoner();
 			
 			/* --------------------------서머너 아이디 얻기 시작--------------------------*/

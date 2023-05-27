@@ -7,10 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import base.admin.vo.UserVO;
 import base.friend.vo.FriendVO;
+import base.main.vo.MainVO;
 import gameMatching.vo.GameVO;
 
 @Repository("MainService")
 public interface MainService {
 	
-	List<UserVO> selectLikeTop5List() throws SQLException;
+	List<MainVO> selectLikeTop5List() throws SQLException;
 }

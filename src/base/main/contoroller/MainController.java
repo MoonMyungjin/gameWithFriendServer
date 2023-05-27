@@ -24,6 +24,7 @@ import base.admin.vo.UserVO;
 import base.friend.service.FriendService;
 import base.friend.vo.FriendVO;
 import base.main.service.MainService;
+import base.main.vo.MainVO;
 
 
 @Controller
@@ -36,7 +37,7 @@ public class MainController {
 	@RequestMapping(value = "/main/fameTop5.do", method = RequestMethod.GET)
 	public ResponseEntity<Map<String,Object>> fameTop5List(HttpServletRequest request,HttpMethod httpMethod) throws Exception{
 		Map<String, Object> dataMap = new HashMap<String, Object>();
-		List<UserVO> selectLikeTop5List = mainService.selectLikeTop5List();
+		List<MainVO> selectLikeTop5List = mainService.selectLikeTop5List();
 		dataMap.put("selectLikeTop5List", selectLikeTop5List);
 		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
 		
