@@ -34,12 +34,8 @@ public class LoginController {
 	@RequestMapping(value="/login/loginCheck.do")
 	public ModelAndView loginCheck(HttpServletRequest request, HttpMethod httpMethod, @RequestBody HashMap<String, Object> commandMap ) throws Exception{
 		ModelAndView modelAndView = new ModelAndView();
-//		commandMap.put("uIntgId","TEST39");
-		
-		log.info("ip!! : ", commandMap.get("uLastLoginIp"));
-		log.info("test123", "1");
 
-		CustomMap returnMap = loginService.checkLoginUserInfo(commandMap);
+		Map<String, Object> returnMap = loginService.checkLoginUserInfo(commandMap);
 		
 		modelAndView.addObject("userInfo", returnMap);
 		
