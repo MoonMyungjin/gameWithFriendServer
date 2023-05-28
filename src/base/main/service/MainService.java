@@ -14,4 +14,8 @@ import gameMatching.vo.GameVO;
 public interface MainService {
 	
 	List<MainVO> selectLikeTop5List() throws SQLException;
+	
+	String fintTargetLike(MainVO mainVO) throws SQLException;
+	
+	void likeTarget(MainVO mainVO) throws SQLException;
 }

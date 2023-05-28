@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="base.admin.champion.mapper">
+	
+	<select id="selectChampionList" resultType="java.util.HashMap">
+		SELECT CAST(CH_INDEX AS UNSIGNED) AS CH_INDEX
+			  ,CH_NAME
+			  ,CH_NAME_K
+			  ,CH_KEY
+		  FROM CHAMPION
+		  <where>
+		 	 <if test="SEARCH_KEY != null and !SEARCH_KEY.equals('')">
+				 AND CH_NAME LIKE CONCAT('%',#{SEARCH_KEY},'%')
+				  OR CH_NAME_K LIKE CONCAT('%',#{SEARCH_KEY},'%')
+			 </if>
+		  </where>
+ 		 ORDER BY CH_INDEX 
+	</select>
+	
+	<select id="selectChampion" resultType="java.util.HashMap">
+		SELECT CH_INDEX
+			  ,CH_NAME
+			  ,CH_NAME_K
+			  ,CH_KEY
+		  FROM CHAMPION
+		 WHERE CH_INDEX = #{CH_INDEX}
+	</select>
+	
+	<select id="selectInsertKey" resultType="int">
+		SELECT CASE WHEN MAX(CAST(CH_INDEX AS UNSIGNED)) IS NULL
+					THEN 1
+					ELSE MAX(CAST(CH_INDEX AS UNSIGNED))+1
+					END
+		  FROM CHAMPION
+	</select>
+	
+	<insert id="insertChampion">
+		INSERT INTO CHAMPION(
+			 CH_INDEX
+			,CH_NAME
+			,CH_NAME_K
+			,CH_KEY
+		) VALUES (
+			 #{CH_INDEX}
+			,#{CH_NAME}
+			,#{CH_NAME_K}
+			,#{CH_KEY}
+		)
+	</insert>
+	
+	<insert id="updateChampion">
+		UPDATE CHAMPION SET
+			 CH_NAME=#{CH_NAME, javaType=String, jdbcType=VARCHAR}
+			,CH_NAME_K=#{CH_NAME_K, javaType=String, jdbcType=VARCHAR}
+			,CH_KEY=#{CH_KEY, javaType=String, jdbcType=VARCHAR}
+		WHERE CH_INDEX=#{CH_INDEX}
+	</insert>
+</mapper>

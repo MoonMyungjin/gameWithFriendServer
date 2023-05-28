@@ -17,8 +17,15 @@ public class GameVO {
 	private float timeScore;
 	private float postionScore;
 	private float championScore;
+	private float url;
 	
 	
+	public float getUrl() {
+		return url;
+	}
+	public void setUrl(float url) {
+		this.url = url;
+	}
 	public String getGlNick() {
 		return glNick;
 	}

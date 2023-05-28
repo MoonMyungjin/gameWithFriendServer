@@ -13,8 +13,23 @@ public class MainVO {
 	private String glTime;
 	private String uLoginCate;
 	private String uNickname;
+	private String targetId;
+	private String myId;
 	
 	
+	
+	public String getTargetId() {
+		return targetId;
+	}
+	public void setTargetId(String targetId) {
+		this.targetId = targetId;
+	}
+	public String getMyId() {
+		return myId;
+	}
+	public void setMyId(String myId) {
+		this.myId = myId;
+	}
 	public String getYlYouId() {
 		return ylYouId;
 	}

@@ -17,6 +17,34 @@
 		,U_NICKNAME AS uNickname
 		 FROM LIKE_TOP_FIVE
 	</select>	
-
+	
+	<select id="selectLikeUser" resultType="base.main.vo.MainVO">
+		SELECT YL_STATE FROM YOU_LIKE 
+		WHERE YL_YOU_ID = #{targetId}
+		AND  YL_MY_ID = #{myId}
+		AND YL_STATE = 'Y'
+	</select>	
+	
+	<update id="likeTarget" >
+			INSERT INTO YOU_LIKE 
+			(
+				YL_YOU_ID,
+				YL_MY_ID,
+				YL_STATE
+			)
+			VALUES 
+			(
+			#{targetId},
+			#{myId},
+			'Y'
+			) 
+			ON DUPLICATE KEY UPDATE YL_STATE = 		(SELECT A.RESULT 
+																	FROM	(SELECT 
+																			CASE WHEN YL_STATE = 'Y' THEN 'N' ELSE 'Y' END RESULT
+																		FROM YOU_LIKE 
+																		WHERE YL_YOU_ID = #{targetId}
+																	AND  YL_MY_ID = #{myId}) A)
+	</update>	
+	
 	
 </mapper>
