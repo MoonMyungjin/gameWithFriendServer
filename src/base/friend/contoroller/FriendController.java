@@ -46,7 +46,7 @@ public class FriendController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping(value = "/friend/findFriendList.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String,Object>> test(@RequestParam(required = true) String myNick,HttpServletRequest req
+	public ResponseEntity<Map<String,Object>> findFriendList(@RequestParam(required = true) String myNick,HttpServletRequest req
 			,HttpMethod httpMethod) throws Exception{
 		Map<String, Object> dataMap = new HashMap<String, Object>();		
 		List<FriendVO> friendList = friendService.friendList(myNick);

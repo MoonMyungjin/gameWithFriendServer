@@ -22,4 +22,13 @@ public class MainDAO {
 		return session.selectList("base.main.mapper.selectLikeTop5List");
 	}
 	
+	public String selectLikeUser(MainVO mainVO) throws SQLException {
+		return session.selectOne("base.main.mapper.selectLikeUser", mainVO);
+	}
+	
+	public void likeTarget(MainVO mainVO) throws SQLException {
+		session.update("base.main.mapper.likeTarget", mainVO);
+	}
+
+	
 }

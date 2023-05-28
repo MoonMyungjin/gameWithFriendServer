@@ -44,6 +44,28 @@ public class MainController {
 		return entity;
 	}
 	
+	@CrossOrigin("http://localhost:3000")
+	@RequestMapping(value = "/main/findTargetLike.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String,Object>> findTargetLike(HttpServletRequest request,HttpMethod httpMethod) throws Exception{
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		MainVO mainVO = new MainVO();
+		String msg = mainService.fintTargetLike(mainVO);
+		dataMap.put("msg", msg);
+		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
+		
+		return entity;
+	}
+	
+	@CrossOrigin("http://localhost:3000")
+	@RequestMapping(value = "/main/likeTarget.do", method = RequestMethod.GET)
+	public void likeTarget(HttpServletRequest request,HttpMethod httpMethod,@RequestParam(required = true) String myNick,@RequestParam(required = true) String yourNick) throws Exception{
+		MainVO mainVO = new MainVO();
+		mainVO.setTargetId(yourNick);
+		mainVO.setMyId(myNick);
+		mainService.likeTarget(mainVO);
+
+	}
+	
 
 
 }

@@ -20,19 +20,23 @@
 	
 	<select id="selectChampion" resultType="gameMatching.vo.GameVO">
 		SELECT 
-				CH_INDEX AS chIndex,
-				CH_NAME AS  chName,
-				CH_NAME_K AS chNameK
-		FROM CHAMPION
+				A.CH_INDEX AS chIndex,
+				A.CH_NAME AS  chName,
+				A.CH_NAME_K AS chNameK,
+				B.FL_UNIQUE_NAME AS url
+		FROM CHAMPION A , FILE B
+		WHERE A.CH_INDEX = B.FL_TABLE_KEY
 	</select>
 	
 	<select id="selectSearchChampion" parameterType="String" resultType="gameMatching.vo.GameVO">
 		SELECT 
-				CH_INDEX AS chIndex,
-				CH_NAME AS  chName,
-				CH_NAME_K AS chNameK
-		FROM CHAMPION
-		WHERE CH_NAME_K LIKE CONCAT('%',#{keyWord},'%')
+				A.CH_INDEX AS chIndex,
+				A.CH_NAME AS  chName,
+				A.CH_NAME_K AS chNameK,
+				B.FL_UNIQUE_NAME AS url
+		FROM CHAMPION A , FILE B
+		WHERE A.CH_INDEX = B.FL_TABLE_KEY 
+		AND CH_NAME_K LIKE CONCAT('%',#{keyWord},'%')
 	</select>
 	
 	<select id="selectSummonerlist" resultType="gameMatching.vo.GameVO">

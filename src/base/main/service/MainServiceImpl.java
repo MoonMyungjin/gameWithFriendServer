@@ -26,6 +26,23 @@ public class MainServiceImpl implements MainService {
 		return selectLikeTop5List;
 	}
 
+	@Override
+	public String fintTargetLike(MainVO mainVO) throws SQLException {
+		String likeUserYn = mainDAO.selectLikeUser(mainVO);
+		String msg = "";
+		if(likeUserYn.equals("Y")) {
+			msg = "Y";
+		}else {
+			msg = "N";
+		}
+		return msg;
+	}
 
+	@Override
+	public void likeTarget(MainVO mainVO) throws SQLException {
+		 mainDAO.likeTarget(mainVO);
+	}
+
+	
 
 }
