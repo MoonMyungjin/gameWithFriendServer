@@ -4,11 +4,10 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="login.mapper">
-	<select id="login.mapper.selectUserInfo" resultType="hashMap">
+<mapper namespace="base.login.mapper">
+	<select id="base.login.mapper.selectUserInfo" resultType="CustomMap">
 		SELECT U_INTG_ID
 		     , U_NAME
-		     , U_PASS
 		     , U_NICKNAME
 		     , U_LAST_LOGIN_IP
 		     , DATE_FORMAT(U_LAST_LOGIN_DTTM, '%Y%m%d%H%i%s')
@@ -16,15 +15,53 @@
 		     , U_LOGIN_CATE
 		     , U_STATE_CD
 		     , U_TYPE_CD
-		     , U_GG_ID
 		  FROM USER
-		 WHERE 1=1
-		 <if test="uIntgId != null">
-		 	AND U_INTG_ID = #{uIntgId}
-		 </if>
-		 <if test="uGgId != null">
-		 	AND U_GG_ID = #{uGgId}
-		 </if>
+		 WHERE U_INTG_ID = #{uIntgId}
 	</select>
+	
+	<insert id="inserUserInfo">
+		INSERT INTO USER
+		(
+		 U_INTG_ID,
+		 U_NAME,
+		 U_NICNAME,
+		 U_LAST_LOGIN_IP,
+		 U_LAST_LOGIN_DTTM,
+		 U_LAST_TERMINAL_KIND,
+		 U_LOGIN_CATE,
+		 U_STATE_CD,
+		 U_TYPE_CD,
+		 U_REG_ID,
+		 U_REG_DATE,
+		 U_MOD_ID,
+		 U_MOD_DATE
+		)
+		VALUES
+		(
+		 #{uIntgId},
+		 #{uName},
+		 NULL,
+		 #{uLastLoginIp},
+		 NOW(),
+		 #{uLastTerminalKind},
+		 NULL,
+		 #{uStateCd},
+		 #{uTypeCd},
+		 'SYSTEM',
+		 NOW(),
+		 'SYSTEM',
+		 NOW()
+		)
+	</insert>
+	
+	<update id="base.login.mapper.updateUserLoginInfo">
+		UPDATE USER
+		   SET U_LAST_LOGIN_IP = #{uLastLoginIp}
+		     , U_LAST_LOGIN_DTTM = NOW()
+		     , U_LAST_TERMINAL_KIND = #{uLastTerminalKind}
+		     , U_MOD_ID = #{uIntgId}
+		     , U_MOD_DATE = NOW()
+		 WHERE U_INTG_ID = #{uIntgId}
+	</update>
 	
 </mapper>
