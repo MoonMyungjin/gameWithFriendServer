@@ -6,6 +6,7 @@
 <configuration>
 	
     <settings>
+          <setting name="returnInstanceForEmptyRow" value="true"/>						   <!-- 조회결과의 row가 null이어도 출력하기 위해 선언 -->
           <setting name="cacheEnabled" value="true"/>                                        <!-- mybatis cache 사용여부 -->
           <setting name="lazyLoadingEnabled" value="true"/>                                <!-- 지연로딩 사용여부 -->
           <setting name="multipleResultSetsEnabled" value="true"/>                        <!-- 한 개의 구문에서 여러 개의 ResultSet을 허용할지 여부 -->
