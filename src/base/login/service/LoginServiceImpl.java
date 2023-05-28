@@ -25,7 +25,7 @@ public class LoginServiceImpl implements LoginService {
 			// 신규 아이디를 insert 해주는로직을 넣자
 			paramMap.putAll(commandMap);
 			paramMap.put("uStateCd", "10601");
-			paramMap.put("uTypeCd", "10603");
+			paramMap.put("uTypeCd", "10703");
 			
 			int cnt = loginDAO.insertUserInfo(paramMap);
 			System.out.println("------------------------------------------!!" + cnt);
