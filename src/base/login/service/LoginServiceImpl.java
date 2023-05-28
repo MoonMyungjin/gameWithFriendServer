@@ -16,12 +16,12 @@ public class LoginServiceImpl implements LoginService {
 	private LoginDAO loginDAO;
 
 	@Override
-	public HashMap<String, String> checkLoginUserInfo(HashMap<String, String> commandMap) throws Exception {
+	public HashMap<String, String> checkLoginUserInfo(HashMap<String, Object> commandMap) throws Exception {
 		HashMap<String, String> returnMap = new HashMap<String, String>();
 		
 		returnMap = loginDAO.selectUserInfo(commandMap);
 		
-		HashMap<String, String> paramMap = new HashMap<String, String>();
+		HashMap<String, Object> paramMap = new HashMap<String, Object>();
 		if (returnMap == null) {
 			// 신규 아이디를 insert 해주는로직을 넣자
 			paramMap.putAll(commandMap);
