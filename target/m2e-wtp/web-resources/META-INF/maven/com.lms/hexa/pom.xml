@@ -284,6 +284,12 @@
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 		</dependency>
+		<!-- HashMap CamelCase 처리 -->
+		<dependency>
+		  <groupId>com.google.guava</groupId>
+		  <artifactId>guava</artifactId>
+		  <version>31.1-jre</version>
+		</dependency>
 		
 	</dependencies>
 	<build>

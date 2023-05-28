@@ -26,6 +26,7 @@
 		<typeAlias type="java.lang.String" alias="str" />
 		<typeAlias type="java.lang.Integer" alias="int" />
 		<typeAlias type="java.util.HashMap" alias="hashMap"/>
+		<typeAlias type="util.CustomMap" alias="customMap"/>
 	</typeAliases>
 	
 </configuration>
