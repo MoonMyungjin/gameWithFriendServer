@@ -50,7 +50,7 @@ public class MainController {
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		MainVO mainVO = new MainVO();
 		mainVO.setMyId(myId);
-		mainVO.setYlYouId(targetId);
+		mainVO.setTargetId(targetId);
 		String msg = mainService.fintTargetLike(mainVO);
 		dataMap.put("msg", msg);
 		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
