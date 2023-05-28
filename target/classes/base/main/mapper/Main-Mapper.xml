@@ -4,18 +4,18 @@
 
 <mapper namespace="base.main.mapper">
 	
-	<select id="selectLikeTop5List" resultType="base.admin.vo.UserVO">
+	<select id="selectLikeTop5List" resultType="base.main.vo.MainVO">
 		SELECT 
-			   U_NAME AS UName
-			  ,U_NICKNAME AS UNickname
-			  ,U_REG_DATE AS URegDate
-			  ,U_LOGIN_CATE AS ULoginCate
-			  ,U_STATE_CD AS UStateCd
-			  ,U_LIKE AS ULike
-		FROM USER
-		ORDER BY U_LIKE DESC
-		LIMIT 5
-		
+		YL_YOU_ID AS ylYouId 
+		,CNT AS cnt
+		,GL_SUMMONER AS glSymmoner
+		,GL_RANK AS glRank
+		,GL_CHAMPION AS glChampion
+		,GL_POSITION AS glPosition
+		,GL_TIME AS glTime
+		,U_LOGIN_CATE AS uLoginCate
+		,U_NICKNAME AS uNickname
+		 FROM LIKE_TOP_FIVE
 	</select>	
 
 	

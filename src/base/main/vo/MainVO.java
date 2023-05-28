@@ -4,59 +4,71 @@ import java.util.Date;
 
 public class MainVO {
 
-	private String fMyId;
-	private String fYouId;
-	private String fStateCd;
-	private String fRegId;
-	private String fRegDate;
-	private String fModId;
-	private String fModDate;
+	private String ylYouId;
+	private String cnt;
+	private String glSymmoner;
+	private String glRank;
+	private String glChampion;
+	private String glPosition;
+	private String glTime;
+	private String uLoginCate;
+	private String uNickname;
 	
 	
-	public String getfMyId() {
-		return fMyId;
+	public String getYlYouId() {
+		return ylYouId;
 	}
-	public void setfMyId(String fMyId) {
-		this.fMyId = fMyId;
+	public void setYlYouId(String ylYouId) {
+		this.ylYouId = ylYouId;
 	}
-	public String getfYouId() {
-		return fYouId;
+	public String getCnt() {
+		return cnt;
 	}
-	public void setfYouId(String fYouId) {
-		this.fYouId = fYouId;
+	public void setCnt(String cnt) {
+		this.cnt = cnt;
 	}
-	public String getfStateCd() {
-		return fStateCd;
+	public String getGlSymmoner() {
+		return glSymmoner;
 	}
-	public void setfStateCd(String fStateCd) {
-		this.fStateCd = fStateCd;
+	public void setGlSymmoner(String glSymmoner) {
+		this.glSymmoner = glSymmoner;
 	}
-	public String getfRegId() {
-		return fRegId;
+	public String getGlRank() {
+		return glRank;
 	}
-	public void setfRegId(String fRegId) {
-		this.fRegId = fRegId;
+	public void setGlRank(String glRank) {
+		this.glRank = glRank;
 	}
-	public String getfRegDate() {
-		return fRegDate;
+	public String getGlChampion() {
+		return glChampion;
 	}
-	public void setfRegDate(String fRegDate) {
-		this.fRegDate = fRegDate;
+	public void setGlChampion(String glChampion) {
+		this.glChampion = glChampion;
 	}
-	public String getfModId() {
-		return fModId;
+	public String getGlPosition() {
+		return glPosition;
 	}
-	public void setfModId(String fModId) {
-		this.fModId = fModId;
+	public void setGlPosition(String glPosition) {
+		this.glPosition = glPosition;
 	}
-	public String getfModDate() {
-		return fModDate;
+	public String getGlTime() {
+		return glTime;
 	}
-	public void setfModDate(String fModDate) {
-		this.fModDate = fModDate;
+	public void setGlTime(String glTime) {
+		this.glTime = glTime;
 	}
-	
-	
+	public String getuLoginCate() {
+		return uLoginCate;
+	}
+	public void setuLoginCate(String uLoginCate) {
+		this.uLoginCate = uLoginCate;
+	}
+	public String getuNickname() {
+		return uNickname;
+	}
+	public void setuNickname(String uNickname) {
+		this.uNickname = uNickname;
+	}
 	
 	
 
