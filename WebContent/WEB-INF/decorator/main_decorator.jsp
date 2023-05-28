@@ -15,7 +15,13 @@
 	<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/bootstrap/plugins/fontawesome-free/css/all.min.css">
 	<!-- Theme style -->
 	<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/bootstrap/dist/css/adminlte.min.css">
-  	
+  		<!-- jQuery -->
+	<script src="<%=request.getContextPath() %>/resources/bootstrap/plugins/jquery/jquery.min.js"></script>
+	<!-- Bootstrap 4 -->
+	<script src="<%=request.getContextPath() %>/resources/bootstrap/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- AdminLTE App -->
+	<script src="<%=request.getContextPath() %>/resources/bootstrap/dist/js/adminlte.min.js"></script>
+	
   	<decorator:head />
   	<style>
   		[class*=sidebar-dark-] {
@@ -50,21 +56,10 @@
 	</div>
 
 
-	<!-- jQuery -->
-	<script src="<%=request.getContextPath() %>/resources/bootstrap/plugins/jquery/jquery.min.js"></script>
-	<!-- Bootstrap 4 -->
-	<script src="<%=request.getContextPath() %>/resources/bootstrap/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-	<!-- AdminLTE App -->
-	<script src="<%=request.getContextPath() %>/resources/bootstrap/dist/js/adminlte.min.js"></script>
 	<script>
 	window.onload = function(){
 		$('body').attr("class",'sidebar-collapse');
 	}
-	$('div.wrapper').css({
-		"max-width":"1280px",
-		"margin":"0 auto"		
-	});
-	
 	</script> 
 	
 	<script defer src="<%=request.getContextPath() %>/resources/js/common.js"></script>  

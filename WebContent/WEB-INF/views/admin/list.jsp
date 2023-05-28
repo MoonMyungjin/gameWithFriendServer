@@ -14,88 +14,27 @@
 	font-size: 14px;
 }
 
-label {
-	margin-bottom: 0;
+.table th{
+	background-color: rgb(32, 73, 105) !important;
+	color: white;
 }
 
-div.table1 {
-	max-height: 180px;
-	overflow-y: auto;
-}
-
-div.table2 {
-	max-height: 180px;
-	overflow-y: scroll;
-}
-
-div.table3 {
-	max-height: 568px;
-	overflow-y: scroll;
-}
-
-.table-head-fixed th {
-	padding-top: 0.3em;
-	padding-bottom: 0.3em;
-}
-
-.table-head-fixed td {
-	padding-top: 0.3em;
-	padding-bottom: 0.3em;
-}
-
-.card-body.p-0 .table thead>tr>th:first-of-type {
-	padding-left: 12px;
-}
-
-.card-body.p-0 .table tbody>tr>td:first-of-type {
-	padding-left: 12px;
-}
-
-.card-body.p-0 .table thead>tr>th:last-of-type {
-	padding-right: 12px;
-}
-
-.card-body.p-0 .table tbody>tr>td:last-of-type {
-	padding-right: 12px;
-}
-
-th, td {
-	text-align: center;
-	padding-top: 5px;
-	padding-bottom: 0px !important;
-}
-
-#tb1 td, #td1 th {
-	padding: 0;
-	padding-top: 5px;
-	padding-bottom: 0px;
-}
-
-.alert {
-	text-align: center;
-}
-
-.alert {
-	font-size: 15px;
-}
-
-.alert-dismissible {
-	padding-right: 0;
-	padding-left: 0;
-}
 .lineTr:hover {
-		cursor: pointer;
-		color: #fdfbd7;
-	    background-color: rgb(32 73 105);
-	    border-color: white;
-	    box-shadow: none;
-	}
-	.selectedTr {
-		color: #fdfbd7;
-	    background-color: rgb(32 73 105);
-	    border-color: white;
-	    box-shadow: none;
-	}
+	cursor: pointer;
+	color: #fdfbd7;
+    background-color: rgb(32 73 105);
+    border-color: white;
+    box-shadow: none;
+}
+.selectedTr {
+	color: #fdfbd7;
+    background-color: rgb(32 73 105);
+    border-color: white;
+    box-shadow: none;
+}
+.tright{
+	text-align: right;
+}
 </style>
 </head>
 <body>
@@ -103,103 +42,48 @@ th, td {
 		<div class="container-fluid">
 			<div class="row md-2">
 				<div class="col-sm-6" style="display: flex;">
-					<h1 data-userId="${loginUser.id }">상담일지</h1>
-					
-				<!--                즐겨찾기에 존재 -->
-               <c:if test="${fn:indexOf(favoriteMenuListStr, '상담일지') != -1}">
-                  <i id="star" class="fa-solid fa-star on fa-2x" ></i>
-               </c:if>
-               
-<!--                즐겨찾기에 존재하지 않음 -->
-               <c:if test="${fn:indexOf(favoriteMenuListStr, '상담일지') == -1}">
-                  <i id="star" class="fa-regular fa-star off fa-2x" ></i>
-               </c:if>
-					
+					<h1>회원관리</h1>
 				</div>
-
+				<div class="col-sm-6 tright">
+					수정을 원하시는 회원 정보를 더블클릭 해주세요
+				</div>
 			</div>
 		</div>
 	</section>
 	<section class="content">
 		<div class="container-fluid">
-			<div class="row">
+			<div class="row table1">
+				<table class="table table-head-fixed table-bordered">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>NAME</th>
+							<th>NICKNAME</th>
+							<th>마지막 로그인 IP</th>
+							<th>최종접속일</th>
+							<th>상태코드</th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach items="${userList}" var="user" varStatus="i">
+							<tr>
+								<td>${user.UIntgId}</td>
+								<td>${user.UName}</td>
+								<td>${user.UNickname}</td>
+								<td>${user.ULastLoginIp}</td>
+								<td>
+									<fmt:formatDate value="${user.ULastLoginDttm}" pattern="YYYY-MM-DD"/>
+								</td>
+								<td>${user.UStateCd}</td>
+							</tr>
+						</c:forEach>
+					</tbody>
 
-				<!-- 좌측 영역 -->
-				<div class="col-sm-12">
-					<div class="card card-dark card-outline" style="height: 450px;">
-						<div class="card-header">
-							<div class="row">
-								<div class="col-sm-5">
-									<h3 class="card-title">
-										<i class="fas fa-check"></i> &nbsp;&nbsp; 상담 완료 내역
-									</h3>
-								</div>
-								<div class="col-sm-4"></div>
-								<div class="col-sm-3">
-											<div class="input-group">
-												<input type="text" class="form-control form-control-defalt" name="keyword" placeholder="검색어를 입력하세요." value="${param.keyword }">
-												<div class="input-group-append">
-												<button type="button" class="btn btn-dark btn-defalt" id="searchBtn">
-												<i class="fas fa-search"></i>
-												</button>
-			   					 	</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="card-body" style="padding-top: 5px;">
-
-							<div class="row table1" style="max-height: 365px;">
-								<table class="table table-head-fixed table-bordered">
-									<thead>
-										<tr>
-											<th style="background-color: rgb(32, 73, 105); color: white;">NO</th>
-											<th style="background-color: rgb(32, 73, 105); color: white;">상담일</th>
-											<th style="background-color: rgb(32, 73, 105); color: white;">상담구분</th>
-											<th style="background-color: rgb(32, 73, 105); color: white;">신청자</th>
-											<th style="background-color: rgb(32, 73, 105); color: white;">상담대상자</th>
-											<th style="background-color: rgb(32, 73, 105); color: white; width: 20vh;" >일지 작성</th>
-										</tr>
-									</thead>
-									<tbody>
-									<c:forEach items="${userList}" var="user">
-										<td>${user.UIntgId}</td>
-										<td>${user.UName}</td>
-									</c:forEach>
-									<c:forEach items="${selectCNSLFinishList}" var="finishList" varStatus="index">
-										<tr data-id="${finishList.cnsltId }" class="lineTr" style="padding-bottom: 0px;">
-											<td>${index.index+1}.</td>
-											<td><fmt:formatDate value="${finishList.cnsltSchDate}" pattern="yyyy-MM-dd" /></td>
-											<td>${finishList.scodeValue}</td>
-											<td id="${finishList.applyerId}">${finishList.cnsltApplyer}</td>
-											<td id="${finishList.tarketId}">${finishList.cnsltTarget}</td>
-											<c:if test="${empty finishList.cnsltAs}">
-											<td>
-											<button id="cnsltCompletionYn" type="button" class="btn btn-block btn-info btn-sm" style="width: 10vh; margin-left: 4vh; margin-bottom: 5px;">미완료</button>
-											</td>
-											</c:if>
-											<c:if test="${!empty finishList.cnsltAs}">
-											<td>
-											<button id="cnsltCompletionYn" type="button" class="btn btn-block btn-info btn-sm" style="width: 10vh; margin-left: 4vh; margin-bottom: 5px;">완료</button>
-											</td>
-											</c:if>
-										</tr>
-										</c:forEach>
-
-									</tbody>
-
-								</table>
-							</div>
-
-						</div>
-					</div>
-				</div>
+				</table>
 			</div>
 		</div>
 	
 	</section>
-	
-	<div id="userId" style="display: none;">${loginUser.id }</div>
 	
 	<script>
 		 
