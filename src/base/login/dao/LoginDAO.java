@@ -7,14 +7,16 @@ import javax.annotation.Resource;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import util.CustomMap;
+
 @Repository("loginDAO")
 public class LoginDAO {
 	
 	@Resource(name="sqlSession")
 	private SqlSession session;
 	
-	public HashMap<String,String> selectUserInfo(HashMap<String,Object> commandMap) throws Exception {
-		HashMap<String,String> returnMap = session.selectOne("base.login.mapper.selectUserInfo", commandMap);
+	public CustomMap selectUserInfo(HashMap<String,Object> commandMap) throws Exception {
+		CustomMap returnMap = session.selectOne("base.login.mapper.selectUserInfo", commandMap);
 		
 		return returnMap;
 	}

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import base.login.service.LoginService;
+import util.CustomMap;
 
 @Controller
 public class LoginController {
@@ -31,16 +32,14 @@ public class LoginController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping(value="/login/loginCheck.do")
-	public ModelAndView loginCheck(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView, HttpMethod httpMethod, @RequestBody HashMap<String, Object> commandMap ) throws Exception{
-		Map<String, String> returnMap = new HashMap<String, String>();
-		
+	public ModelAndView loginCheck(HttpServletRequest request, HttpMethod httpMethod, @RequestBody HashMap<String, Object> commandMap ) throws Exception{
+		ModelAndView modelAndView = new ModelAndView();
 //		commandMap.put("uIntgId","TEST39");
 		
-		log.info("commandMap : ", commandMap);
-		log.info("ip : ", commandMap.get("uLastLoginIp"));
-		log.info("test123", returnMap);
-//		returnMap = loginService.checkLoginUserInfo(commandMap);
-		
+		log.info("ip!! : ", commandMap.get("uLastLoginIp"));
+		log.info("test123", "1");
+
+		CustomMap returnMap = loginService.checkLoginUserInfo(commandMap);
 		
 		modelAndView.addObject("userInfo", returnMap);
 		

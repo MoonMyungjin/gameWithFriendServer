@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import base.login.dao.LoginDAO;
+import util.CustomMap;
 
 @Service("loginService")
 public class LoginServiceImpl implements LoginService {
@@ -16,15 +17,14 @@ public class LoginServiceImpl implements LoginService {
 	private LoginDAO loginDAO;
 
 	@Override
-	public HashMap<String, String> checkLoginUserInfo(HashMap<String, Object> commandMap) throws Exception {
-		HashMap<String, String> returnMap = new HashMap<String, String>();
+	public CustomMap checkLoginUserInfo(HashMap<String, Object> commandMap) throws Exception {
 		
-		returnMap = loginDAO.selectUserInfo(commandMap);
+		CustomMap returnMap = loginDAO.selectUserInfo(commandMap); 
 		
 		HashMap<String, Object> paramMap = new HashMap<String, Object>();
 		System.out.println("------------------------------------------" + returnMap.size());
 		System.out.println("------------------------------------------" + (returnMap.size() == 1));
-		if (StringUtils.isEmpty(returnMap.get("uIntgId"))) {
+		if (StringUtils.isEmpty((String) returnMap.get("uIntgId"))) {
 			// 신규 아이디를 insert 해주는로직을 넣자
 			System.out.println("------------------------------------------isnert");
 			paramMap.putAll(commandMap);
