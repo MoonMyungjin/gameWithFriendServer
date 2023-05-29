@@ -22,7 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import base.login.service.LoginService;
 import util.CustomMap;
 
-@Controller
+@RestController
 public class LoginController {
 	
 	@Resource(name="loginService")
@@ -33,13 +33,12 @@ public class LoginController {
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping(value="/login/loginCheck.do")
 	public ModelAndView loginCheck(HttpServletRequest request, HttpMethod httpMethod, @RequestBody HashMap<String, Object> commandMap ) throws Exception{
-		ModelAndView modelAndView = new ModelAndView();
+		ModelAndView modelAndView = new ModelAndView("jsonView");
 
 		Map<String, Object> returnMap = loginService.checkLoginUserInfo(commandMap);
 		
-		modelAndView.addObject("userInfo", returnMap);
 		
-		modelAndView.setViewName("jsonView");
+		modelAndView.addObject("userInfo", returnMap);
 		
 		return modelAndView;
 	}
