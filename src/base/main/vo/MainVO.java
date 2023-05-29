@@ -15,9 +15,16 @@ public class MainVO {
 	private String uNickname;
 	private String targetId;
 	private String myId;
+	private String ylState;
 	
 	
 	
+	public String getYlState() {
+		return ylState;
+	}
+	public void setYlState(String ylState) {
+		this.ylState = ylState;
+	}
 	public String getTargetId() {
 		return targetId;
 	}

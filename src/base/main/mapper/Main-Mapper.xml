@@ -19,7 +19,8 @@
 	</select>	
 	
 	<select id="selectLikeUser" resultType="base.main.vo.MainVO">
-		SELECT YL_STATE FROM YOU_LIKE 
+		SELECT YL_STATE AS ylState
+		 FROM YOU_LIKE 
 		WHERE YL_YOU_ID = #{targetId}
 		AND  YL_MY_ID = #{myId}
 		AND YL_STATE = 'Y'
