@@ -18,7 +18,7 @@
 		 FROM LIKE_TOP_FIVE
 	</select>	
 	
-	<select id="selectLikeUser" resultType="base.main.vo.MainVO">
+	<select id="selectLikeUser" resultType="java.lang.String">
 		SELECT YL_STATE AS ylState
 		 FROM YOU_LIKE 
 		WHERE YL_YOU_ID = #{targetId}
