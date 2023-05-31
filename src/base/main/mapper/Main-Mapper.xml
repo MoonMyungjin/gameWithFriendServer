@@ -23,7 +23,6 @@
 		 FROM YOU_LIKE 
 		WHERE YL_YOU_ID = #{targetId}
 		AND  YL_MY_ID = #{myId}
-		AND YL_STATE = 'Y'
 	</select>	
 	
 	<update id="likeTarget" >

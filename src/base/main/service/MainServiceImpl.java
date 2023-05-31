@@ -28,13 +28,13 @@ public class MainServiceImpl implements MainService {
 
 	@Override
 	public String fintTargetLike(MainVO mainVO) throws SQLException {
-		String likeUserYn = mainDAO.selectLikeUser(mainVO);
 		String msg = "";
-		if(likeUserYn.equals("Y")) {
-			msg = "Y";
+		if(mainDAO.selectLikeUser(mainVO) == null) {
+			msg= "N";
 		}else {
-			msg = "N";
+			msg=mainDAO.selectLikeUser(mainVO);
 		}
+
 		return msg;
 	}
 
