@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 
 import com.google.common.base.CaseFormat;
 
+@SuppressWarnings("serial")
 public class CustomMap extends LinkedHashMap<String, Object> {
 	
 	@Override

@@ -1,11 +1,14 @@
 package base.login.dao;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
+
+import util.CustomMap;
 
 @Repository("loginDAO")
 public class LoginDAO {
@@ -13,13 +16,21 @@ public class LoginDAO {
 	@Resource(name="sqlSession")
 	private SqlSession session;
 	
-	public HashMap<String,String> selectUserInfo(HashMap<String,Object> commandMap) throws Exception {
-		HashMap<String,String> returnMap = session.selectOne("base.login.mapper.selectUserInfo", commandMap);
+	public Map<String, Object> selectUserInfo(HashMap<String,Object> commandMap) throws Exception {
+		Map<String, Object> returnMap = session.selectOne("base.login.mapper.selectUserInfo", commandMap);
+		
+		if (returnMap == null) {
+			returnMap = new CustomMap();
+		}
 		
 		return returnMap;
 	}
 	
-	public void insertUserInfo(HashMap<String,Object> commandMap) throws Exception {}
+	public int insertUserInfo(HashMap<String,Object> commandMap) throws Exception {
+		int cnt = session.insert("base.login.mapper.inserUserInfo", commandMap);
+		
+		return cnt;
+	}
 	
 	public int updateUserLoginInfo(HashMap<String,Object> commandMap) throws Exception {
 		int cnt = session.update("base.login.mapper.updateUserLoginInfo", commandMap);

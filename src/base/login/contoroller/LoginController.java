@@ -20,8 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import base.login.service.LoginService;
+import util.CustomMap;
 
-@Controller
+@RestController
 public class LoginController {
 	
 	@Resource(name="loginService")
@@ -31,20 +32,13 @@ public class LoginController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping(value="/login/loginCheck.do")
-	public ModelAndView loginCheck(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView, HttpMethod httpMethod, @RequestBody HashMap<String, Object> commandMap ) throws Exception{
-		Map<String, String> returnMap = new HashMap<String, String>();
-		
-//		commandMap.put("uIntgId","TEST39");
-		
-		log.info("commandMap : ", commandMap);
-		log.info("ip : ", commandMap.get("uLastLoginIp"));
-		log.info("test123", returnMap);
-//		returnMap = loginService.checkLoginUserInfo(commandMap);
+	public ModelAndView loginCheck(HttpServletRequest request, HttpMethod httpMethod, @RequestBody HashMap<String, Object> commandMap ) throws Exception{
+		ModelAndView modelAndView = new ModelAndView("jsonView");
+
+		Map<String, Object> returnMap = loginService.checkLoginUserInfo(commandMap);
 		
 		
 		modelAndView.addObject("userInfo", returnMap);
-		
-		modelAndView.setViewName("jsonView");
 		
 		return modelAndView;
 	}
