@@ -43,6 +43,31 @@ public class LoginController {
 		return modelAndView;
 	}
 	
+	@CrossOrigin("http://localhost:3000")
+	@RequestMapping(value="/login/saveUserNickName.do")
+	public ModelAndView saveUserNickName(HttpServletRequest request, HttpMethod httpMethod, @RequestBody HashMap<String, Object> commandMap ) throws Exception{
+		ModelAndView modelAndView = new ModelAndView("jsonView");
+		Map<String, Object> returnMap = new CustomMap();
+		
+		String isSaved = "N";
+		
+		int cnt = loginService.saveUserNickName(commandMap);
+		
+		if (cnt == 1) {
+			isSaved = "Y";
+					
+			returnMap = loginService.selectUserInfo(commandMap);
+			
+			modelAndView.addObject("userInfo", returnMap);
+			modelAndView.addObject("isSaved", isSaved);
+			
+		} else {
+			isSaved = "N";
+		}
+		
+		return modelAndView;
+	}
+	
 	
 	
 	

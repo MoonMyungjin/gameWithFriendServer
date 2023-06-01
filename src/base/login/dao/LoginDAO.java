@@ -34,7 +34,13 @@ public class LoginDAO {
 	
 	public int updateUserLoginInfo(HashMap<String,Object> commandMap) throws Exception {
 		int cnt = session.update("base.login.mapper.updateUserLoginInfo", commandMap);
-				
+		
+		return cnt;
+	}
+	
+	public int updateUserNickName(HashMap<String,Object> commandMap) throws Exception {
+		int cnt = session.update("base.login.mapper.updateUserNickName", commandMap);
+		
 		return cnt;
 	}
 	

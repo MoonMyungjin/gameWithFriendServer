@@ -64,4 +64,12 @@
 		 WHERE U_INTG_ID = #{uIntgId}
 	</update>
 	
+	<update id="base.login.mapper.updateUserNickName" >
+		UPDATE USER
+		   SET U_NICKNAME = #{uNickname}#
+		     , U_MOD_ID = #{uIntgId}
+		     , U_MOD_DATE = NOW()
+		 WHERE U_INTG_ID = #{uIntgId}
+	</update>
+	
 </mapper>

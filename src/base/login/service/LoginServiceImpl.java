@@ -49,5 +49,19 @@ public class LoginServiceImpl implements LoginService {
 		
 		return returnMap;
 	}
+
+	@Override
+	public Map<String, Object> selectUserInfo(HashMap<String, Object> commandMap) throws Exception {
+		Map<String, Object> returnMap = loginDAO.selectUserInfo(commandMap);
+		
+		return returnMap;
+	}
+
+	@Override
+	public int saveUserNickName(HashMap<String, Object> commandMap) throws Exception {
+		int cnt = loginDAO.updateUserNickName(commandMap);
+		
+		return cnt;
+	}
 	
 }
