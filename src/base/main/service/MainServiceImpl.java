@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import base.admin.dao.AdminDAO;
 import base.admin.vo.UserVO;
+import base.alram.dao.AlramDAO;
+import base.alram.vo.AlramVO;
 import base.friend.dao.FriendDAO;
 import base.friend.vo.FriendVO;
 import base.main.dao.MainDAO;
@@ -19,6 +21,9 @@ public class MainServiceImpl implements MainService {
 	
 	@Resource(name="MainDAO")
 	protected MainDAO mainDAO;
+	
+	@Resource(name="AlramDAO")
+	protected AlramDAO alramDAO;
 
 	@Override
 	public List<MainVO> selectLikeTop5List() throws SQLException {
@@ -41,6 +46,20 @@ public class MainServiceImpl implements MainService {
 	@Override
 	public void likeTarget(MainVO mainVO) throws SQLException {
 		 mainDAO.likeTarget(mainVO);
+		 String msg = "";
+		 if(mainDAO.selectLikeUser(mainVO) == null) {
+			msg= "N";
+		 }else {
+			msg=mainDAO.selectLikeUser(mainVO);
+		 }
+		 if(msg.equals("Y")) {
+			 AlramVO alramVO = new AlramVO();
+			 alramVO.setMyId(mainVO.getMyId());
+			 alramVO.setTargetId(mainVO.getTargetId());
+			 alramVO.setAlCodeId("10802");
+			 alramDAO.sendLikeAlram(alramVO);
+			 
+		 }
 	}
 
 	

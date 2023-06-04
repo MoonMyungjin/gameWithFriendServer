@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="base.alram.mapper">
+	
+	<select id="findMyAlramList" resultType="base.alram.vo.AlramVO">
+	
+				SELECT A.AL_MY_ID AS alMyId,
+						 A.AL_REG_DT AS alRegDt,
+						 A.AL_SEND_ID AS alSendId,
+						 B.CD_DTL_NAME AS cdDtlName,
+						 B.CD_DTL_DESC AS cdDtlDesc
+				FROM ALRAM A, CODE_DTL B 
+				WHERE A.AL_CODE_ID = B.CD_DTL_ID 
+				AND A.AL_MY_ID = #{alMyId}
+				AND A.AL_USE_YN = 'Y'
+				ORDER BY alRegDt
+	
+	</select>	
+	
+	<update id="sendLikeAlram" >
+			INSERT INTO ALRAM 
+			(
+				AL_MY_ID,
+				AL_SEND_ID,
+				AL_CODE_ID,
+				AL_REG_ID,
+				AL_REG_DT
+			)
+			VALUES 
+			(
+				#{targetId},
+				#{myId},
+				#{alCodeId},
+				'ADMIN',
+				NOW()
+			) 
+			
+	</update>	
+
+	
+	
+</mapper>

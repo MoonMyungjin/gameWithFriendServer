@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="base.admin.option.mapper">
+	
+	<select id="selectOptionList" resultType="java.util.HashMap">
+		SELECT CD_DTL_ID  ,
+		 CD_DTL_PARENT_ID,
+		 CD_DTL_NAME ,
+		 CD_DTL_DESC 
+		FROM CODE_DTL
+		WHERE CD_DTL_PARENT_ID = #{CD_DTL_PARENT_ID}
+	</select>
+	
+		<select id="selectOption" resultType="java.util.HashMap">
+		SELECT CD_DTL_ID  ,
+		 CD_DTL_PARENT_ID,
+		 CD_DTL_NAME ,
+		 CD_DTL_DESC 
+		FROM CODE_DTL
+		WHERE CD_DTL_ID = #{CD_DTL_ID}
+	</select>
+
+</mapper>
