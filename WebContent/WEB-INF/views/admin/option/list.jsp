@@ -82,7 +82,7 @@ img{
 								<div id="image-show">
 									<!-- server.xml 파일 내 추가 필요 -->
 									<!-- <Context docBase="C:\java\file" path="/tomcatImg/" reloadable="true"/> -->
-									<c:forEach items="${selectedchampion.image}" var="img">
+									<c:forEach items="${selectedOption.image}" var="img">
 										<img src="/tomcatImg/${img.flPath}/${img.flUniqueName}" alt="">
 									</c:forEach>
 								</div>
@@ -91,51 +91,51 @@ img{
 								<table class="table selectedTable table-bordered">
 									<tbody>
 										<tr>
-											<th>시스템 Key</th>
+											<th>옵션코드번호</th>
 											<td>
-												<input type="hidden" name="CH_INDEX" value="${selectedchampion.champ.CH_INDEX }">
-												<c:out value="${selectedchampion.champ.CH_INDEX}"/>
+												<input type="hidden" name="CD_DTL_ID" value="${selectedOption.option.CD_DTL_ID }">
+												<c:out value="${selectedOption.option.CD_DTL_ID}"/>
 											</td>
 										</tr>
 										<tr>
-											<th>이름(영문)</th>
-											<td><input type="text" name="CH_NAME" value="${selectedchampion.champ.CH_NAME }"></td>
+											<th>옵션상위코드번호</th>
+											<td><input type="text" name="CD_DTL_PARENT_ID" disabled="disabled" value="${selectedOption.option.CD_DTL_PARENT_ID }"></td>
 										</tr>
 										<tr>
-											<th>이름(한글)</th>
-											<td><input type="text" name="CH_NAME_K" value="${selectedchampion.champ.CH_NAME_K }"></td>
+											<th>옵션이름</th>
+											<td><input type="text" name="CD_DTL_NAME" value="${selectedOption.option.CD_DTL_NAME }"></td>
 										</tr>
 										<tr>
-											<th>Riot Key</th>
-											<td><input type="text" name="CH_KEY" value="${selectedchampion.champ.CH_KEY }"></td>
+											<th>옵션설명</th>
+											<td><input type="text" name="CD_DTL_DESC" value="${selectedOption.option.CD_DTL_DESC }"></td>
 										</tr>
 										<tr>
 											<td>
 												<c:choose>
-													<c:when test="${fn:length(selectedchampion.image) eq 0}">
+													<c:when test="${fn:length(selectedOption.image) eq 0}">
 														<label for="chooseFile" class="btn btn-dark">파일찾기</label> 
 														<span style="display: none;">
 															<input type="file" id="chooseFile" name="file" accept="image/*" onchange="loadFile(this)">
 														</span>
 													</c:when>
-													<c:when test="${fn:length(selectedchampion.image) gt 0}">
+													<c:when test="${fn:length(selectedOption.image) gt 0}">
 														<label for="chooseFile" class="btn btn-dark">파일변경</label> 
 														<span style="display: none;">
 															<input type="file" id="chooseFile" name="file" accept="image/*" onchange="loadFile(this)">
 														</span>
 													</c:when>
 												</c:choose>
-												<c:if test="${fn:length(selectedchampion.image) eq 0}">
+												<c:if test="${fn:length(selectedOption.image) eq 0}">
 													
 												</c:if>
 											</td>
 											<td id="fileName">
 												<c:choose>
-													<c:when test="${fn:length(selectedchampion.image) eq 0}">
+													<c:when test="${fn:length(selectedOption.image) eq 0}">
 														등록된 파일 없음
 													</c:when>
-													<c:when test="${fn:length(selectedchampion.image) gt 0}">
-														<c:forEach items="${selectedchampion.image}" var="img">
+													<c:when test="${fn:length(selectedOption.image) gt 0}">
+														<c:forEach items="${selectedOption.image}" var="img">
 															${img.flOriginName}
 														</c:forEach>
 													</c:when>
@@ -163,19 +163,19 @@ img{
 						<table class="table listTable table-head-fixed table-bordered">
 							<thead>
 								<tr>
-									<th>시스템 Key</th>
-									<th>Riot Key</th>
-									<th>이름(영문)</th>
-									<th>이름(한글)</th>
+									<th>옵션코드번호</th>
+									<th>옵션상위코드번호</th>
+									<th>옵션네임</th>
+									<th>옵션설명</th>
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach items="${championList}" var="champ" varStatus="i">
-									<tr class="lineTr <c:if test="${champ.CH_INDEX eq selectedchampion.champ.CH_INDEX}">selected</c:if>">
-										<td>${champ.CH_INDEX}</td>
-										<td>${champ.CH_KEY}</td>
-										<td>${champ.CH_NAME}</td>
-										<td>${champ.CH_NAME_K}</td>
+								<c:forEach items="${selectOptionList}" var="option" varStatus="i">
+									<tr class="lineTr <c:if test="${option.CD_DTL_ID eq selectedOption.option.CD_DTL_ID}">selected</c:if>">
+										<td>${option.CD_DTL_ID}</td>
+										<td>${option.CD_DTL_PARENT_ID}</td>
+										<td>${option.CD_DTL_NAME}</td>
+										<td>${option.CD_DTL_DESC}</td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -211,31 +211,30 @@ img{
 	
 	$(".lineTr").click(function(){
 		
-		var chIndex = $(this).children().eq(0).text();
+		var opIndex = $(this).children().eq(0).text();
 		
-		window.location.href = "/admin/champion/list.do?CH_INDEX="+chIndex+"&SEARCH_KEY="+$('#searchName').val();
+		window.location.href = "/admin/option/list.do?CD_DTL_ID="+opIndex+"&SEARCH_KEY="+$('#searchName').val();
 		
 	});
 	
 	function search(){
 		
 		var chIndex = $('.selected').children().eq(0).text();
-		window.location.href = "/admin/champion/list.do?CH_INDEX="+chIndex+"&SEARCH_KEY="+$('#searchName').val();
+		window.location.href = "/admin/option/list.do?CD_DTL_ID="+opIndex+"&SEARCH_KEY="+$('#searchName').val();
 	}
 	
 	$("#searchName").on("keyup",function(key){
 		if(key.keyCode==13) {
 			var chIndex = $('.selected').children().eq(0).text();
-			window.location.href = "/admin/champion/list.do?CH_INDEX="+chIndex+"&SEARCH_KEY="+$('#searchName').val();
+			window.location.href = "/admin/option/list.do?CD_DTL_ID="+opIndex+"&SEARCH_KEY="+$('#searchName').val();
 		}
 	});
 	
 	function clearInput(){
 // 		console.log($(".selectedTable")[0])
 		$(".selectedTable").find("td").eq(0).html("저장시 채번");
-		$(".selectedTable").find("input[name=CH_NAME]").val("");
-		$(".selectedTable").find("input[name=CH_NAME_K]").val("");
-		$(".selectedTable").find("input[name=CH_KEY]").val("");
+		$(".selectedTable").find("input[name=CD_DTL_NAME]").val("");
+		$(".selectedTable").find("input[name=CD_DTL_DESC]").val("");
 		$(".selectedTable").find("label").html("파일찾기");
 		$("#fileName").html("");
 		$("#image-show").html("");

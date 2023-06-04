@@ -11,9 +11,15 @@
 		 CD_DTL_DESC 
 		FROM CODE_DTL
 		WHERE CD_DTL_PARENT_ID = #{CD_DTL_PARENT_ID}
+		 <where>
+		 	 <if test="SEARCH_KEY != null and !SEARCH_KEY.equals('')">
+				 AND CD_DTL_NAME LIKE CONCAT('%',#{SEARCH_KEY},'%')
+			 </if>
+		  </where>
+ 		 ORDER BY CD_DTL_ID 
 	</select>
 	
-		<select id="selectOption" resultType="java.util.HashMap">
+	<select id="selectOption" resultType="java.util.HashMap">
 		SELECT CD_DTL_ID  ,
 		 CD_DTL_PARENT_ID,
 		 CD_DTL_NAME ,

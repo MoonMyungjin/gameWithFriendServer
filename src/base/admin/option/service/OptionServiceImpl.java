@@ -30,11 +30,18 @@ public class OptionServiceImpl implements OptionService {
 	}
 
 	@Override
-	public HashMap<String, Object> selectOption(String opDtlId) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public HashMap<String, Object> selectOption(String optionIndex) throws SQLException {
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("option",optionDAO.selectOption(optionIndex));
+		FileVO paramVO = new FileVO();
+		paramVO.setFlTableId("OPTION");
+		paramVO.setFlTableKey(optionIndex);
+		resultMap.put("image",fileDAO.selectFiles(paramVO));
+		return resultMap;
 	}
 	
+	
+
 	
 
 

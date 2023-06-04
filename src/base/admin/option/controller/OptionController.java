@@ -36,6 +36,14 @@ public class OptionController {
 		searchMap.put("CD_DTL_PARENT_ID", "101");
 		List<HashMap<String,String>> selectOptionList = optionService.selectOptionList(searchMap);
 		model.addAttribute("selectOptionList", selectOptionList);
+		String optionIndex = "";
+		if(searchMap.get("CD_DTL_ID") == null || searchMap.get("CD_DTL_ID").equals("")) {
+			optionIndex = String.valueOf(selectOptionList.get(0).get("CD_DTL_ID"));
+		} else {
+			optionIndex = String.valueOf(searchMap.get("CD_DTL_ID"));
+		}
+		HashMap<String,Object> selectedOption = optionService.selectOption(optionIndex);
+		model.addAttribute("selectedOption", selectedOption);
 		model.addAttribute("searchMap", searchMap);
 
 		

@@ -20,6 +20,10 @@ public class OptionDAO {
 	public List<HashMap<String, String>> selectOptionList (Map<String, String> searchMap) {
 		return session.selectList("base.admin.option.mapper.selectOptionList",searchMap);
 	}
+	
+	public HashMap<String, String> selectOption (String optionIndex) {
+		return session.selectOne("base.admin.option.mapper.selectOption",optionIndex);
+	}
 
 
 }
