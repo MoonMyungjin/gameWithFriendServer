@@ -21,6 +21,13 @@
     border-color: white;
     box-shadow: none;
 }
+.lineTrTwo:hover {
+	cursor: pointer;
+	color: #fdfbd7;
+    background-color: #60b3ac;
+    border-color: white;
+    box-shadow: none;
+}
 .selected {
 	color: #fdfbd7;
     background-color: #60b3ac;
@@ -89,6 +96,7 @@ img{
 							</div>
 							<div class="col-sm-6">
 								<table class="table selectedTable table-bordered">
+									<thead>상위옵션</thead>
 									<tbody>
 										<tr>
 											<th>옵션코드번호</th>
@@ -154,6 +162,87 @@ img{
 										</tr>
 									</tbody>
 								</table>
+								
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div id="image-show-under">
+									<!-- server.xml 파일 내 추가 필요 -->
+									<!-- <Context docBase="C:\java\file" path="/tomcatImg/" reloadable="true"/> -->
+									<c:forEach items="${selectedOption.image}" var="img">
+										<img src="/tomcatImg/${img.flPath}/${img.flUniqueName}" alt="">
+									</c:forEach>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<table class="table selectedTable table-bordered">
+									<thead>하위옵션</thead>
+									<tbody>
+										<tr>
+											<th>옵션코드번호</th>
+											<td>
+												<input type="hidden" name="CD_DTL_ID_UNDER" value="${selectedUnderOption.option.CD_DTL_ID }">
+												<c:out value="${selectedUnderOption.option.CD_DTL_ID}"/>
+											</td>
+										</tr>
+										<tr>
+											<th>옵션상위코드번호</th>
+											<td><input type="text" name="CD_DTL_PARENT_ID_UNDER" disabled="disabled" value="${selectedUnderOption.option.CD_DTL_PARENT_ID }"></td>
+										</tr>
+										<tr>
+											<th>옵션이름</th>
+											<td><input type="text" name="CD_DTL_NAME_UNDER" value="${selectedUnderOption.option.CD_DTL_NAME }"></td>
+										</tr>
+										<tr>
+											<th>옵션설명</th>
+											<td><input type="text" name="CD_DTL_DESC_UNDER" value="${selectedUnderOption.option.CD_DTL_DESC }"></td>
+										</tr>
+										<tr>
+											<td>
+												<c:choose>
+													<c:when test="${fn:length(selectedUnderOption.image) eq 0}">
+														<label for="chooseFile" class="btn btn-dark">파일찾기</label> 
+														<span style="display: none;">
+															<input type="file" id="chooseFile" name="fileUnder" accept="image/*" onchange="loadFile(this)">
+														</span>
+													</c:when>
+													<c:when test="${fn:length(selectedUnderOption.image) gt 0}">
+														<label for="chooseFile" class="btn btn-dark">파일변경</label> 
+														<span style="display: none;">
+															<input type="file" id="chooseFile" name="fileUnder" accept="image/*" onchange="loadFile(this)">
+														</span>
+													</c:when>
+												</c:choose>
+												<c:if test="${fn:length(selectedUnderOption.image) eq 0}">
+													
+												</c:if>
+											</td>
+											<td id="fileNameUnder">
+												<c:choose>
+													<c:when test="${fn:length(selectedUnderOption.image) eq 0}">
+														등록된 파일 없음
+													</c:when>
+													<c:when test="${fn:length(selectedUnderOption.image) gt 0}">
+														<c:forEach items="${selectedUnderOption.image}" var="img">
+															${img.flOriginName}
+														</c:forEach>
+													</c:when>
+												</c:choose>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="2">
+												<span onclick="clearInputUnder()" class="btn btn-dark">
+													입력초기화
+												</span>
+												<span onclick="doSubmit()" class="btn btn-dark">
+													저장
+												</span>
+											</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 						</div>
 					</div>
@@ -161,6 +250,7 @@ img{
 				<div class="col-sm-6" >
 					<div class="table1">
 						<table class="table listTable table-head-fixed table-bordered">
+							<thead>상위옵션</thead>
 							<thead>
 								<tr>
 									<th>옵션코드번호</th>
@@ -176,6 +266,27 @@ img{
 										<td>${option.CD_DTL_PARENT_ID}</td>
 										<td>${option.CD_DTL_NAME}</td>
 										<td>${option.CD_DTL_DESC}</td>
+									</tr>
+								</c:forEach>
+							</tbody>
+						</table>
+						<table class="table listTable table-head-fixed table-bordered">
+							<thead>하위옵션</thead>
+							<thead>
+								<tr>
+									<th>옵션코드번호</th>
+									<th>옵션상위코드번호</th>
+									<th>옵션네임</th>
+									<th>옵션설명</th>
+								</tr>
+							</thead>
+							<tbody>
+								<c:forEach items="${selectOptionUnderList}" var="optionUnder" varStatus="i">
+									<tr class="lineTrTwo" <c:if test="${optionUnder.CD_DTL_ID eq selectedOption.option.CD_DTL_ID}">selected</c:if>">
+										<td>${optionUnder.CD_DTL_ID}</td>
+										<td>${optionUnder.CD_DTL_PARENT_ID}</td>
+										<td>${optionUnder.CD_DTL_NAME}</td>
+										<td>${optionUnder.CD_DTL_DESC}</td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -212,10 +323,20 @@ img{
 	$(".lineTr").click(function(){
 		
 		var opIndex = $(this).children().eq(0).text();
-		
-		window.location.href = "/admin/option/list.do?CD_DTL_ID="+opIndex+"&SEARCH_KEY="+$('#searchName').val();
+		var opTwoIndex = $(".lineTrTwo").children().eq(0).text();
+		window.location.href = "/admin/option/list.do?CD_DTL_ID="+opIndex+"&CD_DTL_ID_UNDER="+opTwoIndex+"&SEARCH_KEY="+$('#searchName').val();
 		
 	});
+	
+	$(".lineTrTwo").click(function(){
+		
+		var opIndex = $(".lineTr selected").children().eq(0).text();
+		var opTwoIndex =$(this).children().eq(0).text();
+		window.location.href = "/admin/option/list.do?CD_DTL_ID="+opIndex+"&CD_DTL_ID_UNDER="+opTwoIndex+"&SEARCH_KEY="+$('#searchName').val();
+		
+	});
+	
+	
 	
 	function search(){
 		
@@ -238,6 +359,16 @@ img{
 		$(".selectedTable").find("label").html("파일찾기");
 		$("#fileName").html("");
 		$("#image-show").html("");
+	}
+	
+	function clearInputUnder(){
+// 		console.log($(".selectedTable")[0])
+		$(".selectedTable").find("input[name=CD_DTL_ID_UNDER]").parent().html("저장시 채번");
+		$(".selectedTable").find("input[name=CD_DTL_NAME_UNDER]").val("");
+		$(".selectedTable").find("input[name=CD_DTL_DESC_UNDER]").val("");
+		$(".selectedTable").find("label").html("파일찾기");
+		$("#fileNameUnder").html("");
+		$("#image-show-under").html("");
 	}
 	
 	function doSubmit(){

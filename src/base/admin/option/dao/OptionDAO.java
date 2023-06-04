@@ -24,6 +24,23 @@ public class OptionDAO {
 	public HashMap<String, String> selectOption (String optionIndex) {
 		return session.selectOne("base.admin.option.mapper.selectOption",optionIndex);
 	}
-
-
+	
+	public String selectUnderOptionIndex (String underOptionIndex) {
+		return session.selectOne("base.admin.option.mapper.selectUnderOptionIndex",underOptionIndex);
+	}
+	
+	public List<HashMap<String, String>> selectUnderOptionList (String selectUnderOptionIndex) {
+		return session.selectList("base.admin.option.mapper.selectUnderOptionList",selectUnderOptionIndex);
+	}
+	
+	public void insertMegaOption (Map<String, String> searchMap) {
+		session.insert("base.admin.option.mapper.insertMegaOption",searchMap);
+	}
+	
+	public void insertOption (Map<String, String> searchMap) {
+		session.insert("base.admin.option.mapper.insertOption",searchMap);
+	}
+	
+	
+	
 }

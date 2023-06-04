@@ -27,5 +27,63 @@
 		FROM CODE_DTL
 		WHERE CD_DTL_ID = #{CD_DTL_ID}
 	</select>
+	
+	<insert id="insertMegaOption">
+		INSERT INTO CODE(
+			 C_ID
+			,C_NAME
+			,C_DESC
+			,C_USE_YN
+			,C_ORDER
+			,C_REG_ID
+			,C_REG_DATE
+		) VALUES (
+			 (SELECT MAX(CONVERT(C_ID, INT))+1 FROM CODE) 
+			,#{CD_DTL_DESC}
+			,#{CD_DTL_NAME}
+			,'Y'
+			,(SELECT MAX(CONVERT(C_ORDER, INT))+1 FROM CODE) 
+			,'ADMIN'
+			,NOW()
+		)
+	</insert>
+	
+	<insert id="insertOption">
+		INSERT INTO CODE_DTL(
+			 CD_DTL_ID
+			,CD_DTL_PARENT_ID
+			,CD_DTL_NAME
+			,CD_DTL_DESC
+			,CD_DTL_USE_YN
+			,CD_DTL_ORDER
+			,CD_DTL_REG_ID
+			,CD_DTL_REG_DATE
+		) VALUES (
+			 (SELECT MAX(CONVERT(CD_DTL_ID, INT))+1 FROM CODE_DTL WHERE CD_DTL_PARENT_ID =#{CD_DTL_PARENT_ID} ) 
+			,#{CD_DTL_PARENT_ID}
+			,#{CD_DTL_NAME}
+			,#{CD_DTL_DESC}
+			,'Y'
+			,(SELECT MAX(CONVERT(CD_DTL_ORDER, INT))+1 FROM CODE_DTL WHERE CD_DTL_PARENT_ID =#{CD_DTL_PARENT_ID} ) 
+			,'ADMIN'
+			,NOW()
+		)
+	</insert>
+	
+	<select id="selectUnderOptionIndex" resultType="java.lang.String">
+		SELECT C_ID
+		 FROM CODE 
+		 WHERE C_DESC =#{underOptionIndex}
+	</select>
+	
+		<select id="selectUnderOptionList" resultType="java.util.HashMap">
+		SELECT CD_DTL_ID  ,
+		 CD_DTL_PARENT_ID,
+		 CD_DTL_NAME ,
+		 CD_DTL_DESC 
+		FROM CODE_DTL
+		WHERE CD_DTL_PARENT_ID = #{selectUnderOptionIndex}
+ 		 ORDER BY CD_DTL_ID 
+	</select>
 
 </mapper>

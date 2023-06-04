@@ -45,8 +45,19 @@ public class OptionController {
 		HashMap<String,Object> selectedOption = optionService.selectOption(optionIndex);
 		model.addAttribute("selectedOption", selectedOption);
 		model.addAttribute("searchMap", searchMap);
-
 		
+		Map<String,String> optionMap = (Map<String, String>) selectedOption.get("option");
+		String underOptionIndex = optionMap.get("CD_DTL_NAME");
+		List<HashMap<String,String>> selectOptionUnderList = optionService.selectOptionUnderList(underOptionIndex);
+		model.addAttribute("selectOptionUnderList", selectOptionUnderList);
+		String optionUnderIndex = "";
+		if(searchMap.get("CD_DTL_ID_UNDER") == null || searchMap.get("CD_DTL_ID_UNDER").equals("")) {
+			optionUnderIndex = String.valueOf(selectOptionUnderList.get(0).get("CD_DTL_ID"));
+		} else {
+			optionUnderIndex = String.valueOf(searchMap.get("CD_DTL_ID_UNDER"));
+		}
+		HashMap<String,Object> selectedUnderOption = optionService.selectOption(optionUnderIndex);
+		model.addAttribute("selectedUnderOption", selectedUnderOption);
 		return "/admin/option/list";
 	}
 	

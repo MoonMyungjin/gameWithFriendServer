@@ -40,6 +40,12 @@ public class OptionServiceImpl implements OptionService {
 		return resultMap;
 	}
 	
+	@Override
+	public List<HashMap<String, String>> selectOptionUnderList(String underOptionIndex) throws SQLException {		
+		String selectUnderOptionIndex = optionDAO.selectUnderOptionIndex(underOptionIndex);
+		return optionDAO.selectUnderOptionList(selectUnderOptionIndex);
+	}
+	
 	
 
 	
