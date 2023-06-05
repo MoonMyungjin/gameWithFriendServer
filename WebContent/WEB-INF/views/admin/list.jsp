@@ -40,12 +40,28 @@
 <body>
 	<section class="content-header">
 		<div class="container-fluid">
-			<div class="row md-2">
-				<div class="col-sm-6" style="display: flex;">
-					<h1>회원관리</h1>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="row">
+						<div class="col-sm-12">
+							<h1>회원관리</h1>
+						</div>
+						<div class="col-sm-12">
+							셀렉트박스 변경 시 바로 저장됩니다.
+						</div>
+					</div>
 				</div>
 				<div class="col-sm-6 tright">
-					수정을 원하시는 회원 정보를 더블클릭 해주세요
+					<div class="row">
+						<div class="input-group input-group-sm" style="padding: 0.25rem 0.5rem; font-size: .875rem; line-height: 1.5;">
+							<input id="searchName" type="text" class="form-control float-right" placeholder="ID 검색" value="${searchMap.SEARCH_KEY }" style="width: 100px; padding: 0.25rem 0.5rem; font-size: .875rem; line-height: 1.5;">
+							<div class="input-group-append">
+								<span id="searchBtn" onclick="search()" class="btn btn-dark listColor" style="padding: 0.25rem 0.5rem; font-size: .875rem; line-height: 1.5;">
+									<i class="fas fa-search" aria-hidden="true"></i>
+								</span>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -57,28 +73,55 @@
 					<thead>
 						<tr>
 							<th>ID</th>
-							<th>NAME</th>
-							<th>NICKNAME</th>
-							<th>마지막 로그인 IP</th>
-							<th>최종접속일</th>
-							<th>상태코드</th>
+							<th>최근로그인IP</th>
+							<th>최근로그인일시</th>
+							<th>최근로그인기종 </th>
+							<th>
+								상태
+								<select id="searchState">
+									<option value="">전체</option>
+									<c:forEach var="state" items="${stateList}">
+										<option value="${state.CD_DTL_ID }">${state.CD_DTL_NAME }</option>
+									</c:forEach>	
+								</select>
+							</th>
+							<th>
+								구분
+								<select id="searchType">
+									<option value="">전체</option>
+									<c:forEach var="type" items="${typeList}">
+										<option value="${type.CD_DTL_ID }">${type.CD_DTL_NAME }</option>
+									</c:forEach>	
+								</select>
+							</th>
 						</tr>
 					</thead>
 					<tbody>
 						<c:forEach items="${userList}" var="user" varStatus="i">
 							<tr>
 								<td>${user.UIntgId}</td>
-								<td>${user.UName}</td>
-								<td>${user.UNickname}</td>
 								<td>${user.ULastLoginIp}</td>
 								<td>
-									<fmt:formatDate value="${user.ULastLoginDttm}" pattern="YYYY-MM-DD"/>
+									<fmt:formatDate value="${user.ULastLoginDttm}" pattern="YYYY-MM-dd"/>
 								</td>
-								<td>${user.UStateCd}</td>
+								<td>${user.ULastTerminalKind}</td>
+								<td>
+									<select id="state_${user.UIntgId}">
+										<c:forEach var="state" items="${stateList}">
+											<option value="${state.CD_DTL_ID }" <c:if test="${state.CD_DTL_ID eq user.UStateCd}">selected="selected" data-sel="Y"</c:if> >${state.CD_DTL_NAME }</option>
+										</c:forEach>
+									</select>
+								</td>
+								<td>
+									<select id="type_${user.UIntgId}">
+										<c:forEach var="type" items="${typeList}">
+											<option value="${type.CD_DTL_ID }" <c:if test="${type.CD_DTL_ID eq user.UTypeCd}">selected="selected" data-sel="Y"</c:if> >${type.CD_DTL_NAME }</option>
+										</c:forEach>
+									</select>
+								</td>
 							</tr>
 						</c:forEach>
 					</tbody>
-
 				</table>
 			</div>
 		</div>
@@ -87,19 +130,19 @@
 	
 	<script>
 		 
-		 
-	window.onload = function(){
-
+	$("select[id^=state]").on("change",function(){
+		var id = $(this).attr("id");
+		var selectedVal = $(this).val();
+		var beforeVal = $("#"+id).find("option[data-sel='Y']").val();
 		
-		$("#searchBtn").on("click",function(){
-			var search = $(this).parent().parent().children().val();
-			
-			location.href = "/manager/consulting/list.do?search="+search;
-			 
-		});
-
+		if(!confirm("사용자 상태를 정말 변경 하시곘습니까?")){
+			return false;
+		}
 		
-	let cnsltId;
+		console.log(id);
+		console.log(beforeVal);
+	});
+	
 	$(document).on("click",".lineTr",function(){
 		$(".selectedTr").attr("class","lineTr");
 		$(this).attr("class","selectedTr")
@@ -209,27 +252,7 @@
 	  		}); 
 	
 	});
-	}	
 	
-
-</script>
-
-<script>
-function list_go(page,url){
-      if(!url) url="/manager/consulting/list.do";
-      
-      var jobForm=$('#jobForm');
-      
-      jobForm.find("[name='page']").val(page);
-      jobForm.find("[name='perPageNum']").val(300);
-      jobForm.find("[name='searchType']").val($('select[name="searchType"]').val());
-      jobForm.find("[name='keyword']").val($('div.input-group>input[name="keyword"]').val());
-   
-      jobForm.attr({
-         action:url,
-         method:'get'
-      }).submit();
-   }
 
 </script>
 
