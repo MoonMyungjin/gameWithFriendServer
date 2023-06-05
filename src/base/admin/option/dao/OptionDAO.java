@@ -33,13 +33,23 @@ public class OptionDAO {
 		return session.selectList("base.admin.option.mapper.selectUnderOptionList",selectUnderOptionIndex);
 	}
 	
-	public void insertMegaOption (Map<String, String> searchMap) {
+	public void insertMegaOption (Map<String, Object> searchMap) {
 		session.insert("base.admin.option.mapper.insertMegaOption",searchMap);
 	}
 	
-	public void insertOption (Map<String, String> searchMap) {
+	public void insertOption (Map<String, Object> searchMap) {
 		session.insert("base.admin.option.mapper.insertOption",searchMap);
 	}
+	
+	
+	public void updateMegaOption (Map<String, Object> searchMap) {
+		session.update("base.admin.option.mapper.updateMegaOption",searchMap);
+	}
+	
+	public void updateOption (Map<String, Object> searchMap) {
+		session.update("base.admin.option.mapper.updateOption",searchMap);
+	}
+	
 	
 	
 	

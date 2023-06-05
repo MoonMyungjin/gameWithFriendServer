@@ -11,6 +11,7 @@
 		 CD_DTL_DESC 
 		FROM CODE_DTL
 		WHERE CD_DTL_PARENT_ID = #{CD_DTL_PARENT_ID}
+		AND CD_DTL_ID !='10102'
 		 <where>
 		 	 <if test="SEARCH_KEY != null and !SEARCH_KEY.equals('')">
 				 AND CD_DTL_NAME LIKE CONCAT('%',#{SEARCH_KEY},'%')
@@ -70,6 +71,32 @@
 		)
 	</insert>
 	
+	<insert id="updateMegaOption">
+						
+					UPDATE CODE 
+					SET C_DESC = #{CD_DTL_NAME} 
+					WHERE C_ID = (
+										SELECT C_ID 
+										FROM CODE 
+										WHERE C_DESC =(
+															SELECT CD_DTL_NAME 
+															FROM CODE_DTL 
+															WHERE CD_DTL_ID = #{CD_DTL_ID} 
+												
+															)
+									)
+					
+	</insert>
+	
+	<insert id="updateOption">
+		UPDATE CODE_DTL SET
+			 CD_DTL_NAME=#{CD_DTL_NAME, javaType=String, jdbcType=VARCHAR}
+			,CD_DTL_DESC=#{CD_DTL_DESC, javaType=String, jdbcType=VARCHAR}
+			,CD_DTL_MOD_ID = 'ADMIN'
+			,CD_DTL_MOD_DATE = NOW()
+		WHERE CD_DTL_ID=#{CD_DTL_ID}
+	</insert>
+	
 	<select id="selectUnderOptionIndex" resultType="java.lang.String">
 		SELECT C_ID
 		 FROM CODE 
@@ -85,5 +112,8 @@
 		WHERE CD_DTL_PARENT_ID = #{selectUnderOptionIndex}
  		 ORDER BY CD_DTL_ID 
 	</select>
+	
+	
+
 
 </mapper>

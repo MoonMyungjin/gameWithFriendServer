@@ -61,5 +61,60 @@ public class OptionController {
 		return "/admin/option/list";
 	}
 	
+	@RequestMapping(value="/admin/option/insert.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String saveOption(@RequestParam Map<String,Object> params
+		,@RequestParam("file") MultipartFile[] files
+			) throws Exception {
+		
+		String result = "";
+		
+		try {
+			List<FileVO> saveFiles = null;
+			
+			if(files.length > 0) {
+				for (MultipartFile multiFile : files) {
+					if(multiFile.getSize() > 0) {
+						saveFiles = FileManageUtil.saveFiles(files,FILE_PATH);
+					}
+				}
+			}
+			
+			optionService.saveOption(params, saveFiles);
+			
+		} catch (Exception e) {
+			result = e.toString();
+		}
+		return result;
+	}
+	
+	
+	@RequestMapping(value="/admin/option/insertUnder.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String saveOptionUnder(@RequestParam Map<String,Object> params
+		,@RequestParam("file") MultipartFile[] files
+			) throws Exception {
+		
+		String result = "";
+		
+		try {
+			List<FileVO> saveFiles = null;
+			
+			if(files.length > 0) {
+				for (MultipartFile multiFile : files) {
+					if(multiFile.getSize() > 0) {
+						saveFiles = FileManageUtil.saveFiles(files,FILE_PATH);
+					}
+				}
+			}
+			
+			optionService.saveOptionUnder(params, saveFiles);
+			
+		} catch (Exception e) {
+			result = e.toString();
+		}
+		return result;
+	}
+	
 
 }

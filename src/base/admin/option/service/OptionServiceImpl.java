@@ -45,6 +45,66 @@ public class OptionServiceImpl implements OptionService {
 		String selectUnderOptionIndex = optionDAO.selectUnderOptionIndex(underOptionIndex);
 		return optionDAO.selectUnderOptionList(selectUnderOptionIndex);
 	}
+
+	@Override
+	public void saveOption(Map<String, Object> params, List<FileVO> files) throws SQLException {
+	HashMap<String, String> option = optionDAO.selectOption(params.get("CD_DTL_ID")+"");
+		
+		if(option == null || option.isEmpty()) {
+
+			optionDAO.insertMegaOption(params);
+			optionDAO.insertOption(params);
+			
+		} else {
+			optionDAO.updateMegaOption(params);
+			optionDAO.updateOption(params);
+		}
+		
+		if(files != null) {
+			//fileDB delete > insert
+			FileVO paramVO = new FileVO();
+			paramVO.setFlTableId("OPTION");
+			paramVO.setFlTableKey(params.get("CD_DTL_ID")+"");
+			fileDAO.deleteFile(paramVO);
+		
+			for (FileVO fileVO : files) {
+				fileVO.setFlRegId("SYSTEM");
+				fileVO.setFlTableId("OPTION");
+				fileVO.setFlTableKey(params.get("CD_DTL_ID")+"");
+				fileDAO.insertFile(fileVO);
+			}
+		}
+		
+	}
+	
+	@Override
+	public void saveOptionUnder(Map<String, Object> params, List<FileVO> files) throws SQLException {
+	HashMap<String, String> option = optionDAO.selectOption(params.get("CD_DTL_ID_UNDER")+"");
+		
+		if(option == null || option.isEmpty()) {
+
+			optionDAO.insertOption(params);
+			
+		} else {
+			optionDAO.updateOption(params);
+		}
+		
+		if(files != null) {
+			//fileDB delete > insert
+			FileVO paramVO = new FileVO();
+			paramVO.setFlTableId("OPTION");
+			paramVO.setFlTableKey(params.get("CD_DTL_ID_UNDER")+"");
+			fileDAO.deleteFile(paramVO);
+		
+			for (FileVO fileVO : files) {
+				fileVO.setFlRegId("SYSTEM");
+				fileVO.setFlTableId("OPTION");
+				fileVO.setFlTableKey(params.get("CD_DTL_ID_UNDER")+"");
+				fileDAO.insertFile(fileVO);
+			}
+		}
+		
+	}
 	
 	
 

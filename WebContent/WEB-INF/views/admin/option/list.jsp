@@ -34,6 +34,12 @@
     border-color: white;
     box-shadow: none;
 }
+.Underselected {
+	color: #fdfbd7;
+    background-color: #60b3ac;
+    border-color: white;
+    box-shadow: none;
+}
 .selectedTable Th{
 	background-color: #60b3ac !important;
 	color: white;
@@ -170,7 +176,7 @@ img{
 								<div id="image-show-under">
 									<!-- server.xml 파일 내 추가 필요 -->
 									<!-- <Context docBase="C:\java\file" path="/tomcatImg/" reloadable="true"/> -->
-									<c:forEach items="${selectedOption.image}" var="img">
+									<c:forEach items="${selectedUnderOption.image}" var="img">
 										<img src="/tomcatImg/${img.flPath}/${img.flUniqueName}" alt="">
 									</c:forEach>
 								</div>
@@ -236,7 +242,7 @@ img{
 												<span onclick="clearInputUnder()" class="btn btn-dark">
 													입력초기화
 												</span>
-												<span onclick="doSubmit()" class="btn btn-dark">
+												<span onclick="doSubmitUnder()" class="btn btn-dark">
 													저장
 												</span>
 											</td>
@@ -282,7 +288,7 @@ img{
 							</thead>
 							<tbody>
 								<c:forEach items="${selectOptionUnderList}" var="optionUnder" varStatus="i">
-									<tr class="lineTrTwo" <c:if test="${optionUnder.CD_DTL_ID eq selectedOption.option.CD_DTL_ID}">selected</c:if>">
+									<tr class="lineTrTwo <c:if test="${optionUnder.CD_DTL_ID eq selectedUnderOption.option.CD_DTL_ID}">Underselected</c:if>">
 										<td>${optionUnder.CD_DTL_ID}</td>
 										<td>${optionUnder.CD_DTL_PARENT_ID}</td>
 										<td>${optionUnder.CD_DTL_NAME}</td>
@@ -330,7 +336,7 @@ img{
 	
 	$(".lineTrTwo").click(function(){
 		
-		var opIndex = $(".lineTr selected").children().eq(0).text();
+		var opIndex = $(".selected").children().eq(0).text();
 		var opTwoIndex =$(this).children().eq(0).text();
 		window.location.href = "/admin/option/list.do?CD_DTL_ID="+opIndex+"&CD_DTL_ID_UNDER="+opTwoIndex+"&SEARCH_KEY="+$('#searchName').val();
 		
@@ -382,6 +388,33 @@ img{
 		
 		$.ajax({
 			url : "insert.do"
+			,enctype: 'multipart/form-data'
+			,type : 'POST' 
+			,data : data 
+			,contentType : false
+			,processData : false
+			,success : function(data) {
+				location.reload();
+			}
+			,error : function(xhr, status) {
+				console.log(xhr);
+			    alert(xhr + " : " + status);
+			}
+		});
+
+	}
+	
+	function doSubmitUnder(){
+		
+		var form = $("#form")[0];
+		var data = new FormData(form)
+
+		if($('input[type=file]')[0].files[0] == undefined){
+		    $("#chooseFile").attr("disabled",true);
+		}
+		
+		$.ajax({
+			url : "insertUnder.do"
 			,enctype: 'multipart/form-data'
 			,type : 'POST' 
 			,data : data 
