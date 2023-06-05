@@ -28,8 +28,6 @@ public class LoginController {
 	@Resource(name="loginService")
 	private LoginService loginService;
 	
-	private static final Logger log = LoggerFactory.getLogger(LoginController.class);
-	
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping(value="/login/loginCheck.do")
 	public ModelAndView loginCheck(HttpServletRequest request, HttpMethod httpMethod, @RequestBody HashMap<String, Object> commandMap ) throws Exception{
@@ -38,7 +36,7 @@ public class LoginController {
 		Map<String, Object> returnMap = loginService.checkLoginUserInfo(commandMap);
 		
 		
-		modelAndView.addObject("userInfo", returnMap);
+		modelAndView.addObject("sessionInfo", returnMap);
 		
 		return modelAndView;
 	}
@@ -58,7 +56,7 @@ public class LoginController {
 					
 			returnMap = loginService.selectUserInfo(commandMap);
 			
-			modelAndView.addObject("userInfo", returnMap);
+			modelAndView.addObject("sessionInfo", returnMap);
 			modelAndView.addObject("isSaved", isSaved);
 			
 		} else {

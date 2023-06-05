@@ -7,7 +7,6 @@
 <mapper namespace="base.login.mapper">
 	<select id="base.login.mapper.selectUserInfo" resultType="customMap">
 		SELECT U_INTG_ID
-		     , U_NAME
 		     , U_NICKNAME
 		     , U_LAST_LOGIN_IP
 		     , DATE_FORMAT(U_LAST_LOGIN_DTTM, '%Y%m%d%H%i%s') as U_LAST_LOGIN_DTTM
@@ -23,7 +22,6 @@
 		INSERT INTO USER
 		(
 		 U_INTG_ID,
-		 U_NAME,
 		 U_NICKNAME,
 		 U_LAST_LOGIN_IP,
 		 U_LAST_LOGIN_DTTM,
@@ -39,7 +37,6 @@
 		VALUES
 		(
 		 #{uIntgId},
-		 #{uName},
 		 NULL,
 		 #{uLastLoginIp},
 		 NOW(),

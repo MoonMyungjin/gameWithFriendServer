@@ -89,6 +89,13 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!-- chatting 모듈 설치 -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-messaging</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		
 		
 		
 		<!-- mariaDB -->
@@ -291,6 +298,7 @@
 		  <version>31.1-jre</version>
 		</dependency>
 		
+
 	</dependencies>
 	<build>
 		<plugins>
