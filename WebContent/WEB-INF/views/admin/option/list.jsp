@@ -208,15 +208,15 @@ img{
 											<td>
 												<c:choose>
 													<c:when test="${fn:length(selectedUnderOption.image) eq 0}">
-														<label for="chooseFile" class="btn btn-dark">파일찾기</label> 
+														<label for="chooseFileUnder" class="btn btn-dark">파일찾기</label> 
 														<span style="display: none;">
-															<input type="file" id="chooseFile" name="fileUnder" accept="image/*" onchange="loadFile(this)">
+															<input type="file" id="chooseFileUnder" name="fileUnder" accept="image/*" onchange="loadFileUnder(this)">
 														</span>
 													</c:when>
 													<c:when test="${fn:length(selectedUnderOption.image) gt 0}">
-														<label for="chooseFile" class="btn btn-dark">파일변경</label> 
+														<label for="chooseFileUnder" class="btn btn-dark">파일변경</label> 
 														<span style="display: none;">
-															<input type="file" id="chooseFile" name="fileUnder" accept="image/*" onchange="loadFile(this)">
+															<input type="file" id="chooseFileUnder" name="fileUnder" accept="image/*" onchange="loadFileUnder(this)">
 														</span>
 													</c:when>
 												</c:choose>
@@ -326,6 +326,23 @@ img{
 	    $('#fileName').html(file.name);
 	};
 	
+	function loadFileUnder(input) {
+	    var file = input.files[0];	//선택된 파일 가져오기
+	    
+	  	//새로운 이미지 div 추가
+	    var newImage = document.createElement("img");
+	    newImage.setAttribute("class", 'img');
+
+	    //이미지 source 가져오기
+	    newImage.src = URL.createObjectURL(file);   
+
+	    newImage.style.objectFit = "contain";
+
+	    //이미지를 image-show div에 추가
+	    var container = $('#image-show-under').html(newImage);
+	    $('#fileNameUnder').html(file.name);
+	};
+	
 	$(".lineTr").click(function(){
 		
 		var opIndex = $(this).children().eq(0).text();
@@ -410,7 +427,7 @@ img{
 		var data = new FormData(form)
 
 		if($('input[type=file]')[0].files[0] == undefined){
-		    $("#chooseFile").attr("disabled",true);
+		    $("#chooseFileUnder").attr("disabled",true);
 		}
 		
 		$.ajax({
