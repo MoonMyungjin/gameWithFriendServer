@@ -71,6 +71,33 @@
 		)
 	</insert>
 	
+	<insert id="insertOptionUnder">
+		INSERT INTO CODE_DTL(
+			 CD_DTL_ID
+			,CD_DTL_PARENT_ID
+			,CD_DTL_NAME
+			,CD_DTL_DESC
+			,CD_DTL_USE_YN
+			,CD_DTL_ORDER
+			,CD_DTL_REG_ID
+			,CD_DTL_REG_DATE
+		) VALUES (
+			IFNULL(
+					(
+						SELECT MAX(CONVERT(A.CD_DTL_ID, INT))+1 FROM CODE_DTL A WHERE A.CD_DTL_PARENT_ID =#{CD_DTL_PARENT_ID_UNDER}
+					) 
+					,CONCAT(#{CD_DTL_PARENT_ID_UNDER},'01') 
+				  )
+			,#{CD_DTL_PARENT_ID_UNDER}
+			,#{CD_DTL_NAME_UNDER}
+			,#{CD_DTL_DESC_UNDER}
+			,'Y'
+			,(SELECT MAX(CONVERT(B.CD_DTL_ORDER, INT))+1 FROM CODE_DTL B WHERE B.CD_DTL_PARENT_ID =#{CD_DTL_PARENT_ID_UNDER} ) 
+			,'ADMIN'
+			,NOW()
+		)
+	</insert>
+	
 	<insert id="updateMegaOption">
 						
 					UPDATE CODE 
@@ -95,6 +122,15 @@
 			,CD_DTL_MOD_ID = 'ADMIN'
 			,CD_DTL_MOD_DATE = NOW()
 		WHERE CD_DTL_ID=#{CD_DTL_ID}
+	</insert>
+	
+	<insert id="updateOptionUnder">
+		UPDATE CODE_DTL SET
+			 CD_DTL_NAME=#{CD_DTL_NAME_UNDER, javaType=String, jdbcType=VARCHAR}
+			,CD_DTL_DESC=#{CD_DTL_DESC_UNDER, javaType=String, jdbcType=VARCHAR}
+			,CD_DTL_MOD_ID = 'ADMIN'
+			,CD_DTL_MOD_DATE = NOW()
+		WHERE CD_DTL_ID=#{CD_DTL_ID_UNDER}
 	</insert>
 	
 	<select id="selectUnderOptionIndex" resultType="java.lang.String">

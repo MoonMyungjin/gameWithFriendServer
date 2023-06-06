@@ -53,6 +53,7 @@ public class OptionServiceImpl implements OptionService {
 		if(option == null || option.isEmpty()) {
 
 			optionDAO.insertMegaOption(params);
+			params.put("CD_DTL_PARENT_ID","101");
 			optionDAO.insertOption(params);
 			
 		} else {
@@ -82,11 +83,10 @@ public class OptionServiceImpl implements OptionService {
 	HashMap<String, String> option = optionDAO.selectOption(params.get("CD_DTL_ID_UNDER")+"");
 		
 		if(option == null || option.isEmpty()) {
-
-			optionDAO.insertOption(params);
+			optionDAO.insertOptionUnder(params);
 			
 		} else {
-			optionDAO.updateOption(params);
+			optionDAO.updateOptionUnder(params);
 		}
 		
 		if(files != null) {
@@ -104,6 +104,11 @@ public class OptionServiceImpl implements OptionService {
 			}
 		}
 		
+	}
+	
+	@Override
+	public String selectOptionUnderKey(String upperOptionIndex) throws SQLException {		
+		return  optionDAO.selectUnderOptionIndex(upperOptionIndex);
 	}
 	
 	

@@ -50,7 +50,13 @@ public class OptionDAO {
 		session.update("base.admin.option.mapper.updateOption",searchMap);
 	}
 	
+	public void insertOptionUnder (Map<String, Object> searchMap) {
+		session.insert("base.admin.option.mapper.insertOptionUnder",searchMap);
+	}
 	
+	public void updateOptionUnder (Map<String, Object> searchMap) {
+		session.update("base.admin.option.mapper.updateOptionUnder",searchMap);
+	}
 	
 	
 }

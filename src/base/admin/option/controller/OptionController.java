@@ -92,7 +92,7 @@ public class OptionController {
 	@RequestMapping(value="/admin/option/insertUnder.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveOptionUnder(@RequestParam Map<String,Object> params
-		,@RequestParam("file") MultipartFile[] files
+		,@RequestParam("fileUnder") MultipartFile[] files
 			) throws Exception {
 		
 		String result = "";
@@ -114,6 +114,24 @@ public class OptionController {
 			result = e.toString();
 		}
 		return result;
+	}
+	
+	
+	@RequestMapping(value="/admin/option/findUnderKey.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String findUnderKey(@RequestParam(required = true) String upperKey
+			) throws Exception {
+		
+		String selectOptionUnderKey = "";
+		
+		try {
+
+		selectOptionUnderKey = optionService.selectOptionUnderKey(upperKey);
+			
+		} catch (Exception e) {
+			
+		}
+		return selectOptionUnderKey;
 	}
 	
 
