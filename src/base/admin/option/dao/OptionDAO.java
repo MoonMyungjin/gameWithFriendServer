@@ -58,5 +58,13 @@ public class OptionDAO {
 		session.update("base.admin.option.mapper.updateOptionUnder",searchMap);
 	}
 	
+	public HashMap<String, String> selectUnderUnderOption (String optionIndex) {
+		return session.selectOne("base.admin.option.mapper.selectUnderUnderOption",optionIndex);
+	}
+	
+	public List<HashMap<String, String>> selectUnderUnderOptionList (Map<String, String> searchMap) {
+		return session.selectList("base.admin.option.mapper.selectUnderUnderOptionList",searchMap);
+	}
+	
 	
 }

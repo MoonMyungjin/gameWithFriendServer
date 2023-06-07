@@ -111,6 +111,27 @@ public class OptionServiceImpl implements OptionService {
 		return  optionDAO.selectUnderOptionIndex(upperOptionIndex);
 	}
 	
+
+	@Override
+	public List<HashMap<String, String>> selectUnderUnderOptionList(Map<String,String> searchMap) throws SQLException {		
+		return optionDAO.selectUnderUnderOptionList(searchMap);
+	}
+	
+	
+	@Override
+	public HashMap<String, Object> selectUnderUnderOption(String optionIndex) throws SQLException {
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("option",optionDAO.selectUnderUnderOption(optionIndex));
+		if(optionIndex !="") {
+			FileVO paramVO = new FileVO();
+			paramVO.setFlTableId("OPTION");
+			paramVO.setFlTableKey(optionIndex);
+			resultMap.put("image",fileDAO.selectFiles(paramVO));
+		}
+
+		return resultMap;
+	}
+	
 	
 
 	

@@ -139,7 +139,8 @@
 		 WHERE C_DESC =#{underOptionIndex}
 	</select>
 	
-		<select id="selectUnderOptionList" resultType="java.util.HashMap">
+	
+	<select id="selectUnderOptionList" resultType="java.util.HashMap">
 		SELECT CD_DTL_ID  ,
 		 CD_DTL_PARENT_ID,
 		 CD_DTL_NAME ,
@@ -149,7 +150,25 @@
  		 ORDER BY CD_DTL_ID 
 	</select>
 	
+	<select id="selectUnderUnderOption" resultType="java.util.HashMap">
+		SELECT CD_DTL_ID  ,
+		 CD_DTL_PARENT_ID,
+		 CD_DTL_NAME ,
+		 CD_DTL_DESC 
+		FROM CODE_DTL
+		WHERE CD_DTL_ID = #{CD_DTL_ID_UNDER_UNDER}
+	</select>
 	
+	<select id="selectUnderUnderOptionList" resultType="java.util.HashMap">
+		SELECT CD_DTL_ID  ,
+		 CD_DTL_PARENT_ID,
+		 CD_DTL_NAME ,
+		 CD_DTL_DESC 
+		FROM CODE_DTL
+		WHERE CD_DTL_PARENT_ID = #{CD_DTL_ID_UNDER}
+		AND CD_DTL_ID !='10102'
+ 		ORDER BY CD_DTL_ID 
+	</select>
 
 
 </mapper>

@@ -1,5 +1,6 @@
 package base.admin.option.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,7 @@ public class OptionController {
 	@RequestMapping(value = "/admin/option/list.do", method = RequestMethod.GET)
 	public String optionList(HttpServletRequest request,Model model,@RequestParam Map<String,String> searchMap) throws Exception{
 		
+		//상위 옵션
 		searchMap.put("CD_DTL_PARENT_ID", "101");
 		List<HashMap<String,String>> selectOptionList = optionService.selectOptionList(searchMap);
 		model.addAttribute("selectOptionList", selectOptionList);
@@ -46,6 +48,7 @@ public class OptionController {
 		model.addAttribute("selectedOption", selectedOption);
 		model.addAttribute("searchMap", searchMap);
 		
+		//하위 옵션
 		Map<String,String> optionMap = (Map<String, String>) selectedOption.get("option");
 		String underOptionIndex = optionMap.get("CD_DTL_NAME");
 		List<HashMap<String,String>> selectOptionUnderList = optionService.selectOptionUnderList(underOptionIndex);
@@ -58,6 +61,32 @@ public class OptionController {
 		}
 		HashMap<String,Object> selectedUnderOption = optionService.selectOption(optionUnderIndex);
 		model.addAttribute("selectedUnderOption", selectedUnderOption);
+		
+
+		List<HashMap<String,String>> selectUnderUnderOptionList = new ArrayList<>();
+		
+		if(searchMap.get("CD_DTL_ID_UNDER") == null) {
+			
+			searchMap.put("CD_DTL_ID_UNDER", optionUnderIndex);
+			selectUnderUnderOptionList = optionService.selectUnderUnderOptionList(searchMap);
+			
+		}else {
+			
+			selectUnderUnderOptionList = optionService.selectUnderUnderOptionList(searchMap);
+		}
+		
+		//최하위 옵션
+		model.addAttribute("selectUnderUnderOptionList", selectUnderUnderOptionList);
+		String optionUnderUnderIndex = "";
+		if(searchMap.get("CD_DTL_ID_UNDER_UNDER") == null || searchMap.get("CD_DTL_ID_UNDER_UNDER").equals("")) {
+			if(selectUnderUnderOptionList.size() !=0 ) {
+				optionUnderUnderIndex = String.valueOf(selectUnderUnderOptionList.get(0).get("CD_DTL_ID"));
+			}
+		} else {
+			optionUnderUnderIndex = String.valueOf(searchMap.get("CD_DTL_ID_UNDER_UNDER"));
+		}
+		HashMap<String, Object> selectUnderUnderOption = optionService.selectUnderUnderOption(optionUnderUnderIndex);
+		model.addAttribute("selectUnderUnderOption", selectUnderUnderOption);
 		return "/admin/option/list";
 	}
 	
