@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import base.admin.dao.AdminDAO;
+import base.admin.option.dao.OptionDAO;
 import base.admin.vo.UserVO;
 import base.alram.dao.AlramDAO;
 import base.alram.vo.AlramVO;
@@ -24,6 +25,9 @@ public class MainServiceImpl implements MainService {
 	
 	@Resource(name="AlramDAO")
 	protected AlramDAO alramDAO;
+	
+
+	
 
 	@Override
 	public List<MainVO> selectLikeTop5List() throws SQLException {
@@ -61,6 +65,9 @@ public class MainServiceImpl implements MainService {
 			 
 		 }
 	}
+	
+	
+	
 
 	
 

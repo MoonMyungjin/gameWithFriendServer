@@ -79,7 +79,7 @@ img{
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-sm-6">
-					<div style="position: fixed; width: 45%;">
+					<div style="width: 100%;">
 						<div class="row">
 							<div class="input-group input-group-sm" style="padding: 0.25rem 0.5rem; font-size: .875rem; line-height: 1.5;">
 								<input id="searchName" type="text" class="form-control float-right" value="${searchMap.SEARCH_KEY }" style="width: 100px; padding: 0.25rem 0.5rem; font-size: .875rem; line-height: 1.5;">
@@ -194,7 +194,93 @@ img{
 										</tr>
 										<tr>
 											<th>옵션상위코드번호</th>
-											<td><input type="text" name="CD_DTL_PARENT_ID_UNDER" disabled="disabled" value="${selectedUnderOption.option.CD_DTL_PARENT_ID }"></td>
+											<td>
+												<input type="hidden" name="CD_DTL_PARENT_ID_UNDER"  value="${selectedUnderOption.option.CD_DTL_PARENT_ID }">
+												<span><c:out value="${selectedUnderOption.option.CD_DTL_PARENT_ID}"/></span>
+											</td>
+										</tr>
+										<tr>
+											<th>옵션이름</th>
+											<td><input type="text" name="CD_DTL_NAME_UNDER" value="${selectedUnderOption.option.CD_DTL_NAME }"></td>
+										</tr>
+										<tr>
+											<th>옵션설명</th>
+											<td><input type="text" name="CD_DTL_DESC_UNDER" value="${selectedUnderOption.option.CD_DTL_DESC }"></td>
+										</tr>
+										<tr>
+											<td>
+												<c:choose>
+													<c:when test="${fn:length(selectedUnderOption.image) eq 0}">
+														<label for="chooseFileUnder" class="btn btn-dark">파일찾기</label> 
+														<span style="display: none;">
+															<input type="file" id="chooseFileUnder" name="fileUnder" accept="image/*" onchange="loadFileUnder(this)">
+														</span>
+													</c:when>
+													<c:when test="${fn:length(selectedUnderOption.image) gt 0}">
+														<label for="chooseFileUnder" class="btn btn-dark">파일변경</label> 
+														<span style="display: none;">
+															<input type="file" id="chooseFileUnder" name="fileUnder" accept="image/*" onchange="loadFileUnder(this)">
+														</span>
+													</c:when>
+												</c:choose>
+												<c:if test="${fn:length(selectedUnderOption.image) eq 0}">
+													
+												</c:if>
+											</td>
+											<td id="fileNameUnder">
+												<c:choose>
+													<c:when test="${fn:length(selectedUnderOption.image) eq 0}">
+														등록된 파일 없음
+													</c:when>
+													<c:when test="${fn:length(selectedUnderOption.image) gt 0}">
+														<c:forEach items="${selectedUnderOption.image}" var="img">
+															${img.flOriginName}
+														</c:forEach>
+													</c:when>
+												</c:choose>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="2">
+												<span onclick="clearInputUnder()" class="btn btn-dark">
+													입력초기화
+												</span>
+												<span onclick="doSubmitUnder()" class="btn btn-dark">
+													저장
+												</span>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>	
+						<div class="row">
+							<div class="col-sm-6">
+								<div id="image-show-under-under">
+									<!-- server.xml 파일 내 추가 필요 -->
+									<!-- <Context docBase="C:\java\file" path="/tomcatImg/" reloadable="true"/> -->
+									<c:forEach items="${selectedUnderOption.image}" var="img">
+										<img src="/tomcatImg/${img.flPath}/${img.flUniqueName}" alt="">
+									</c:forEach>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<table class="table selectedTable table-bordered">
+									<thead>최하위옵션</thead>
+									<tbody>
+										<tr>
+											<th>옵션코드번호</th>
+											<td>
+												<input type="hidden" name="CD_DTL_ID_UNDER" value="${selectedUnderOption.option.CD_DTL_ID }">
+												<c:out value="${selectedUnderOption.option.CD_DTL_ID}"/>
+											</td>
+										</tr>
+										<tr>
+											<th>옵션상위코드번호</th>
+											<td>
+												<input type="hidden" name="CD_DTL_PARENT_ID_UNDER"  value="${selectedUnderOption.option.CD_DTL_PARENT_ID }">
+												<span><c:out value="${selectedUnderOption.option.CD_DTL_PARENT_ID}"/></span>
+											</td>
 										</tr>
 										<tr>
 											<th>옵션이름</th>
@@ -253,50 +339,76 @@ img{
 						</div>
 					</div>
 				</div>
-				<div class="col-sm-6" >
-					<div class="table1">
-						<table class="table listTable table-head-fixed table-bordered">
-							<thead>상위옵션</thead>
-							<thead>
-								<tr>
-									<th>옵션코드번호</th>
-									<th>옵션상위코드번호</th>
-									<th>옵션네임</th>
-									<th>옵션설명</th>
-								</tr>
-							</thead>
-							<tbody>
-								<c:forEach items="${selectOptionList}" var="option" varStatus="i">
-									<tr class="lineTr <c:if test="${option.CD_DTL_ID eq selectedOption.option.CD_DTL_ID}">selected</c:if>">
-										<td>${option.CD_DTL_ID}</td>
-										<td>${option.CD_DTL_PARENT_ID}</td>
-										<td>${option.CD_DTL_NAME}</td>
-										<td>${option.CD_DTL_DESC}</td>
+				<div class="col-sm-6"  >
+						<div class="table1">
+							<table class="table listTable table-head-fixed table-bordered">
+								<thead>상위옵션</thead>
+								<thead>
+									<tr>
+										<th>옵션코드번호</th>
+										<th>옵션상위코드번호</th>
+										<th>옵션네임</th>
+										<th>옵션설명</th>
 									</tr>
-								</c:forEach>
-							</tbody>
-						</table>
-						<table class="table listTable table-head-fixed table-bordered">
-							<thead>하위옵션</thead>
-							<thead>
-								<tr>
-									<th>옵션코드번호</th>
-									<th>옵션상위코드번호</th>
-									<th>옵션네임</th>
-									<th>옵션설명</th>
-								</tr>
-							</thead>
-							<tbody>
-								<c:forEach items="${selectOptionUnderList}" var="optionUnder" varStatus="i">
-									<tr class="lineTrTwo <c:if test="${optionUnder.CD_DTL_ID eq selectedUnderOption.option.CD_DTL_ID}">Underselected</c:if>">
-										<td>${optionUnder.CD_DTL_ID}</td>
-										<td>${optionUnder.CD_DTL_PARENT_ID}</td>
-										<td>${optionUnder.CD_DTL_NAME}</td>
-										<td>${optionUnder.CD_DTL_DESC}</td>
+								</thead>
+								<tbody>
+									<c:forEach items="${selectOptionList}" var="option" varStatus="i">
+										<tr class="lineTr <c:if test="${option.CD_DTL_ID eq selectedOption.option.CD_DTL_ID}">selected</c:if>">
+											<td>${option.CD_DTL_ID}</td>
+											<td>${option.CD_DTL_PARENT_ID}</td>
+											<td>${option.CD_DTL_NAME}</td>
+											<td>${option.CD_DTL_DESC}</td>
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+						</div>
+						<div class="table1">
+							<table class="table listTable table-head-fixed table-bordered">
+								<thead>하위옵션</thead>
+								<thead>
+									<tr>
+										<th>옵션코드번호</th>
+										<th>옵션상위코드번호</th>
+										<th>옵션네임</th>
+										<th>옵션설명</th>
 									</tr>
-								</c:forEach>
-							</tbody>
-						</table>
+								</thead>
+								<tbody>
+									<c:forEach items="${selectOptionUnderList}" var="optionUnder" varStatus="i">
+										<tr class="lineTrTwo <c:if test="${optionUnder.CD_DTL_ID eq selectedUnderOption.option.CD_DTL_ID}">Underselected</c:if>">
+											<td>${optionUnder.CD_DTL_ID}</td>
+											<td>${optionUnder.CD_DTL_PARENT_ID}</td>
+											<td>${optionUnder.CD_DTL_NAME}</td>
+											<td>${optionUnder.CD_DTL_DESC}</td>
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+						</div>
+						<div class="table1">	
+							<table class="table listTable table-head-fixed table-bordered">
+								<thead>초하위옵션</thead>
+								<thead>
+									<tr>
+										<th>옵션코드번호</th>
+										<th>옵션상위코드번호</th>
+										<th>옵션네임</th>
+										<th>옵션설명</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach items="${selectOptionUnderList}" var="optionUnderUnder" varStatus="i">
+										<tr class="lineTrThree <c:if test="${optionUnder.CD_DTL_ID eq selectedUnderOption.option.CD_DTL_ID}">Underselected</c:if>">
+											<td>${optionUnderUnder.CD_DTL_ID}</td>
+											<td>${optionUnderUnder.CD_DTL_PARENT_ID}</td>
+											<td>${optionUnderUnder.CD_DTL_NAME}</td>
+											<td>${optionUnderUnder.CD_DTL_DESC}</td>
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -307,6 +419,9 @@ img{
 <script>
 	$(document).ready(function(){
 		$('.selected').attr('tabindex','0').focus();
+		if($(".lineTrTwo").length == 0){
+			findUnderKey();
+		}
 	});
 
 	function loadFile(input) {
@@ -343,6 +458,23 @@ img{
 	    $('#fileNameUnder').html(file.name);
 	};
 	
+	function loadFileUnderUnder(input) {
+	    var file = input.files[0];	//선택된 파일 가져오기
+	    
+	  	//새로운 이미지 div 추가
+	    var newImage = document.createElement("img");
+	    newImage.setAttribute("class", 'img');
+
+	    //이미지 source 가져오기
+	    newImage.src = URL.createObjectURL(file);   
+
+	    newImage.style.objectFit = "contain";
+
+	    //이미지를 image-show div에 추가
+	    var container = $('#image-show-under-under').html(newImage);
+	    $('#fileNameUnderUnder').html(file.name);
+	};
+	
 	$(".lineTr").click(function(){
 		
 		var opIndex = $(this).children().eq(0).text();
@@ -356,6 +488,15 @@ img{
 		var opIndex = $(".selected").children().eq(0).text();
 		var opTwoIndex =$(this).children().eq(0).text();
 		window.location.href = "/admin/option/list.do?CD_DTL_ID="+opIndex+"&CD_DTL_ID_UNDER="+opTwoIndex+"&SEARCH_KEY="+$('#searchName').val();
+		
+	});
+	
+	$(".lineTrThree").click(function(){
+		
+		var opIndex = $(".selected").children().eq(0).text();
+		var opTwoIndex =$(".selected").children().eq(0).text();
+		var opThreeIndex =$(this).children().eq(0).text();
+		window.location.href = "/admin/option/list.do?CD_DTL_ID="+opIndex+"&CD_DTL_ID_UNDER="+opTwoIndex+"&CD_DTL_ID_UNDER_UNDER="+opThreeIndex+"&SEARCH_KEY="+$('#searchName').val();
 		
 	});
 	
@@ -439,6 +580,32 @@ img{
 			,processData : false
 			,success : function(data) {
 				location.reload();
+			}
+			,error : function(xhr, status) {
+				console.log(xhr);
+			    alert(xhr + " : " + status);
+			}
+		});
+
+	}
+	
+	function findUnderKey(){
+		
+		let uppperKey = $(".selected").children('td:eq(2)').text();
+		
+		$.ajax({
+			url : "findUnderKey.do?upperKey="+uppperKey+""
+			,enctype: 'multipart/form-data'
+			,type : 'POST' 
+			,contentType : false
+			,processData : false
+			,dataType: 'text'
+			,success : function(data) {
+				console.log("@@@@@@@@@@@@@@@@@@@@2")
+				console.log(data)
+				$(".selectedTable").find("input[name=CD_DTL_PARENT_ID_UNDER]").val(data);
+				$(".selectedTable").find("input[name=CD_DTL_PARENT_ID_UNDER]").next().text(data);
+				
 			}
 			,error : function(xhr, status) {
 				console.log(xhr);
