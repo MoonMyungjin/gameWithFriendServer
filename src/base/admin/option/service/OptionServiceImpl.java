@@ -107,6 +107,34 @@ public class OptionServiceImpl implements OptionService {
 	}
 	
 	@Override
+	public void saveOptionUnderUnder(Map<String, Object> params, List<FileVO> files) throws SQLException {
+	HashMap<String, String> option = optionDAO.selectOption(params.get("CD_DTL_ID_UNDER_UNDER")+"");
+		
+		if(option == null || option.isEmpty()) {
+			optionDAO.insertOptionUnderUnder(params);
+			
+		} else {
+			optionDAO.updateOptionUnderUnder(params);
+		}
+		
+		if(files != null) {
+			//fileDB delete > insert
+			FileVO paramVO = new FileVO();
+			paramVO.setFlTableId("OPTION");
+			paramVO.setFlTableKey(params.get("CD_DTL_ID_UNDER_UNDER")+"");
+			fileDAO.deleteFile(paramVO);
+		
+			for (FileVO fileVO : files) {
+				fileVO.setFlRegId("SYSTEM");
+				fileVO.setFlTableId("OPTION");
+				fileVO.setFlTableKey(params.get("CD_DTL_ID_UNDER_UNDER")+"");
+				fileDAO.insertFile(fileVO);
+			}
+		}
+		
+	}
+	
+	@Override
 	public String selectOptionUnderKey(String upperOptionIndex) throws SQLException {		
 		return  optionDAO.selectUnderOptionIndex(upperOptionIndex);
 	}
@@ -131,6 +159,9 @@ public class OptionServiceImpl implements OptionService {
 
 		return resultMap;
 	}
+	
+
+	
 	
 	
 

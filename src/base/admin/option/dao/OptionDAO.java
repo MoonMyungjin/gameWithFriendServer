@@ -66,5 +66,13 @@ public class OptionDAO {
 		return session.selectList("base.admin.option.mapper.selectUnderUnderOptionList",searchMap);
 	}
 	
+	public void updateOptionUnderUnder (Map<String, Object> searchMap) {
+		session.update("base.admin.option.mapper.updateOptionUnderUnder",searchMap);
+	}
+	
+	public void insertOptionUnderUnder (Map<String, Object> searchMap) {
+		session.insert("base.admin.option.mapper.insertUnderUnderOption",searchMap);
+	}
+	
 	
 }

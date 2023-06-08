@@ -22,6 +22,9 @@ public interface OptionService {
 	void saveOption(Map<String, Object> params, List<FileVO> files) throws SQLException;
 	
 	void saveOptionUnder(Map<String, Object> params, List<FileVO> files) throws SQLException;
+	
+	void saveOptionUnderUnder(Map<String, Object> params, List<FileVO> files) throws SQLException;
+
 
 	String selectOptionUnderKey(String upperOptionKey) throws SQLException;
 	

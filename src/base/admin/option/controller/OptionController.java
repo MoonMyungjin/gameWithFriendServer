@@ -145,6 +145,33 @@ public class OptionController {
 		return result;
 	}
 	
+	@RequestMapping(value="/admin/option/insertUnderUnder.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String saveOptionUnderUnder(@RequestParam Map<String,Object> params
+		,@RequestParam("fileUnderUnder") MultipartFile[] files
+			) throws Exception {
+		
+		String result = "";
+		
+		try {
+			List<FileVO> saveFiles = null;
+			
+			if(files.length > 0) {
+				for (MultipartFile multiFile : files) {
+					if(multiFile.getSize() > 0) {
+						saveFiles = FileManageUtil.saveFiles(files,FILE_PATH);
+					}
+				}
+			}
+			
+			optionService.saveOptionUnderUnder(params, saveFiles);
+			
+		} catch (Exception e) {
+			result = e.toString();
+		}
+		return result;
+	}
+	
 	
 	@RequestMapping(value="/admin/option/findUnderKey.do", method = RequestMethod.POST)
 	@ResponseBody

@@ -28,6 +28,13 @@
     border-color: white;
     box-shadow: none;
 }
+.lineTrThree:hover {
+	cursor: pointer;
+	color: #fdfbd7;
+    background-color: #60b3ac;
+    border-color: white;
+    box-shadow: none;
+}
 .selected {
 	color: #fdfbd7;
     background-color: #60b3ac;
@@ -259,7 +266,7 @@ img{
 								<div id="image-show-under-under">
 									<!-- server.xml 파일 내 추가 필요 -->
 									<!-- <Context docBase="C:\java\file" path="/tomcatImg/" reloadable="true"/> -->
-									<c:forEach items="${selectedUnderOption.image}" var="img">
+									<c:forEach items="${selectUnderUnderOption.image}" var="img">
 										<img src="/tomcatImg/${img.flPath}/${img.flUniqueName}" alt="">
 									</c:forEach>
 								</div>
@@ -271,52 +278,52 @@ img{
 										<tr>
 											<th>옵션코드번호</th>
 											<td>
-												<input type="hidden" name="CD_DTL_ID_UNDER" value="${selectedUnderOption.option.CD_DTL_ID }">
-												<c:out value="${selectedUnderOption.option.CD_DTL_ID}"/>
+												<input type="hidden" name="CD_DTL_ID_UNDER_UNDER" value="${selectUnderUnderOption.option.CD_DTL_ID }">
+												<c:out value="${selectUnderUnderOption.option.CD_DTL_ID}"/>
 											</td>
 										</tr>
 										<tr>
 											<th>옵션상위코드번호</th>
 											<td>
-												<input type="hidden" name="CD_DTL_PARENT_ID_UNDER"  value="${selectedUnderOption.option.CD_DTL_PARENT_ID }">
-												<span><c:out value="${selectedUnderOption.option.CD_DTL_PARENT_ID}"/></span>
+												<input type="hidden" name="CD_DTL_PARENT_ID_UNDER_UNDER"  value="${selectUnderUnderOption.option.CD_DTL_PARENT_ID }">
+												<span><c:out value="${selectUnderUnderOption.option.CD_DTL_PARENT_ID}"/></span>
 											</td>
 										</tr>
 										<tr>
 											<th>옵션이름</th>
-											<td><input type="text" name="CD_DTL_NAME_UNDER" value="${selectedUnderOption.option.CD_DTL_NAME }"></td>
+											<td><input type="text" name="CD_DTL_NAME_UNDER_UNDER" value="${selectUnderUnderOption.option.CD_DTL_NAME }"></td>
 										</tr>
 										<tr>
 											<th>옵션설명</th>
-											<td><input type="text" name="CD_DTL_DESC_UNDER" value="${selectedUnderOption.option.CD_DTL_DESC }"></td>
+											<td><input type="text" name="CD_DTL_DESC_UNDER_UNDER" value="${selectUnderUnderOption.option.CD_DTL_DESC }"></td>
 										</tr>
 										<tr>
 											<td>
 												<c:choose>
-													<c:when test="${fn:length(selectedUnderOption.image) eq 0}">
-														<label for="chooseFileUnder" class="btn btn-dark">파일찾기</label> 
+													<c:when test="${fn:length(selectUnderUnderOption.image) eq 0}">
+														<label for="chooseFileUnderUnder" class="btn btn-dark">파일찾기</label> 
 														<span style="display: none;">
-															<input type="file" id="chooseFileUnder" name="fileUnder" accept="image/*" onchange="loadFileUnder(this)">
+															<input type="file" id="chooseFileUnderUnder" name="fileUnderUnder" accept="image/*" onchange="loadFileUnderUnder(this)">
 														</span>
 													</c:when>
-													<c:when test="${fn:length(selectedUnderOption.image) gt 0}">
-														<label for="chooseFileUnder" class="btn btn-dark">파일변경</label> 
+													<c:when test="${fn:length(selectUnderUnderOption.image) gt 0}">
+														<label for="chooseFileUnderUnder" class="btn btn-dark">파일변경</label> 
 														<span style="display: none;">
-															<input type="file" id="chooseFileUnder" name="fileUnder" accept="image/*" onchange="loadFileUnder(this)">
+															<input type="file" id="chooseFileUnderUnder" name="fileUnderUnder" accept="image/*" onchange="loadFileUnderUnder(this)">
 														</span>
 													</c:when>
 												</c:choose>
-												<c:if test="${fn:length(selectedUnderOption.image) eq 0}">
+												<c:if test="${fn:length(selectUnderUnderOption.image) eq 0}">
 													
 												</c:if>
 											</td>
-											<td id="fileNameUnder">
+											<td id="fileNameUnderUnder">
 												<c:choose>
-													<c:when test="${fn:length(selectedUnderOption.image) eq 0}">
+													<c:when test="${fn:length(selectUnderUnderOption.image) eq 0}">
 														등록된 파일 없음
 													</c:when>
-													<c:when test="${fn:length(selectedUnderOption.image) gt 0}">
-														<c:forEach items="${selectedUnderOption.image}" var="img">
+													<c:when test="${fn:length(selectUnderUnderOption.image) gt 0}">
+														<c:forEach items="${selectUnderUnderOption.image}" var="img">
 															${img.flOriginName}
 														</c:forEach>
 													</c:when>
@@ -325,10 +332,10 @@ img{
 										</tr>
 										<tr>
 											<td colspan="2">
-												<span onclick="clearInputUnder()" class="btn btn-dark">
+												<span onclick="clearInputUnderUnder()" class="btn btn-dark">
 													입력초기화
 												</span>
-												<span onclick="doSubmitUnder()" class="btn btn-dark">
+												<span onclick="doSubmitUnderUnder()" class="btn btn-dark">
 													저장
 												</span>
 											</td>
@@ -398,8 +405,8 @@ img{
 									</tr>
 								</thead>
 								<tbody>
-									<c:forEach items="${selectOptionUnderList}" var="optionUnderUnder" varStatus="i">
-										<tr class="lineTrThree <c:if test="${optionUnder.CD_DTL_ID eq selectedUnderOption.option.CD_DTL_ID}">Underselected</c:if>">
+									<c:forEach items="${selectUnderUnderOptionList}" var="optionUnderUnder" varStatus="i">
+										<tr class="lineTrThree <c:if test="${optionUnderUnder.CD_DTL_ID eq selectUnderUnderOption.option.CD_DTL_ID}">Underselected</c:if>">
 											<td>${optionUnderUnder.CD_DTL_ID}</td>
 											<td>${optionUnderUnder.CD_DTL_PARENT_ID}</td>
 											<td>${optionUnderUnder.CD_DTL_NAME}</td>
@@ -422,6 +429,11 @@ img{
 		if($(".lineTrTwo").length == 0){
 			findUnderKey();
 		}
+		if($("input[name=CD_DTL_PARENT_ID_UNDER_UNDER]").val() ==""){
+			findUnderUnderUpperKey();	
+		}
+		
+		
 	});
 
 	function loadFile(input) {
@@ -535,6 +547,17 @@ img{
 		$("#image-show-under").html("");
 	}
 	
+	
+	function clearInputUnderUnder(){
+// 		console.log($(".selectedTable")[0])
+		$(".selectedTable").find("input[name=CD_DTL_ID_UNDER]").parent().html("저장시 채번");
+		$(".selectedTable").find("input[name=CD_DTL_NAME_UNDER]").val("");
+		$(".selectedTable").find("input[name=CD_DTL_DESC_UNDER]").val("");
+		$(".selectedTable").find("label").html("파일찾기");
+		$("#fileNameUnder").html("");
+		$("#image-show-under").html("");
+	}
+	
 	function doSubmit(){
 		
 		var form = $("#form")[0];
@@ -589,6 +612,33 @@ img{
 
 	}
 	
+	function doSubmitUnderUnder(){
+		
+		var form = $("#form")[0];
+		var data = new FormData(form)
+
+		if($('input[type=file]')[0].files[0] == undefined){
+		    $("#chooseFileUnderUnder").attr("disabled",true);
+		}
+		
+		$.ajax({
+			url : "insertUnderUnder.do"
+			,enctype: 'multipart/form-data'
+			,type : 'POST' 
+			,data : data 
+			,contentType : false
+			,processData : false
+			,success : function(data) {
+				location.reload();
+			}
+			,error : function(xhr, status) {
+				console.log(xhr);
+			    alert(xhr + " : " + status);
+			}
+		});
+
+	}
+	
 	function findUnderKey(){
 		
 		let uppperKey = $(".selected").children('td:eq(2)').text();
@@ -613,6 +663,12 @@ img{
 			}
 		});
 
+	}
+	
+	function findUnderUnderUpperKey(){
+		let upperKey = $(".Underselected").children('td:eq(0)').text();
+		$("input[name=CD_DTL_PARENT_ID_UNDER_UNDER]").val(upperKey);
+		$("input[name=CD_DTL_PARENT_ID_UNDER_UNDER]").next().text(upperKey);
 	}
 </script>
 
