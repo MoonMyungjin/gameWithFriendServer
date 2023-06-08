@@ -47,6 +47,12 @@
     border-color: white;
     box-shadow: none;
 }
+.UnderUnderselected {
+	color: #fdfbd7;
+    background-color: #60b3ac;
+    border-color: white;
+    box-shadow: none;
+}
 .selectedTable Th{
 	background-color: #60b3ac !important;
 	color: white;
@@ -406,7 +412,7 @@ img{
 								</thead>
 								<tbody>
 									<c:forEach items="${selectUnderUnderOptionList}" var="optionUnderUnder" varStatus="i">
-										<tr class="lineTrThree <c:if test="${optionUnderUnder.CD_DTL_ID eq selectUnderUnderOption.option.CD_DTL_ID}">Underselected</c:if>">
+										<tr class="lineTrThree <c:if test="${optionUnderUnder.CD_DTL_ID eq selectUnderUnderOption.option.CD_DTL_ID}">UnderUnderselected</c:if>">
 											<td>${optionUnderUnder.CD_DTL_ID}</td>
 											<td>${optionUnderUnder.CD_DTL_PARENT_ID}</td>
 											<td>${optionUnderUnder.CD_DTL_NAME}</td>
@@ -506,7 +512,7 @@ img{
 	$(".lineTrThree").click(function(){
 		
 		var opIndex = $(".selected").children().eq(0).text();
-		var opTwoIndex =$(".selected").children().eq(0).text();
+		var opTwoIndex =$(".Underselected").children().eq(0).text();
 		var opThreeIndex =$(this).children().eq(0).text();
 		window.location.href = "/admin/option/list.do?CD_DTL_ID="+opIndex+"&CD_DTL_ID_UNDER="+opTwoIndex+"&CD_DTL_ID_UNDER_UNDER="+opThreeIndex+"&SEARCH_KEY="+$('#searchName').val();
 		
@@ -550,12 +556,12 @@ img{
 	
 	function clearInputUnderUnder(){
 // 		console.log($(".selectedTable")[0])
-		$(".selectedTable").find("input[name=CD_DTL_ID_UNDER]").parent().html("저장시 채번");
-		$(".selectedTable").find("input[name=CD_DTL_NAME_UNDER]").val("");
-		$(".selectedTable").find("input[name=CD_DTL_DESC_UNDER]").val("");
+		$(".selectedTable").find("input[name=CD_DTL_ID_UNDER_UNDER]").parent().html("저장시 채번");
+		$(".selectedTable").find("input[name=CD_DTL_NAME_UNDER_UNDER]").val("");
+		$(".selectedTable").find("input[name=CD_DTL_DESC_UNDER_UNDER]").val("");
 		$(".selectedTable").find("label").html("파일찾기");
-		$("#fileNameUnder").html("");
-		$("#image-show-under").html("");
+		$("#fileNameUnderUnder").html("");
+		$("#image-show-under-under").html("");
 	}
 	
 	function doSubmit(){
