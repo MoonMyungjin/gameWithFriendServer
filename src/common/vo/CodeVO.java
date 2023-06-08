@@ -4,6 +4,8 @@ public class CodeVO {
 
 	private String cdDtlName;
 	private String cdDtlParentId;
+	private String url;
+	
 
 	public String getCdDtlName() {
 		return cdDtlName;
@@ -20,6 +22,16 @@ public class CodeVO {
 	public void setCdDtlParentId(String cdDtlParentId) {
 		this.cdDtlParentId = cdDtlParentId;
 	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	
+	
 	
 	
 	

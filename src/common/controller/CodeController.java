@@ -62,5 +62,20 @@ public class CodeController {
 	}
 	
 	
+	@CrossOrigin("http://localhost:3000")
+	@RequestMapping("/common/selectOptionUrl")
+	public ResponseEntity<Map<String,Object>> selectOptionUrl(
+		HttpServletRequest req,HttpMethod httpMethod) throws Exception{
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		CodeVO codeVO = new CodeVO();
+		codeVO.setCdDtlParentId("101");
+		List<CodeVO> codeNmList = codeService.selectCdDtlNm(codeVO);
+		dataMap.put("codeVO", codeNmList);
+		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
+		
+		return entity;
+	}
+	
+	
 	
 }

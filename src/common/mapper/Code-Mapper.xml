@@ -25,4 +25,14 @@
 			AND CD_DTl_USE_YN = 'Y'
 	</select>
 	
+	<select id="selectOption" resultType="common.vo.CodeVO">
+			SELECT A.CD_DTL_NAME AS cdDtlName,
+					(
+						SELECT FL_UNIQUE_NAME  FROM FILE WHERE FL_TABLE_KEY = A.CD_DTL_ID
+					) AS url
+			FROM CODE_DTL A
+			WHERE A.CD_DTL_PARENT_ID = #{cdDtlParentId}
+	</select>
+	
+	
 </mapper>

@@ -22,5 +22,10 @@ public class CodeDAO {
 	public List<CodeVO> selectCdDtlNm(CodeVO codeVO) throws SQLException {
 		return session.selectList("code.mapper.selectCdDtlNm",codeVO);
 	}
+	
+	public List<CodeVO> selectOption(CodeVO codeVO) throws SQLException {
+		return session.selectList("code.mapper.selectOption",codeVO);
+	}
+
 
 }
