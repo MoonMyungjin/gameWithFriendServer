@@ -54,12 +54,7 @@
 				<div class="col-sm-6 tright">
 					<div class="row">
 						<div class="input-group input-group-sm" style="padding: 0.25rem 0.5rem; font-size: .875rem; line-height: 1.5;">
-							<input id="searchName" type="text" class="form-control float-right" placeholder="ID 검색" value="${searchMap.SEARCH_KEY }" style="width: 100px; padding: 0.25rem 0.5rem; font-size: .875rem; line-height: 1.5;">
-							<div class="input-group-append">
-								<span id="searchBtn" onclick="search()" class="btn btn-dark listColor" style="padding: 0.25rem 0.5rem; font-size: .875rem; line-height: 1.5;">
-									<i class="fas fa-search" aria-hidden="true"></i>
-								</span>
-							</div>
+							
 						</div>
 					</div>
 				</div>
@@ -72,25 +67,41 @@
 				<table class="table table-head-fixed table-bordered">
 					<thead>
 						<tr>
-							<th>ID</th>
+							<th>
+								<div class="row">
+									<div class="col-sm-6">
+										ID
+									</div>
+									<div class="col-sm-6 float-right">
+										<div class="row">
+											<input id="searchId" type="text" class="form-control" placeholder="ID 검색" value="${params.searchId }" style="width: 100px; padding: 0.25rem 0.5rem; font-size: .875rem; line-height: 1.5;">
+											<div class="input-group-append">
+												<span id="searchBtn" onclick="search()" class="btn btn-dark listColor" style="padding: 0.25rem 0.5rem; font-size: .875rem; line-height: 1.5;">
+													<i class="fas fa-search" aria-hidden="true"></i>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</th>
 							<th>최근로그인IP</th>
 							<th>최근로그인일시</th>
 							<th>최근로그인기종 </th>
 							<th>
 								상태
-								<select id="searchState">
+								<select id="searchState" onchange="search()">
 									<option value="">전체</option>
 									<c:forEach var="state" items="${stateList}">
-										<option value="${state.CD_DTL_ID }">${state.CD_DTL_NAME }</option>
+										<option value="${state.CD_DTL_ID }" <c:if test="${state.CD_DTL_ID eq params.searchState}">selected="selected" </c:if> >${state.CD_DTL_NAME }</option>
 									</c:forEach>	
 								</select>
 							</th>
 							<th>
 								구분
-								<select id="searchType">
+								<select id="searchType" onchange="search()">
 									<option value="">전체</option>
 									<c:forEach var="type" items="${typeList}">
-										<option value="${type.CD_DTL_ID }">${type.CD_DTL_NAME }</option>
+										<option value="${type.CD_DTL_ID }" <c:if test="${type.CD_DTL_ID eq params.searchType}">selected="selected" </c:if> >${type.CD_DTL_NAME }</option>
 									</c:forEach>	
 								</select>
 							</th>
@@ -106,16 +117,16 @@
 								</td>
 								<td>${user.ULastTerminalKind}</td>
 								<td>
-									<select id="state_${user.UIntgId}">
+									<select id="state_${user.UIntgId}" class="dropdown">
 										<c:forEach var="state" items="${stateList}">
-											<option value="${state.CD_DTL_ID }" <c:if test="${state.CD_DTL_ID eq user.UStateCd}">selected="selected" data-sel="Y"</c:if> >${state.CD_DTL_NAME }</option>
+											<option value="${state.CD_DTL_ID }" <c:if test="${state.CD_DTL_ID eq user.UStateCd}">selected="selected" </c:if> >${state.CD_DTL_NAME }</option>
 										</c:forEach>
 									</select>
 								</td>
 								<td>
-									<select id="type_${user.UIntgId}">
+									<select id="type_${user.UIntgId}" class="dropdown">
 										<c:forEach var="type" items="${typeList}">
-											<option value="${type.CD_DTL_ID }" <c:if test="${type.CD_DTL_ID eq user.UTypeCd}">selected="selected" data-sel="Y"</c:if> >${type.CD_DTL_NAME }</option>
+											<option value="${type.CD_DTL_ID }" <c:if test="${type.CD_DTL_ID eq user.UTypeCd}">selected="selected" </c:if> >${type.CD_DTL_NAME }</option>
 										</c:forEach>
 									</select>
 								</td>
@@ -128,131 +139,54 @@
 	
 	</section>
 	
-	<script>
-		 
-	$("select[id^=state]").on("change",function(){
-		var id = $(this).attr("id");
-		var selectedVal = $(this).val();
-		var beforeVal = $("#"+id).find("option[data-sel='Y']").val();
-		
-		if(!confirm("사용자 상태를 정말 변경 하시곘습니까?")){
-			return false;
-		}
-		
-		console.log(id);
-		console.log(beforeVal);
-	});
-	
-	$(document).on("click",".lineTr",function(){
-		$(".selectedTr").attr("class","lineTr");
-		$(this).attr("class","selectedTr")
-		
-		cnsltId = $(this).attr("data-id");
-		console.log(cnsltId);
-		
-		
-		$.ajax({
-		     type: "post"
-		    ,url : "/manager/consulting/finishDetail.do"
-		    ,data : {"cnsltId" : cnsltId}
-		    ,success : function (data){
-			 	   console.log(data.finishDetail.parentName);
-			 	   console.log(data.finishDetail);
-			 	   console.log(data);
-			 	   
-			 	   
-			 	   let studentHpStr = data.finishDetail.studentHp
-			 	   studentHpStr = studentHpStr.substr(0,3)+"-"+studentHpStr.substr(3,4)+"-"+studentHpStr.substr(7,4);
-			 		console.log(studentHpStr);
-			 		let modifyDay = data.finishDetail.cnsltSchDate
-			 		let modifiedDay = parseInt(modifyDay.split("-")[2])+1;
-			 		if(modifiedDay < 10){
-			 			modifiedDay = "0"+modifiedDay;
-			 		}
-		 	 		modifyDay = modifyDay.split("-")[0]+"-"+modifyDay.split("-")[1]+"-"+modifiedDay;
-			 		console.log(modifyDay);
-			 		
-			 		
-			    	if(data.finishDetail.parentName == null ){
-			    	
-		 	    	$("#cnsltSchDate").text(modifyDay);
-		 			$("#scodeValue").attr("data-id",cnsltId);
-			 		$("#scodeValue").text(data.finishDetail.scodeValue);
-			 		$("#cnsltSchTime").text(data.finishDetail.cnsltSchTime);
-			 		$("#parentName").text(data.finishDetail.studentName);
-			 		$("#parentHp").text(studentHpStr);
-			 		$("#studentName").text(data.finishDetail.studentName);
-			 		$("#studentHp").text(studentHpStr);
-			 		$("#schoolName").text(data.finishDetail.schoolName);
-			 		$("#grade").text(data.finishDetail.grade);
-			 		$("#className").text(data.finishDetail.className); 
-			 		$("#cnsltContent").text(data.finishDetail.cnsltContent); 
-			 		$("#cnsltAs").text(data.finishDetail.cnsltAs); 
-			 	
-			 		
-			    }else{ 
-			 		let parentHpStr = data.finishDetail.parentHp
-			 		parentHpStr = parentHpStr.substr(0,3)+"-"+parentHpStr.substr(3,4)+"-"+parentHpStr.substr(7,4);
-			 		console.log(parentHpStr);
-			 		
-			 		$("#cnsltSchDate").text(modifyDay);
-			 		$("#scodeValue").attr("data-id",cnsltId);
-			 		$("#scodeValue").text(data.finishDetail.scodeValue);
-			 		$("#cnsltSchTime").text(data.finishDetail.cnsltSchTime);
-			 		$("#parentName").text(data.finishDetail.parentName);
-			 		$("#parentHp").text(parentHpStr);
-			 		$("#studentName").text(data.finishDetail.studentName);
-			 		$("#studentHp").text(studentHpStr);
-			 		$("#schoolName").text(data.finishDetail.schoolName);
-			 		$("#grade").text(data.finishDetail.grade);
-			 		$("#className").text(data.finishDetail.className);
-			 		$("#cnsltContent").text(data.finishDetail.cnsltContent); 
-			 		$("#cnsltAs").text(data.finishDetail.cnsltAs); 
-			    }
-		     }
-		    ,error : function(e){
-		     }
-			});
+<script>
 
-	     });
+var prev_val;
+
+$('.dropdown').focus(function() {
+
+    prev_val = $(this).val();
+
+}).change(function() {
+
+    $(this).blur();
+    
+    var success = confirm("사용자 상태를 정말 변경 하시곘습니까?");
+
+    if(!success) {
+        $(this).val(prev_val);
+        return false; 
+    }
+    
+    var id = $(this).attr("id");
+    var uIntgId = id.split('_')[1];
+	var selectedVal = $(this).val();
+	var cate = id.split('_')[0];
 	
+	var data = {
+	 		 	 "id" : uIntgId
+		 		,"cate" : cate
+		 		,"val" : selectedVal
+		 	 }
 	
-	$("#registBtn").click(function(){
-	 let cnsltContent = $("#cnsltContent").val();
-	 let cnsltAs = $("#cnsltAs").val();
-	 
-	 console.log(cnsltId);
-	
-	let dataItem = {
-			"cnsltContent" : cnsltContent,
-			"cnsltAs" : cnsltAs,
-			"cnsltId" : cnsltId
-		};
-	console.log(dataItem);
-	
-	
-	
-		  $.ajax({
-	          type: "post"
-	         ,url : "/manager/consulting/updateRegist.do"
-	         ,data : dataItem
-	         ,success : function (data){
-	        	 console.log(data);
-	        		Swal.fire({
-				        icon: 'success',
-				        title: '저장이 완료 되었습니다!'
-				    });
-			    	setTimeout(function() {
-				    	location.reload();
-			    		}, 2000);
-	        	 
-			     }
-	         ,error : function(e){
-	          }
-	  		}); 
-	
-	});
-	
+	$.ajax({
+		 type: "post"
+		,url : "/admin/userUpdate.do"
+		,data : data
+		,success : function (data){
+			alert("["+id+"] : 상태변경 완료");
+		     }
+		,error : function(e){
+		 	 }
+	}); 
+});
+
+function search(){
+	var searchId = $("#searchId").val();
+	var searchState = $("#searchState").val();
+	var searchType = $("#searchType").val();
+	window.location.href = "/admin/userList.do?searchId="+searchId+"&searchState="+searchState+"&searchType="+searchType;
+}
 
 </script>
 
