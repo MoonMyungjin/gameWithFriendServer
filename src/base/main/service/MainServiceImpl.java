@@ -70,10 +70,10 @@ public class MainServiceImpl implements MainService {
 	}
 
 	@Override
-	public List<MainVO> selectMatchingOption() throws SQLException {
+	public List<CodeVO> selectMatchingOption() throws SQLException {
 		CodeVO codeVO = new CodeVO();
-		codeDAO.selectOption(codeVO);
-		return null;
+		List<CodeVO> selectOption = codeDAO.selectOption(codeVO);
+		return selectOption;
 	}
 	
 	

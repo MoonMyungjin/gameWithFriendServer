@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import base.admin.vo.UserVO;
 import base.friend.vo.FriendVO;
 import base.main.vo.MainVO;
+import common.vo.CodeVO;
 import gameMatching.vo.GameVO;
 
 @Repository("MainService")
@@ -19,5 +20,5 @@ public interface MainService {
 	
 	void likeTarget(MainVO mainVO) throws SQLException;
 	
-	List<MainVO> selectMatchingOption() throws SQLException;
+	List<CodeVO> selectMatchingOption() throws SQLException;
 }
