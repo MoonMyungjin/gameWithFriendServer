@@ -28,7 +28,7 @@ public class MainServiceImpl implements MainService {
 	@Resource(name="AlramDAO")
 	protected AlramDAO alramDAO;
 	
-	@Resource(name="CodeDAO")
+	@Resource(name="codeDAO")
 	protected CodeDAO codeDAO;
 	
 
