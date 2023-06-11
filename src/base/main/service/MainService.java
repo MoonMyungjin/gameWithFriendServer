@@ -18,4 +18,6 @@ public interface MainService {
 	String fintTargetLike(MainVO mainVO) throws SQLException;
 	
 	void likeTarget(MainVO mainVO) throws SQLException;
+	
+	List<MainVO> selectMatchingOption() throws SQLException;
 }

@@ -36,7 +36,11 @@ public class OptionServiceImpl implements OptionService {
 		FileVO paramVO = new FileVO();
 		paramVO.setFlTableId("OPTION");
 		paramVO.setFlTableKey(optionIndex);
-		resultMap.put("image",fileDAO.selectFiles(paramVO));
+		if(fileDAO.selectFiles(paramVO).size() >1) {
+			
+		}else {
+			resultMap.put("image",fileDAO.selectFiles(paramVO));
+		}		
 		return resultMap;
 	}
 	
@@ -53,7 +57,6 @@ public class OptionServiceImpl implements OptionService {
 		if(option == null || option.isEmpty()) {
 
 			optionDAO.insertMegaOption(params);
-			params.put("CD_DTL_PARENT_ID","101");
 			optionDAO.insertOption(params);
 			
 		} else {
@@ -161,7 +164,11 @@ public class OptionServiceImpl implements OptionService {
 	}
 	
 
-	
+	@Override
+	public List<HashMap<String, String>> selectMegaOptionList(String megaOptionId) throws SQLException {		
+		return optionDAO.selectMegaOptionList(megaOptionId);
+	}
+
 	
 	
 

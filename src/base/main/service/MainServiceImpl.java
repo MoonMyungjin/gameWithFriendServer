@@ -16,6 +16,8 @@ import base.friend.dao.FriendDAO;
 import base.friend.vo.FriendVO;
 import base.main.dao.MainDAO;
 import base.main.vo.MainVO;
+import common.dao.CodeDAO;
+import common.vo.CodeVO;
 
 @Service("MainService")
 public class MainServiceImpl implements MainService {
@@ -26,7 +28,8 @@ public class MainServiceImpl implements MainService {
 	@Resource(name="AlramDAO")
 	protected AlramDAO alramDAO;
 	
-
+	@Resource(name="CodeDAO")
+	protected CodeDAO codeDAO;
 	
 
 	@Override
@@ -64,6 +67,13 @@ public class MainServiceImpl implements MainService {
 			 alramDAO.sendLikeAlram(alramVO);
 			 
 		 }
+	}
+
+	@Override
+	public List<MainVO> selectMatchingOption() throws SQLException {
+		CodeVO codeVO = new CodeVO();
+		codeDAO.selectOption(codeVO);
+		return null;
 	}
 	
 	

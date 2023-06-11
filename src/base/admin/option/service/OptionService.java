@@ -31,4 +31,6 @@ public interface OptionService {
 	List<HashMap<String, String>> selectUnderUnderOptionList(Map<String,String> searchMap)throws SQLException;
 	
 	HashMap<String, Object> selectUnderUnderOption(String opDtlId) throws SQLException;
+	
+	List<HashMap<String, String>> selectMegaOptionList(String megaOptionId)throws SQLException;
 }

@@ -34,13 +34,19 @@ public class OptionController {
 	@RequestMapping(value = "/admin/option/list.do", method = RequestMethod.GET)
 	public String optionList(HttpServletRequest request,Model model,@RequestParam Map<String,String> searchMap) throws Exception{
 		
+		//최상위 옵션 셀렉트박스 리스트 
+		List<HashMap<String,String>> selectMegaOptionList = optionService.selectMegaOptionList("게임매칭 옵션 목록");
+		model.addAttribute("selectMegaOptionList", selectMegaOptionList);				
+		
 		//상위 옵션
-		searchMap.put("CD_DTL_PARENT_ID", "101");
+		if(searchMap.get("CD_DTL_PARENT_ID") == null || searchMap.get("CD_DTL_PARENT_ID").equals("")) {
+			searchMap.put("CD_DTL_PARENT_ID", "101");
+		}	
 		List<HashMap<String,String>> selectOptionList = optionService.selectOptionList(searchMap);
 		model.addAttribute("selectOptionList", selectOptionList);
 		String optionIndex = "";
 		if(searchMap.get("CD_DTL_ID") == null || searchMap.get("CD_DTL_ID").equals("")) {
-			optionIndex = String.valueOf(selectOptionList.get(0).get("CD_DTL_ID"));
+			optionIndex = String.valueOf(selectOptionList.get(0).get("CD_DTL_ID"));		
 		} else {
 			optionIndex = String.valueOf(searchMap.get("CD_DTL_ID"));
 		}
@@ -55,23 +61,21 @@ public class OptionController {
 		model.addAttribute("selectOptionUnderList", selectOptionUnderList);
 		String optionUnderIndex = "";
 		if(searchMap.get("CD_DTL_ID_UNDER") == null || searchMap.get("CD_DTL_ID_UNDER").equals("")) {
-			optionUnderIndex = String.valueOf(selectOptionUnderList.get(0).get("CD_DTL_ID"));
+			if(selectOptionUnderList.size() == 0) {
+				
+			}else {
+				optionUnderIndex = String.valueOf(selectOptionUnderList.get(0).get("CD_DTL_ID"));
+			}
 		} else {
 			optionUnderIndex = String.valueOf(searchMap.get("CD_DTL_ID_UNDER"));
 		}
 		HashMap<String,Object> selectedUnderOption = optionService.selectOption(optionUnderIndex);
 		model.addAttribute("selectedUnderOption", selectedUnderOption);
-		
-
 		List<HashMap<String,String>> selectUnderUnderOptionList = new ArrayList<>();
-		
 		if(searchMap.get("CD_DTL_ID_UNDER") == null) {
-			
 			searchMap.put("CD_DTL_ID_UNDER", optionUnderIndex);
-			selectUnderUnderOptionList = optionService.selectUnderUnderOptionList(searchMap);
-			
-		}else {
-			
+			selectUnderUnderOptionList = optionService.selectUnderUnderOptionList(searchMap);	
+		}else {	
 			selectUnderUnderOptionList = optionService.selectUnderUnderOptionList(searchMap);
 		}
 		

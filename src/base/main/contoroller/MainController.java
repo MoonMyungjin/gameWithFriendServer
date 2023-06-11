@@ -63,6 +63,17 @@ public class MainController {
 
 	}
 	
+	@CrossOrigin("http://localhost:3000")
+	@RequestMapping(value = "/main/selectMatchingOption.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String,Object>> selectMatchingOption(HttpServletRequest request,HttpMethod httpMethod) throws Exception{
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		List<MainVO> selectLikeTop5List = mainService.selectLikeTop5List();
+		dataMap.put("selectLikeTop5List", selectLikeTop5List);
+		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
+		
+		return entity;
+	}
+	
 	
 
 

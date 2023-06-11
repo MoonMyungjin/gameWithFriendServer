@@ -207,6 +207,14 @@
 		AND CD_DTL_ID !='10102'
  		ORDER BY CD_DTL_ID 
 	</select>
+	
+		
+	<select id="selectMegaOptionList" resultType="java.util.HashMap">
+		SELECT C_ID,
+				C_NAME
+		 FROM CODE 
+		 WHERE C_DESC =#{megaOptionId}
+	</select>
 
 
 </mapper>

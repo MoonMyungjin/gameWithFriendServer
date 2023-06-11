@@ -74,5 +74,9 @@ public class OptionDAO {
 		session.insert("base.admin.option.mapper.insertUnderUnderOption",searchMap);
 	}
 	
+	public List<HashMap<String, String>> selectMegaOptionList (String megaOptionId) {
+		return session.selectList("base.admin.option.mapper.selectMegaOptionList",megaOptionId);
+	}
+	
 	
 }

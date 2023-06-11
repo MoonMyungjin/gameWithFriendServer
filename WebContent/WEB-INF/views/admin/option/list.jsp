@@ -115,7 +115,7 @@ img{
 							</div>
 							<div class="col-sm-6">
 								<table class="table selectedTable table-bordered">
-									<thead>상위옵션</thead>
+									<thead>상위옵션</thead> 
 									<tbody>
 										<tr>
 											<th>옵션코드번호</th>
@@ -126,7 +126,9 @@ img{
 										</tr>
 										<tr>
 											<th>옵션상위코드번호</th>
-											<td><input type="text" name="CD_DTL_PARENT_ID" disabled="disabled" value="${selectedOption.option.CD_DTL_PARENT_ID }"></td>
+											<td><input type="hidden" name="CD_DTL_PARENT_ID"  value="${selectedOption.option.CD_DTL_PARENT_ID }">
+												<c:out value="${selectedOption.option.CD_DTL_PARENT_ID}"/>
+											</td>
 										</tr>
 										<tr>
 											<th>옵션이름</th>
@@ -355,7 +357,14 @@ img{
 				<div class="col-sm-6"  >
 						<div class="table1">
 							<table class="table listTable table-head-fixed table-bordered">
-								<thead>상위옵션</thead>
+								<thead >상위옵션</thead>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;상위 옵션 변경
+									<select id="selectOption">
+									  <option value='' selected>-- 선택 --</option>
+									  <c:forEach items="${selectMegaOptionList}" var="optionMega" varStatus="i">
+									  	<option value='${optionMega.C_ID}'>${optionMega.C_NAME}</option>
+									  </c:forEach>
+									</select> 
 								<thead>
 									<tr>
 										<th>옵션코드번호</th>
@@ -496,8 +505,8 @@ img{
 	$(".lineTr").click(function(){
 		
 		var opIndex = $(this).children().eq(0).text();
-		var opTwoIndex = $(".lineTrTwo").children().eq(0).text();
-		window.location.href = "/admin/option/list.do?CD_DTL_ID="+opIndex+"&CD_DTL_ID_UNDER="+opTwoIndex+"&SEARCH_KEY="+$('#searchName').val();
+		var opParentIndex = $(this).children().eq(1).text();
+		window.location.href = "/admin/option/list.do?CD_DTL_ID="+opIndex+"&CD_DTL_PARENT_ID="+opParentIndex+"&SEARCH_KEY="+$('#searchName').val();
 		
 	});
 	
@@ -518,7 +527,11 @@ img{
 		
 	});
 	
-	
+	$("#selectOption").on("change", function(){
+		var opIndex = $(this).val();
+		var opTwoIndex = $(".lineTrTwo").children().eq(0).text();
+		window.location.href = "/admin/option/list.do?CD_DTL_PARENT_ID="+opIndex;
+	});
 	
 	function search(){
 		
@@ -657,11 +670,8 @@ img{
 			,processData : false
 			,dataType: 'text'
 			,success : function(data) {
-				console.log("@@@@@@@@@@@@@@@@@@@@2")
-				console.log(data)
 				$(".selectedTable").find("input[name=CD_DTL_PARENT_ID_UNDER]").val(data);
 				$(".selectedTable").find("input[name=CD_DTL_PARENT_ID_UNDER]").next().text(data);
-				
 			}
 			,error : function(xhr, status) {
 				console.log(xhr);
