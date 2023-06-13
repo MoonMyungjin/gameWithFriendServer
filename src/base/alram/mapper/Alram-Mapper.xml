@@ -6,17 +6,21 @@
 	
 	<select id="findMyAlramList" resultType="base.alram.vo.AlramVO">
 	
+
 				SELECT A.AL_MY_ID AS alMyId,
 						 A.AL_REG_DT AS alRegDt,
 						 A.AL_SEND_ID AS alSendId,
 						 B.CD_DTL_NAME AS cdDtlName,
-						 B.CD_DTL_DESC AS cdDtlDesc
-				FROM ALRAM A, CODE_DTL B 
+						 B.CD_DTL_DESC AS cdDtlDesc,
+						 C.U_NICKNAME AS uNickName,
+						(SELECT U_NICKNAME FROM USER WHERE U_INTG_ID = A.AL_SEND_ID) AS sendNickName 
+				FROM ALRAM A, CODE_DTL B, USER C 
 				WHERE A.AL_CODE_ID = B.CD_DTL_ID 
-				AND A.AL_MY_ID = #{alMyId}
+				AND A.AL_MY_ID = C.U_INTG_ID
+				AND A.AL_MY_ID =  #{alMyId}
 				AND A.AL_USE_YN = 'Y'
 				ORDER BY alRegDt
-	
+				
 	</select>	
 	
 	<update id="sendLikeAlram" >

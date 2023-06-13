@@ -12,8 +12,22 @@ public class AlramVO {
 	private String myId;
 	private String targetId;
 	private String alCodeId;
+	private String uNickName;
+	private String sendNickName;
 	
 	
+	public String getSendNickName() {
+		return sendNickName;
+	}
+	public void setSendNickName(String sendNickName) {
+		this.sendNickName = sendNickName;
+	}
+	public String getuNickName() {
+		return uNickName;
+	}
+	public void setuNickName(String uNickName) {
+		this.uNickName = uNickName;
+	}
 	public String getMyId() {
 		return myId;
 	}
