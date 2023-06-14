@@ -64,7 +64,7 @@ public class MainServiceImpl implements MainService {
 			 alramVO.setMyId(mainVO.getMyId());
 			 alramVO.setTargetId(mainVO.getTargetId());
 			 alramVO.setAlCodeId("10802");
-			 alramDAO.sendLikeAlram(alramVO);
+			 alramDAO.sendAlram(alramVO);
 			 
 		 }
 	}
@@ -72,7 +72,7 @@ public class MainServiceImpl implements MainService {
 	@Override
 	public List<CodeVO> selectMatchingOption() throws SQLException {
 		CodeVO codeVO = new CodeVO();
-		List<CodeVO> selectOption = codeDAO.selectOption(codeVO);
+		List<CodeVO> selectOption = codeDAO.selectOptionList(codeVO);
 		return selectOption;
 	}
 	
