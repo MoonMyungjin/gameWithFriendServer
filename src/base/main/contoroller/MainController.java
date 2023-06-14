@@ -27,7 +27,7 @@ import common.vo.CodeVO;
 @Controller
 public class MainController {
 	
-	@Resource(name="CodeService")
+	@Resource(name="codeService")
 	private CodeService codeService;
 	
 	@Resource(name="AlramService")
