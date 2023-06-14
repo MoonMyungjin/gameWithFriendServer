@@ -4,8 +4,26 @@ public class CodeVO {
 
 	private String cdDtlName;
 	private String cdDtlParentId;
+	private String cdDtlId;
+	private String cdDtlDesc;
 	private String url;
 	
+	
+	public String getCdDtlId() {
+		return cdDtlId;
+	}
+
+	public void setCdDtlId(String cdDtlId) {
+		this.cdDtlId = cdDtlId;
+	}
+
+	public String getCdDtlDesc() {
+		return cdDtlDesc;
+	}
+
+	public void setCdDtlDesc(String cdDtlDesc) {
+		this.cdDtlDesc = cdDtlDesc;
+	}
 
 	public String getCdDtlName() {
 		return cdDtlName;

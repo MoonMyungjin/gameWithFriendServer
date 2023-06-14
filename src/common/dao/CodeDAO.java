@@ -23,8 +23,8 @@ public class CodeDAO {
 		return session.selectList("code.mapper.selectCdDtlNm",codeVO);
 	}
 	
-	public List<CodeVO> selectOption(CodeVO codeVO) throws SQLException {
-		return session.selectList("code.mapper.selectOption",codeVO);
+	public List<CodeVO> selectOptionList(CodeVO codeVO) throws SQLException {
+		return session.selectList("code.mapper.selectOptionList",codeVO);
 	}
 
 

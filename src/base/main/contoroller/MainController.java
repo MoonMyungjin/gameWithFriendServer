@@ -20,16 +20,21 @@ import base.alram.service.AlramService;
 import base.alram.vo.AlramVO;
 import base.main.service.MainService;
 import base.main.vo.MainVO;
+import common.service.CodeService;
+import common.vo.CodeVO;
 
 
 @Controller
 public class MainController {
 	
-	@Resource(name="MainService")
-	private MainService mainService;
+	@Resource(name="CodeService")
+	private CodeService codeService;
 	
 	@Resource(name="AlramService")
 	private AlramService alramService;
+	
+	@Resource(name="MainService")
+	private MainService mainService;
 	
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping(value = "/main/fameTop5.do", method = RequestMethod.GET)
@@ -73,11 +78,13 @@ public class MainController {
 	}
 	
 	@CrossOrigin("http://localhost:3000")
-	@RequestMapping(value = "/main/selectMatchingOption.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/main/selectMatchingOptionList.do", method = RequestMethod.GET)
 	public ResponseEntity<Map<String,Object>> selectMatchingOption(HttpServletRequest request,HttpMethod httpMethod) throws Exception{
 		Map<String, Object> dataMap = new HashMap<String, Object>();
-		List<MainVO> selectLikeTop5List = mainService.selectLikeTop5List();
-		dataMap.put("selectLikeTop5List", selectLikeTop5List);
+		CodeVO codeVO = new CodeVO();
+		codeVO.setCdDtlParentId("109");
+		List<CodeVO> selectMatchingOptionList = codeService.selectOptionList(codeVO);
+		dataMap.put("selectMatchingOptionList", selectMatchingOptionList);
 		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
 		
 		return entity;
