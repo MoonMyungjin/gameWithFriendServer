@@ -38,6 +38,11 @@ public class FriendServiceImpl implements FriendService {
 	public int friendNum(String myNick) throws SQLException {
 		return friendDAO.selectFriendNum(myNick);
 	}
+	
+	@Override
+	public FriendVO selectUserFriendState(FriendVO friendVO) throws SQLException {
+		return friendDAO.selectUserFriendState(friendVO);
+	}
 
 
 }

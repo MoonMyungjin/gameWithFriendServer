@@ -18,4 +18,6 @@ public interface FriendService {
 	List<FriendVO> friendList(String myNick) throws SQLException;
 	
 	int friendNum(String myNick) throws SQLException;
+	
+	FriendVO selectUserFriendState(FriendVO friendVO) throws SQLException;
 }

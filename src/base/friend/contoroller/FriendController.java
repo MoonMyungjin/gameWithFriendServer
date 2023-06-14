@@ -58,5 +58,22 @@ public class FriendController {
 		return entity;
 	}
 	
+	@CrossOrigin("http://localhost:3000")
+	@RequestMapping(value = "/friend/selectUserFriend.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String,Object>> selectUserFriendState(@RequestParam(required = true) String myId,@RequestParam(required = true) String youId,HttpServletRequest req
+			,HttpMethod httpMethod) throws Exception{
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		FriendVO friendVO = new FriendVO();
+		friendVO.setfMyId(myId);
+		friendVO.setfYouId(youId);
+		FriendVO selectUserFriendState = friendService.selectUserFriendState(friendVO);
+		dataMap.put("selectUserFriendState", selectUserFriendState);
+		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
+		
+		return entity;
+	}
+	
+	
+	
 
 }

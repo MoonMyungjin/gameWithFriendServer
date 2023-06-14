@@ -35,4 +35,8 @@ public class FriendDAO {
 		return session.selectOne("base.friend.mapper.selectFriendNum", myNick);
 	}
 	
+	public FriendVO selectUserFriendState(FriendVO friendVO) throws SQLException {
+		return session.selectOne("base.friend.mapper.selectUserFriendState",friendVO);
+	}
+	
 }
