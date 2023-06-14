@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import base.alram.service.AlramService;
+import base.alram.vo.AlramVO;
 import base.main.service.MainService;
 import base.main.vo.MainVO;
 
@@ -25,6 +27,9 @@ public class MainController {
 	
 	@Resource(name="MainService")
 	private MainService mainService;
+	
+	@Resource(name="AlramService")
+	private AlramService alramService;
 	
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping(value = "/main/fameTop5.do", method = RequestMethod.GET)
@@ -60,7 +65,11 @@ public class MainController {
 		mainVO.setTargetId(yourNick);
 		mainVO.setMyId(myNick);
 		mainService.likeTarget(mainVO);
-
+		AlramVO alramVO = new AlramVO();
+		alramVO.setAlMyId(yourNick);
+		alramVO.setAlSendId(myNick);
+		alramVO.setAlCodeId("10802");
+		alramService.sendAlram(alramVO);
 	}
 	
 	@CrossOrigin("http://localhost:3000")

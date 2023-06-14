@@ -24,7 +24,7 @@ public class AlramDAO {
 	}
 	
 
-	public void sendLikeAlram(AlramVO alramVO) throws SQLException {
-		session.update("base.alram.mapper.sendLikeAlram", alramVO);
+	public void sendAlram(AlramVO alramVO) throws SQLException {
+		session.update("base.alram.mapper.sendAlram", alramVO);
 	}
 }

@@ -27,6 +27,11 @@ public class AlramServiceImpl implements AlramService {
 		return alramDAO.findMyAlramList(alramVO);
 	}
 
+	@Override
+	public void sendAlram(AlramVO alramVO) throws SQLException {
+		alramDAO.sendAlram(alramVO);	
+	}
+
 
 	
 

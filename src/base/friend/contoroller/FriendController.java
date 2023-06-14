@@ -21,6 +21,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import base.admin.service.AdminService;
 import base.admin.vo.UserVO;
+import base.alram.service.AlramService;
+import base.alram.vo.AlramVO;
 import base.friend.service.FriendService;
 import base.friend.vo.FriendVO;
 
@@ -31,6 +33,9 @@ public class FriendController {
 	@Resource(name="FriendService")
 	private FriendService friendService;
 	
+	@Resource(name="AlramService")
+	private AlramService alramService;
+	
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping(value = "/friend/friendAdd.do", method = RequestMethod.GET)
 	public void friendAdd(HttpServletRequest request,HttpMethod httpMethod,@RequestParam(required = true) String myNick,@RequestParam(required = true) String yourNick) throws Exception{
@@ -40,7 +45,11 @@ public class FriendController {
 		friendVO.setfYouId(yourNick);
 		friendService.friendAddSend(friendVO);
 		friendService.friendAddReceive(friendVO);
-
+		AlramVO alramVO = new AlramVO();
+		alramVO.setAlMyId(yourNick);
+		alramVO.setAlSendId(myNick);
+		alramVO.setAlCodeId("10801");
+		alramService.sendAlram(alramVO);
 	}
 	
 	

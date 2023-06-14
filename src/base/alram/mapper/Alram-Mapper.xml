@@ -23,7 +23,7 @@
 				
 	</select>	
 	
-	<update id="sendLikeAlram" >
+	<update id="sendAlram" >
 			INSERT INTO ALRAM 
 			(
 				AL_MY_ID,

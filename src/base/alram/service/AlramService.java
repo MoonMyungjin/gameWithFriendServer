@@ -15,4 +15,6 @@ import gameMatching.vo.GameVO;
 public interface AlramService {
 	
 	List<AlramVO> findMyAlramList(AlramVO alramVO) throws SQLException;
+	
+	void sendAlram(AlramVO alramVO) throws SQLException;
 }
