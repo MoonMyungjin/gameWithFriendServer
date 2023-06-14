@@ -2,6 +2,7 @@ package base.admin.service;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -17,8 +18,13 @@ public class AdminServiceImpl implements AdminService {
 	protected AdminDAO adminDAO;
 
 	@Override
-	public List<UserVO> getUserList() throws SQLException {
-		return adminDAO.getUserList();
+	public List<UserVO> getUserList(Map<String, Object> params) throws SQLException {
+		return adminDAO.getUserList(params);
+	}
+
+	@Override
+	public void userUpdate(Map<String, Object> params) throws SQLException {
+		adminDAO.userUpdate(params);
 	}
 
 }

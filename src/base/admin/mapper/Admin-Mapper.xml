@@ -22,6 +22,17 @@
 		  FROM USER U
 		  LEFT JOIN CODE_DTL CD1 ON(CD1.CD_DTL_PARENT_ID = 106 AND CD1.CD_DTL_ID = U.U_STATE_CD)
 		  LEFT JOIN CODE_DTL CD2 ON(CD2.CD_DTL_PARENT_ID = 107 AND CD2.CD_DTL_ID = U.U_TYPE_CD)
+		 <where>
+		 	<if test="searchId != null and !searchId.equals('')">
+				AND U_INTG_ID LIKE CONCAT('%',#{searchId},'%')
+		   	</if>
+		 	<if test="searchState != null and !searchState.equals('')">
+				AND U_STATE_CD = #{searchState}
+		   	</if>
+		 	<if test="searchType != null and !searchType.equals('')">
+				AND U_TYPE_CD = #{searchType}
+		   	</if>
+		 </where>
 		 ORDER BY U_LAST_LOGIN_DTTM DESC
 	</select>
 	
@@ -46,5 +57,17 @@
 		  WHERE U_NACKNAME =#{myNick}
 	</select>
 	
+	<update id="userUpdate">
+		UPDATE USER
+		   SET U_MOD_ID='SYSTEM'
+		   	  ,U_MOD_DATE=SYSDATE()
+		   	  <if test="cate != null and cate.equals('state')">
+			   	  ,U_STATE_CD=#{val}
+		   	  </if>
+		   	  <if test="cate != null and cate.equals('type')">
+			   	  ,U_TYPE_CD=#{val}
+		   	  </if>
+		 WHERE U_INTG_ID=#{id}
+	</update>
 	
 </mapper>

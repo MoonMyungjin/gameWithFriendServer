@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="base.chat.mapper">	
+	<insert id="insertChatRoom">
+		INSERT INTO CHAT 
+		  (CHA_SEQ,
+		   CHA_TITL,
+		   CHA_REG_ID,
+		   CHA_REG_DATE, 
+		   CHA_MOD_ID, 
+		   CHA_MOD_DATE
+		  )
+		SELECT
+			   (SELECT CASE WHEN 
+			                    (SELECT CHA_SEQ 
+			               	     FROM CHAT 
+			       		          WHERE SUBSTR(CHA_SEQ, 1, 8) = CONVERT(DATE_FORMAT(CURDATE(), '%Y%m%d'), VARCHAR(8))) IS NULL
+			               THEN CONCAT(DATE_FORMAT(CURDATE(), '%Y%m%d'), '0000001')
+			               ELSE (SELECT CONVERT(CHA_SEQ, INT) + 1
+			                       FROM CHAT 
+			       		          WHERE SUBSTR(CHA_SEQ, 1, 8) = CONVERT(DATE_FORMAT(CURDATE(), '%Y%m%d'), VARCHAR(8)))
+			                END AS CHA_SEQ),
+		        NULL,
+		        #{uIntgId},
+		        NOW(),
+		        #{uIntgId},
+		        NOW()
+	</insert>
+	
+</mapper>
