@@ -28,6 +28,8 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 
+import common.service.CodeService;
+import common.vo.CodeVO;
 import gameMatching.cassandra.CassandraConnector;
 import gameMatching.cassandra.CassandraMapper;
 import gameMatching.service.GameMatchingService;
@@ -45,6 +47,9 @@ public class GameMatchingController {
 	
 	@Resource(name="gameMatchingService")
 	private GameMatchingService gameMatchingService;
+	
+	@Resource(name="codeService")
+	private CodeService codeService;
 	
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping("/gameMatching/selectGameMatchingUserTop3")
@@ -145,10 +150,28 @@ public class GameMatchingController {
 		List<GameVO> gameVO = gameMatchingService.selectSearchChampion(keyWord);
 		dataMap.put("gameVO", gameVO);
 		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
-		System.out.println(dataMap);
 		return entity;
 	}
 	
+	@CrossOrigin("http://localhost:3000")
+	@RequestMapping("/gameMatching/selectMatchingOption")
+	public ResponseEntity<Map<String,Object>> selectMatchingOption(@RequestParam(required = true) String gameType,
+		HttpServletRequest req,HttpMethod httpMethod) throws Exception{
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		CodeVO codeVO = new CodeVO();
+		codeVO.setCdDtlParentId("101");
+		List<CodeVO> selectOptionList = codeService.selectOptionList(codeVO);
+		if(gameType.equals("소환사의협곡")){
+			dataMap.put("selectOptionList", selectOptionList);
+		}else if(gameType.equals("칼바람나락")){
+			selectOptionList.remove(1);
+			dataMap.put("selectOptionList", selectOptionList);
+		}else if(gameType.equals("격전")){
+			dataMap.put("selectOptionList", selectOptionList);
+		}
+		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
+		return entity;
+	}
 	
 	
 }
