@@ -7,7 +7,8 @@
 	<select id="findMyAlramList" resultType="base.alram.vo.AlramVO">
 	
 
-				SELECT A.AL_MY_ID AS alMyId,
+				SELECT 	A.AL_SEQ AS alSeq,
+						A.AL_MY_ID AS alMyId,
 						 A.AL_REG_DT AS alRegDt,
 						 A.AL_SEND_ID AS alSendId,
 						 B.CD_DTL_NAME AS cdDtlName,

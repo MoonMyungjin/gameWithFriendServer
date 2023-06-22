@@ -14,8 +14,16 @@ public class AlramVO {
 	private String alCodeId;
 	private String uNickName;
 	private String sendNickName;
+	private String alSeq;
 	
 	
+	
+	public String getAlSeq() {
+		return alSeq;
+	}
+	public void setAlSeq(String alSeq) {
+		this.alSeq = alSeq;
+	}
 	public String getSendNickName() {
 		return sendNickName;
 	}
