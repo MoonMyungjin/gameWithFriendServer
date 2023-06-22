@@ -19,7 +19,7 @@
 				AND A.AL_MY_ID = C.U_INTG_ID
 				AND A.AL_MY_ID =  #{alMyId}
 				AND A.AL_USE_YN = 'Y'
-				ORDER BY alRegDt
+				ORDER BY alRegDt DESC
 				
 	</select>	
 	
