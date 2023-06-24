@@ -43,6 +43,16 @@
 			) 
 			
 	</update>	
+	
+	
+	<update id="alramDelete" parameterType="base.alram.vo.AlramVO" >
+
+			UPDATE ALRAM SET
+			AL_USE_YN = 'N'
+			WHERE 
+			AL_SEQ = #{alSeq}
+		
+	</update>	
 
 	
 	

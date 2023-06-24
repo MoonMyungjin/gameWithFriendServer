@@ -17,4 +17,6 @@ public interface AlramService {
 	List<AlramVO> findMyAlramList(AlramVO alramVO) throws SQLException;
 	
 	void sendAlram(AlramVO alramVO) throws SQLException;
+	
+	void alramDelete(AlramVO alramVO) throws SQLException;
 }
