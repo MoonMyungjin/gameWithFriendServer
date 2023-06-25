@@ -48,6 +48,18 @@ public class AlramController {
 		return entity;
 	}
 	
+	@CrossOrigin("http://localhost:3000")
+	@RequestMapping(value = "/alram/alramDelete.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String,Object>> alramDelete(HttpServletRequest request,HttpMethod httpMethod,@RequestParam(required = true) String alSeq) throws Exception{
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		AlramVO alramVO = new AlramVO();
+		alramVO.setAlSeq(alSeq);
+		alramService.alramDelete(alramVO);
+		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
+		
+		return entity;
+	}
+	
 	
 
 

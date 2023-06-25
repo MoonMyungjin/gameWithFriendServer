@@ -27,4 +27,8 @@ public class AlramDAO {
 	public void sendAlram(AlramVO alramVO) throws SQLException {
 		session.update("base.alram.mapper.sendAlram", alramVO);
 	}
+	
+	public void alramDelete(AlramVO alramVO) throws SQLException {
+		session.update("base.alram.mapper.alramDelete", alramVO);
+	}
 }

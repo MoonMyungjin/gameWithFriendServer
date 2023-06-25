@@ -191,5 +191,18 @@ public class GameMatchingController {
 		return entity;
 	}
 	
+	@CrossOrigin("http://localhost:3000")
+	@RequestMapping("/gameMatching/selectBasicOption")
+	public ResponseEntity<Map<String,Object>> selectBasicOption(@RequestParam(required = true) String matchingOptionCode,
+		HttpServletRequest req,HttpMethod httpMethod) throws Exception{
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		CodeVO codeVO = new CodeVO();
+		codeVO.setCdDtlParentId(matchingOptionCode);
+		List<CodeVO> selectOptionList = codeService.selectOptionList(codeVO);
+		dataMap.put("selectOptionList", selectOptionList);
+		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
+		return entity;
+	}
+	
 	
 }

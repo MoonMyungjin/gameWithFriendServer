@@ -32,6 +32,12 @@ public class AlramServiceImpl implements AlramService {
 		alramDAO.sendAlram(alramVO);	
 	}
 
+	@Override
+	public void alramDelete(AlramVO alramVO) throws SQLException {
+		alramDAO.alramDelete(alramVO);	
+		
+	}
+
 
 	
 

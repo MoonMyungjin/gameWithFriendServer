@@ -7,7 +7,8 @@
 	<select id="findMyAlramList" resultType="base.alram.vo.AlramVO">
 	
 
-				SELECT A.AL_MY_ID AS alMyId,
+				SELECT 	A.AL_SEQ AS alSeq,
+						A.AL_MY_ID AS alMyId,
 						 A.AL_REG_DT AS alRegDt,
 						 A.AL_SEND_ID AS alSendId,
 						 B.CD_DTL_NAME AS cdDtlName,
@@ -19,7 +20,7 @@
 				AND A.AL_MY_ID = C.U_INTG_ID
 				AND A.AL_MY_ID =  #{alMyId}
 				AND A.AL_USE_YN = 'Y'
-				ORDER BY alRegDt
+				ORDER BY alRegDt DESC
 				
 	</select>	
 	
@@ -41,6 +42,16 @@
 				NOW()
 			) 
 			
+	</update>	
+	
+	
+	<update id="alramDelete" parameterType="base.alram.vo.AlramVO" >
+
+			UPDATE ALRAM SET
+			AL_USE_YN = 'N'
+			WHERE 
+			AL_SEQ = #{alSeq}
+		
 	</update>	
 
 	
