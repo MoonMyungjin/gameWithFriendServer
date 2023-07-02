@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="base.matching.mapper">
+
+	<select id="selectHistoryList" resultType="base.matching.vo.MatchingHistoryVO">
+		SELECT A.M_MATCHING_ID AS mMatchingID,
+		       A.M_MY_ID AS mMyID,
+		       A.M_USER_ID AS mUserID,
+		   	   A.M_GAME_TYPE AS mGameType,
+		       A.M_MATCHING_SCORE AS mMatchingScore,
+		       A.M_MATCHING_DATE AS mMatchingDate,
+	           B.GL_RANK AS mUserRank,
+	           B.GL_CHAMPION AS mUserChmpion,
+	           B.GL_TIME AS mUserTime
+	      FROM MATCHING A, GAME_LOL B
+	     WHERE 1 = 1
+	       AND A.M_MY_ID = #{myID}
+	       AND A.M_USER_ID = B.GL_NICK;
+	</select>
+	
+</mapper>
