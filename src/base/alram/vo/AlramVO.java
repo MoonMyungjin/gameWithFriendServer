@@ -7,6 +7,7 @@ public class AlramVO {
 	private String alMyId;
 	private String alRegDt;
 	private String alSendId;
+	private String cdDtlId;
 	private String cdDtlName;
 	private String cdDtlDesc;
 	private String myId;
@@ -18,6 +19,12 @@ public class AlramVO {
 	
 	
 	
+	public String getCdDtlId() {
+		return cdDtlId;
+	}
+	public void setCdDtlId(String cdDtlId) {
+		this.cdDtlId = cdDtlId;
+	}
 	public String getAlSeq() {
 		return alSeq;
 	}

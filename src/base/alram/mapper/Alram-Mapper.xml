@@ -11,6 +11,7 @@
 						A.AL_MY_ID AS alMyId,
 						 A.AL_REG_DT AS alRegDt,
 						 A.AL_SEND_ID AS alSendId,
+						 B.CD_DTL_ID AS cdDtlId,
 						 B.CD_DTL_NAME AS cdDtlName,
 						 B.CD_DTL_DESC AS cdDtlDesc,
 						 C.U_NICKNAME AS uNickName,
