@@ -71,10 +71,15 @@ public class MainController {
 		mainVO.setMyId(myNick);
 		mainService.likeTarget(mainVO);
 		AlramVO alramVO = new AlramVO();
-		alramVO.setAlMyId(yourNick);
-		alramVO.setAlSendId(myNick);
-		alramVO.setAlCodeId("10802");
-		alramService.sendAlram(alramVO);
+		if(yourNick.equals("")) {
+			
+		}else {
+			alramVO.setAlMyId(yourNick);
+			alramVO.setAlSendId(myNick);
+			alramVO.setAlCodeId("10802");
+			alramService.sendAlram(alramVO);
+		}
+		
 	}
 	
 	@CrossOrigin("http://localhost:3000")
