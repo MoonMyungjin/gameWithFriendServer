@@ -12,6 +12,7 @@
 		class="brand-image img-circle elevation-3" style="opacity: .8">
 	</a>
 	<a href="/admin/userList.do">[회원관리]</a>&emsp;
+	<a href="/admin/report/list.do">[신고 목록]</a>&emsp;
 	<a href="/admin/champion/list.do">[LOL 챔피언 정보관리]</a>&emsp;
 	<a href="/admin/option/list.do">[옵션 정보관리]</a>&emsp;
     </ul>

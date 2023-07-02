@@ -36,7 +36,6 @@ public class MainController {
 	@Resource(name="MainService")
 	private MainService mainService;
 	
-	@CrossOrigin("http://localhost:3000")
 	@RequestMapping(value = "/main/fameTop5.do", method = RequestMethod.GET)
 	public ResponseEntity<Map<String,Object>> fameTop5List(HttpServletRequest request,HttpMethod httpMethod) throws Exception{
 		Map<String, Object> dataMap = new HashMap<String, Object>();
@@ -47,7 +46,6 @@ public class MainController {
 		return entity;
 	}
 	
-	@CrossOrigin("http://localhost:3000")
 	@RequestMapping(value = "/main/findTargetLike.do", method = RequestMethod.GET)
 	public ResponseEntity<Map<String,Object>> findTargetLike(HttpServletRequest request,HttpMethod httpMethod,@RequestParam(required = true) String myId,@RequestParam(required = true) String targetId) throws Exception{
 		Map<String, Object> dataMap = new HashMap<String, Object>();

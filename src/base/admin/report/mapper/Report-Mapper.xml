@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="base.admin.report.mapper">
+	
+	<select id="selectReportList" resultType="customMap">
+		SELECT RE_SEQ
+			  ,RE_SEND_ID
+			  ,RE_TARGET_ID
+			  ,RE_CONT
+			  ,RE_RED_ID
+			  ,RE_REG_DT
+			  ,RE_MOD_ID
+			  ,RE_MOD_DT
+			  ,RE_DEL_YN
+			  ,RE_CHECK_YN
+			  ,RE_TYPE
+		  FROM REPORT
+	</select>
+	
+</mapper>
