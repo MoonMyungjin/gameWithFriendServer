@@ -1,6 +1,5 @@
 package base.matching.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +7,9 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import base.alram.vo.AlramVO;
-import base.friend.service.FriendService;
-import base.friend.vo.FriendVO;
 import base.matching.service.MatchingService;
 import base.matching.vo.MatchingHistoryVO;
 
@@ -31,34 +30,31 @@ public class MatchingController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping(value = "/matching/historyList.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String,Object>> findFriendList (@RequestParam(required = true) String myID, HttpServletRequest req, HttpMethod httpMethod) throws Exception{
+	public ResponseEntity<Map<String,Object>> findFriendList (@RequestParam(required = true) String myID,
+			                                                  @RequestParam(required = true) String selectType,
+			                                                  @RequestParam(required = false) String baseDate,
+															  HttpServletRequest req,
+															  HttpMethod httpMethod) throws Exception
+	{
 		Map<String, Object> resultMap = new HashMap<String, Object>();		
-		//List<FriendVO> friendList = friendService.friendList(myNick);
-		//int friendNum = friendService.friendNum(myNick);
 		
-//		List<Map<String,String>> historyList = new ArrayList<>();
-//		
-//		Map<String, String> first = new HashMap<>();
-//		first.put("M_MATCHING_ID", "1");
-//		first.put("M_MY_ID","jonghwi");
-//		first.put("M_USER_ID","TEST1");
-//		first.put("M_MATCHING_DATE","2023-06-23");
-//		first.put("M_GAME_TYPE","100");
-//		first.put("M_MATCHING_SCORE","90");
-//		
-//		Map<String, String> second = new HashMap<>();
-//		second.put("MATCHING_ID", "1");
-//		second.put("M_MY_ID","jonghwi");
-//		second.put("M_USER_ID","TEST1");
-//		second.put("M_MATCHING_DATE","2023-06-23");
-//		second.put("M_GAME_TYPE","100");
-//		second.put("M_MATCHING_SCORE","90");
-//		
-//		historyList.add(first);
-//		historyList.add(second);
+		// Matching History List
+		List<MatchingHistoryVO> historyList = matchingService.getHistoryList(myID, selectType, baseDate);
 		
-		List<MatchingHistoryVO> historyList = matchingService.historyList(myID);
+		// Display Date
+		String displayDate = "";
+		if(historyList.size() > 0) displayDate = historyList.get(0).getmMatchingDate();
+		
+		// Previous & Later Date
+		String previousLaterDate = "";
+		if(!displayDate.equals("")) previousLaterDate = matchingService.getPreviousLaterDate(myID, displayDate);
+		String[] arrPreLaterDate = null;
+		if(!previousLaterDate.equals("")) arrPreLaterDate = previousLaterDate.split("@");
+		
 		resultMap.put("historyList", historyList);
+		resultMap.put("displayDate", displayDate);
+		resultMap.put("previousDate", arrPreLaterDate == null ? "" : arrPreLaterDate[0]);
+		resultMap.put("LaterDate", arrPreLaterDate == null ? "" : arrPreLaterDate[1]);
 		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(resultMap, HttpStatus.OK);
 		
 		return entity;
