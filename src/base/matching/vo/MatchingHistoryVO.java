@@ -9,7 +9,7 @@ public class MatchingHistoryVO {
 	private String mUserID;
 	private String mGameType;
 	private int mMatchingScore;
-	private Date mMatchingDate;
+	private String mMatchingDate;
 	private String mUserRank;
 	private String mUserChmpion;
 	private String mUserTime;
@@ -54,11 +54,11 @@ public class MatchingHistoryVO {
 		this.mMatchingScore = mMatchingScore;
 	}
 
-	public Date getmMatchingDate() {
+	public String getmMatchingDate() {
 		return mMatchingDate;
 	}
 
-	public void setmMatchingDate(Date mMatchingDate) {
+	public void setmMatchingDate(String mMatchingDate) {
 		this.mMatchingDate = mMatchingDate;
 	}
 
