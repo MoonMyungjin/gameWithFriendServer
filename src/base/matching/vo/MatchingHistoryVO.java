@@ -7,6 +7,8 @@ public class MatchingHistoryVO {
 	private int mMatchingID;
 	private String mMyID;
 	private String mUserID;
+	private String mMyNickname;
+	private String mUserNickname;
 	private String mGameType;
 	private int mMatchingScore;
 	private String mMatchingDate;
@@ -85,4 +87,21 @@ public class MatchingHistoryVO {
 	public void setmUserTime(String mUserTime) {
 		this.mUserTime = mUserTime;
 	}
+
+	public String getmMyNickname() {
+		return mMyNickname;
+	}
+
+	public void setmMyNickname(String mMyNickname) {
+		this.mMyNickname = mMyNickname;
+	}
+
+	public String getmUserNickname() {
+		return mUserNickname;
+	}
+
+	public void setmUserNickname(String mUserNickname) {
+		this.mUserNickname = mUserNickname;
+	}
+
 }
