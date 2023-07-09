@@ -1,20 +1,17 @@
 package base.myPage.controller;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import base.myPage.service.MypageService;
 import common.util.FileManageUtil;
 import common.vo.FileVO;
-import gameMatching.vo.UserGameInfoVO;
 
 
 @Controller
@@ -36,19 +32,11 @@ public class MypageController {
 
 	private final String FILE_PATH = "myPage";
 	
-	@RequestMapping("/mypage/changeMyImage.do")
-	public ResponseEntity<Map<String,Object>> pushRiotApi(@RequestParam(required = true) String id,
-			HttpServletRequest req
-		,HttpMethod httpMethod) throws Exception{
-		Map<String, Object> dataMap = new HashMap<String, Object>();
+	@GetMapping("/mypage/changeMyImage.do")
+	public String changeMyImageGet(@RequestParam("data") String data, HttpServletRequest req) throws Exception{
 		
-		userGameInfo.setUserId(id);
-		UserGameInfoVO selectUserGameInfo = cassandra.selectUserGameInfo(userGameInfo);
-		dataMap.put("userInfo", selectUserGameInfo);
-		
-		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
-		
-		return entity;
+		System.out.println(data);
+		return data;
 	}
 	
 	
