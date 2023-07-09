@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.socket.WebSocketSession;
 
 import base.chat.service.TextChatService;
+import util.CustomMap;
 
 @RestController
 @RequestMapping(value="/chat")
@@ -23,7 +24,7 @@ public class ChatController {
 	@Resource(name="textChatService")
 	private TextChatService textChatService;
 	
-	@RequestMapping(value="/getChatList")
+	@RequestMapping(value="/getChatList.do")
 	public ModelAndView getChatList(HttpServletRequest request, @RequestBody HashMap<String, Object> commandMap) throws Exception {
 		ModelAndView modelAndView = new ModelAndView("jsonView");
 		
@@ -34,10 +35,16 @@ public class ChatController {
 		return modelAndView;
 	}
 	
-	@RequestMapping(value="/openChatRoom")
+	@RequestMapping(value="/openChatRoom.do")
 	public ModelAndView oepnChatRoom(HttpServletRequest requeest, @RequestBody HashMap<String, Object> commandMap) throws Exception {
 		ModelAndView modelAndView = new ModelAndView("jsonView");
 		
+		String chatRoomId = textChatService.openChatRoom(commandMap);
+		
+		Map<String, String> resultMap = new HashMap<String, String>();
+		resultMap.put("chatRoomId", chatRoomId);
+		
+		modelAndView.addObject("resultMap", resultMap);
 		
 		return modelAndView;
 	}

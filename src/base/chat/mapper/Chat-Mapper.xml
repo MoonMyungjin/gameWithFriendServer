@@ -19,31 +19,68 @@
     	WHERE B.CHA_INTG_ID = #{uIntgId}
     	GROUP BY B.CHA_SEQ, A.CHA_TITL
 	</select>
-
-	<insert id="insertChatRoom">
-		INSERT INTO CHAT 
-		  (CHA_SEQ,
-		   CHA_TITL,
-		   CHA_REG_ID,
-		   CHA_REG_DATE, 
-		   CHA_MOD_ID, 
-		   CHA_MOD_DATE
-		  )
-		SELECT
-			   (SELECT CASE WHEN 
-			                    (SELECT CHA_SEQ 
-			               	     FROM CHAT 
-			       		          WHERE SUBSTR(CHA_SEQ, 1, 8) = CONVERT(DATE_FORMAT(CURDATE(), '%Y%m%d'), VARCHAR(8))) IS NULL
-			               THEN CONCAT(DATE_FORMAT(CURDATE(), '%Y%m%d'), '0000001')
-			               ELSE (SELECT CONVERT(CHA_SEQ, INT) + 1
-			                       FROM CHAT 
-			       		          WHERE SUBSTR(CHA_SEQ, 1, 8) = CONVERT(DATE_FORMAT(CURDATE(), '%Y%m%d'), VARCHAR(8)))
-			                END AS CHA_SEQ),
-		        NULL,
-		        #{uIntgId},
-		        NOW(),
-		        #{uIntgId},
-		        NOW()
+	
+	<insert id="insertChatRoom" parameterType="hashMap" useGeneratedKeys="true" keyProperty="chaSeq">
+	  <selectKey order="BEFORE" keyProperty="chaSeq" resultType="String">
+	    SELECT IFNULL(
+	      (SELECT CONVERT(MAX(CHA_SEQ), INT) + 1
+	       FROM CHAT
+	       WHERE SUBSTR(CHA_SEQ, 1, 8) = CONVERT(DATE_FORMAT(CURDATE(), '%Y%m%d'), VARCHAR(8))
+	       ),
+	      CONCAT(DATE_FORMAT(CURDATE(), '%Y%m%d'), '0000001')
+	    ) AS CHA_SEQ
+	    FROM DUAL;
+	  </selectKey>
+	  
+	  INSERT INTO CHAT (CHA_SEQ, CHA_TITL, CHA_REG_ID, CHA_REG_DATE, CHA_MOD_ID, CHA_MOD_DATE)
+	  VALUES (#{chaSeq}, NULL, #{sender}, NOW(), #{sender}, NOW())
 	</insert>
+	
+	<insert id="insertChatRoomDetail" parameterType="hashMap">
+		INSERT INTO CHAT_DTL (CHA_SEQ, CHA_INTG_ID, CHA_TITLE, CHA_REG_ID, CHA_REG_DATE, CHA_MOD_ID, CHA_MOD_DATE)
+		VALUES (
+			#{chaSeq},
+			#{chaIntgId},
+			NULL,
+			#{chaRegId},
+			NOW(),
+			#{chaModId},
+			NOW()
+		)
+	</insert>
+<!-- 	<insert id="insertChatRoom"> -->
+<!-- 		INSERT INTO CHAT  -->
+<!-- 		  (CHA_SEQ, -->
+<!-- 		   CHA_TITL, -->
+<!-- 		   CHA_REG_ID, -->
+<!-- 		   CHA_REG_DATE,  -->
+<!-- 		   CHA_MOD_ID,  -->
+<!-- 		   CHA_MOD_DATE -->
+<!-- 		  ) -->
+<!-- 		SELECT -->
+<!-- 			   (SELECT CASE WHEN  -->
+<!-- 			                    (SELECT CHA_SEQ  -->
+<!-- 			               	     FROM CHAT  -->
+<!-- 			       		          WHERE SUBSTR(CHA_SEQ, 1, 8) = CONVERT(DATE_FORMAT(CURDATE(), '%Y%m%d'), VARCHAR(8))) IS NULL -->
+<!-- 			               THEN CONCAT(DATE_FORMAT(CURDATE(), '%Y%m%d'), '0000001') -->
+<!-- 			               ELSE (SELECT CONVERT(CHA_SEQ, INT) + 1 -->
+<!-- 			                       FROM CHAT  -->
+<!-- 			       		          WHERE SUBSTR(CHA_SEQ, 1, 8) = CONVERT(DATE_FORMAT(CURDATE(), '%Y%m%d'), VARCHAR(8))) -->
+<!-- 			                END AS CHA_SEQ), -->
+<!-- 		        NULL, -->
+<!-- 		        #{uIntgId}, -->
+<!-- 		        NOW(), -->
+<!-- 		        #{uIntgId}, -->
+<!-- 		        NOW() -->
+<!-- 	</insert> -->
+	
+	<!-- 두명의 사용자가 대화중인 채팅방 id를 조회하는 쿼리 -->
+	<select id="selectChatRoom" resultType="str">
+		SELECT CHA_SEQ
+		  FROM CHAT_DTL
+		 WHERE CHA_INTG_ID IN (#{sender}, #{receiver})
+		 GROUP BY CHA_SEQ
+		HAVING COUNT(DISTINCT CHA_INTG_ID) = 2;
+	</select>
 	
 </mapper>
