@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="base.myPage.mapper">
+
+	<select id="selectUserInfo" resultType="base.admin.vo.UserVO">
+		SELECT A.*
+			  ,B.FL_UNIQUE_NAME as PROFILE_IMG_URL
+		  FROM USER A
+		  LEFT JOIN FILE B ON (A.U_INTG_ID = B.FL_TABLE_KEY)
+		 WHERE U_INTG_ID = #{value}
+	</select>
+	
+</mapper>

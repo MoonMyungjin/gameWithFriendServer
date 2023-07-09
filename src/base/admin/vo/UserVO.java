@@ -18,6 +18,7 @@ public class UserVO {
 	private Date URegDate;
 	private String UModId;
 	private Date UModDate;
+	private String ProfileImgUrl;
 	
 	public String getUIntgId() {
 		return UIntgId;
@@ -102,5 +103,11 @@ public class UserVO {
 	}
 	public void setUModDate(Date uModDate) {
 		UModDate = uModDate;
+	}
+	public String getProfileImgUrl() {
+		return ProfileImgUrl;
+	}
+	public void setProfileImgUrl(String profileImgUrl) {
+		ProfileImgUrl = profileImgUrl;
 	}
 }
