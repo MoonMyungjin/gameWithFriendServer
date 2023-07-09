@@ -24,7 +24,7 @@ public interface GameMatchingService {
 	/* findSummonerData: 인증한 유저 리스트를 받아와 테이블에 Update 한다*/
 	void findSummonerData(List<GameVO> summonerList) throws SQLException, ParseException, UnsupportedEncodingException, FileNotFoundException, IOException, InterruptedException;
 
-	List<GameVO> selectGameMatchingUserTop3 (HashMap<String, Object> optionInfo) throws SQLException;
+	List<GameVO> selectGameMatchingUserTop3 (HashMap<String, Object> optionInfo, String myId) throws SQLException;
 	
 	List<GameVO> optionRankPointGet (int optionSelectNumber,int optionSelectNumberPoint,List<GameVO> selectUserList, String iRankChoice) throws SQLException;
 	

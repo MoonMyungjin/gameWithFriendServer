@@ -1,4 +1,4 @@
-package base.admin.champion.vo;
+package base.admin.report.vo;
 
 import java.util.Date;
 

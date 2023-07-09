@@ -69,7 +69,8 @@
 			UPDATE GAME_LOL SET
 					GL_RANK = #{item.glRank},
 					GL_CHAMPION = #{item.glChampion},
-					GL_POSITION = #{item.glPosition}
+					GL_POSITION = #{item.glPosition},
+					GL_DATE = NOW()
 			WHERE  GL_SEQ = #{item.glSeq}
 			]]>
 		</foreach>

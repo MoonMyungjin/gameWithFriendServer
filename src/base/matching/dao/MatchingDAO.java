@@ -10,6 +10,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import base.matching.vo.MatchingHistoryVO;
+import gameMatching.vo.GameVO;
 
 @Repository("MatchingDAO")
 public class MatchingDAO {
@@ -49,6 +50,16 @@ public class MatchingDAO {
 	public String selectPreviousLaterDate(Map<String, String> paramMap) throws SQLException {
 		return session.selectOne("base.matching.mapper.selectPreviousLaterDate", paramMap);
 	}
-
 	
+	public List<MatchingHistoryVO> selectExceptList(MatchingHistoryVO vo) throws SQLException {
+		return session.selectList("base.matching.mapper.selectExceptList", vo);
+	}
+	
+	public void insertMatchingHistory(List<GameVO> list) throws SQLException {
+		session.insert("base.matching.mapper.insertMatchingHistory", list);
+	}
+	
+	public String selectMatchingHistoryTableKey() throws SQLException {
+		return session.selectOne("base.matching.mapper.selectMatchingHistoryTableKey");
+	}
 }

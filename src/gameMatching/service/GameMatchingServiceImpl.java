@@ -27,15 +27,21 @@ import org.springframework.web.client.RestTemplate;
 import com.datastax.oss.driver.shaded.guava.common.collect.Comparators;
 import com.fasterxml.jackson.databind.JsonSerializer;
 
+import base.matching.dao.MatchingDAO;
+import base.matching.vo.MatchingHistoryVO;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import gameMatching.dao.GameMatchingDAO;
 import gameMatching.vo.GameVO;
 
 @Service("gameMatchingService")
-public class GameMatchingServiceImpl implements GameMatchingService {
+public class GameMatchingServiceImpl<E> implements GameMatchingService {
 	
 	@Resource(name="gameMatchingDAO")
 	protected GameMatchingDAO gameMatchingDAO;
+	
+	@Resource(name="MatchingDAO")
+	protected MatchingDAO matchingDAO;
+
 	
 	@Override
 	public List<GameVO> selectChampion() throws SQLException {
@@ -53,15 +59,16 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 	}
 	
 	@Override
-	public List<GameVO> selectGameMatchingUserTop3(HashMap<String, Object> optionInfo) throws SQLException {
+	public List<GameVO> selectGameMatchingUserTop3(HashMap<String, Object> optionInfo, String myId) throws SQLException {
 		/* 100점 기준 옵션 갯수에 따른 옵션마다 차등 점수 배분 시작 */
 		
 		List<String> selectGameOption = gameMatchingDAO.selectGameOption();
 		
 		List<String> userSelectOptionList = new ArrayList<>();
 		List<String> userSelectOptionDetailList = new ArrayList<>();
-		int userSelectOptionSize = optionInfo.size()-1;
-		System.out.println(userSelectOptionSize);
+		int userSelectOptionSize = optionInfo.size();
+		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		System.out.println(optionInfo);
 		for(int i=0; i<userSelectOptionSize; i++) {
 			Object object = optionInfo.get(""+i);
 			System.out.println(object.toString());
@@ -86,11 +93,29 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 	        gameOptionPointList.add(i-1, (int)tempPointArrContent);
 	    }
         gameOptionPointList.sort(Comparator.reverseOrder());
+        System.out.println(gameOptionPointList);
         /* 100점 기준 옵션 갯수에 따른 옵션마다 차등 점수 배분 끝*/
         
         /* 각 옵션에 따른 매칭 포인트 부여 부분*/
         
         List<GameVO> selectUserList = gameMatchingDAO.selectUserlist();
+	 	MatchingHistoryVO vo = new MatchingHistoryVO();
+	 	List<MatchingHistoryVO> selectExceptList = matchingDAO.selectExceptList(vo);
+
+	 	if(selectExceptList.size()>0) {
+	 		for (int i = 0; i < selectExceptList.size(); i++) {
+				
+	 			for (int j = 0; j < selectUserList.size(); j++) {
+					
+	 				if(selectExceptList.get(i).getmMyID().equals(selectUserList.get(j).getGlNick())) {
+//	 					selectUserList.remove(j);
+	 				}
+	 				
+				}
+	 			
+			}
+	 	}
+        
         for(int i=0; i<userSelectOptionList.size(); i++) {
         	if(userSelectOptionList.get(i).equals("rank")) {
 	    		int optionSelectNumber =i;
@@ -149,9 +174,25 @@ public class GameMatchingServiceImpl implements GameMatchingService {
         	}
         }
         
+        
         top3UserList.add(selectUserList.get(top1Index));
         top3UserList.add(selectUserList.get(top2Index));
         top3UserList.add(selectUserList.get(top3Index));
+        
+        for (int i = 0; i < top3UserList.size(); i++) {
+        	 top3UserList.get(i).setMyId(myId);
+        	 top3UserList.get(i).setGameType("랭크");
+        	 String selectMatchingHistoryTableKey = matchingDAO.selectMatchingHistoryTableKey();
+        	 top3UserList.get(i).setChIndex(selectMatchingHistoryTableKey);
+		}
+        
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        System.out.println(top3UserList.get(0).getMatchingScore());      
+        System.out.println(top3UserList.get(0).getGlNick());
+        System.out.println(top3UserList.get(0).getGlRank());        	
+        System.out.println(myId);
+        
+        matchingDAO.insertMatchingHistory(top3UserList);
 		return top3UserList;
 	}
 	
@@ -164,7 +205,7 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 		JSONParser jsonParser = new JSONParser();
 		RestTemplate restTemplate = new RestTemplate();
 		ArrayList<GameVO> updateList = new ArrayList<GameVO>();
-		String apiKey = "RGAPI-bf3aae46-e466-4d08-a414-27304f984e77";
+		String apiKey = "RGAPI-522c7f1f-69df-4f3b-b673-e1f1d02af1fb";
 		for (int j = 0; j < summonerList.size(); j++) {/* 인증한 유저리스트만큼 돌리기*/
 			summonerNameUser = summonerList.get(j).getGlSummoner();
 			
@@ -181,10 +222,22 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 			String jsonString2 = restTemplate.getForObject(url2, String.class);
 			JSONArray jsonObject2 = (JSONArray) jsonParser.parse(jsonString2);
 			String lolTier = "unRank";
+			String lolRank = "";
 			if(jsonObject2.size() !=0) {
 				JSONObject jsonResponse2 = (JSONObject) jsonObject2.get(0);
 				Object objectTier = jsonResponse2.get("tier");
+				Object objectRank= jsonResponse2.get("rank");
 				lolTier = String.valueOf(objectTier);
+				lolRank = String.valueOf(objectRank);
+				if(lolRank.equals("I")) {
+					lolRank = "1";
+				}else if(lolRank.equals("II")) {
+					lolRank = "2";
+				}else if(lolRank.equals("III")) {
+					lolRank = "3";
+				}else if(lolRank.equals("IV")) {
+					lolRank = "4";
+				}
 			}
 			/* --------------------------티어 얻기 끝--------------------------*/
 			
@@ -215,7 +268,7 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 			/* --------------------------포지션 분류하기  시작 --------------------------*/
 			Object puuid = jsonObject.get("puuid");
 			String lolPuuid = String.valueOf(puuid);
-			String url4 ="https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/"+lolPuuid+"/ids?start=0&count=100&api_key="+apiKey;
+			String url4 ="https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/"+lolPuuid+"/ids?start=0&count=10&api_key="+apiKey;
 			String jsonString4 = restTemplate.getForObject(url4, String.class);
 			JSONArray jsonObject4 = (JSONArray) jsonParser.parse(jsonString4);
 			Object objectTemp = new Object();
@@ -313,13 +366,14 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 			System.out.println("-----------------------Find-----------------------");
 			System.out.println("랭크 티어");
 			System.out.println(lolTier);
+			System.out.println(lolRank);
 			System.out.println("챔프 top3");
 			System.out.println(champNameTop3);
 			System.out.println("라인명");
 			System.out.println(lineNameTemp);
 			summonerList.get(j).setGlChampion(champNameTop3);
 			summonerList.get(j).setGlPosition(lineNameTemp);
-			summonerList.get(j).setGlRank(lolTier);
+			summonerList.get(j).setGlRank(lolTier+lolRank);
 			updateList.add(summonerList.get(j));
 		}
 		gameMatchingDAO.updateUserGameInfo(updateList);
@@ -330,33 +384,172 @@ public class GameMatchingServiceImpl implements GameMatchingService {
 	@Override
 	public List<GameVO> optionRankPointGet(int optionSelectNumber,int optionSelectNumberPoint,List<GameVO> selectUserList,String iRankChoice) throws SQLException {
 	 	List<String> selectRankList = gameMatchingDAO.selectRankList();
+	 	System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2");
+	 	System.out.println(optionSelectNumber);
+	 	System.out.println(optionSelectNumberPoint);
+	 	System.out.println(selectUserList);
+	 	System.out.println(iRankChoice);
+	 	System.out.println("@@@@@@@@@@@@splitTest@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2");
+	 	String[] split = iRankChoice.split("~");
+	 	System.out.println(split[0]);
+	 	System.out.println(split[1]);
+	 	String substring ="0";
+	 	String substring2 ="0";
+	 	if(split[0].equals("UNRANK")) {
+	 		
+	 	}else if(split[0].equals("MASTER")) {
+	 		
+	 	}else if(split[0].equals("GRANDMASTER")) {
+	 		
+	 	}else if(split[0].equals("CHALLENGER")) {
+	 		
+	 	}else {
+	 		substring = split[0].substring(split[0].length()-1, split[0].length());
+	 	}
+	 	
+	 	if(split[1].equals("UNRANK")) {
+	 		
+	 	}else if(split[1].equals("MASTER")) {
+	 		
+	 	}else if(split[1].equals("GRANDMASTER")) {
+	 		
+	 	}else if(split[1].equals("CHALLENGER")) {
+	 		
+	 	}else {
+	 		substring2 = split[1].substring(split[1].length()-1, split[1].length());
+	 	}	
+	 	
+	 	System.out.println(substring);
+	 	System.out.println(substring2);
+	 	String substringRank = "";
+	 	String substringRank2 = "";
+	 	if(substring.equals("0")) {
+	 		substringRank= split[0].substring(0, split[0].length());
+	 	}else {
+	 		substringRank= split[0].substring(0, split[0].length()-1);
+	 	}
+	 	if(substring2.equals("0")) {
+	 		substringRank2 = split[1].substring(0, split[1].length());
+	 	}else {
+	 		substringRank2 = split[1].substring(0, split[1].length()-1);
+	 	}
 	 	
 	 	
+	 	float bounsIndex = (Integer.parseInt(substring)-Integer.parseInt(substring2));
+	 	if(Integer.parseInt(substring)-Integer.parseInt(substring2)<0) {
+	 		bounsIndex = bounsIndex*-1;
+	 	}
+	 	System.out.println(bounsIndex);
+	 	System.out.println(substringRank);
+	 	System.out.println(substringRank2);
+	 	int firstIndex = 0;
+	 	int secondIndex = 0;
+	 	List<String> tempSelectRankList = selectRankList;
+	 	for(int j=0; j<tempSelectRankList.size(); j++) {
+	 		if(tempSelectRankList.get(j).equals(substringRank)) {
+	 			firstIndex = j;
+	 		}
+	 	}
+	 	List<String> subList = tempSelectRankList.subList(firstIndex, tempSelectRankList.size());
+	 	for(int j=0; j<subList.size(); j++) {
+	 		if(subList.get(j).equals(substringRank2)) {
+	 			secondIndex = j;
+	 		}
+	 	}
+	 	List<String> tempPeriodList = subList.subList(0, secondIndex+1);
+	 	List<String> periodList = new ArrayList<>();
+	 	
+	 	System.out.println(tempPeriodList);
+	 	System.out.println(periodList);
+	 	int tempIndex =0;
+	 	for(int j=0; j<tempPeriodList.size(); j++) {
+	 		
+	 		if(tempPeriodList.get(j).equals("UNRANK")) {
+	 			periodList.add(tempIndex, tempPeriodList.get(j));
+	 		}else if(tempPeriodList.get(j).equals("MASTER")) {
+	 			periodList.add(tempIndex, tempPeriodList.get(j));
+	 		}else if(tempPeriodList.get(j).equals("GRANDMASTER")) {
+	 			periodList.add(tempIndex, tempPeriodList.get(j));
+	 		}else if(tempPeriodList.get(j).equals("CHALLENGER")) {
+	 			periodList.add(tempIndex, tempPeriodList.get(j));
+	 		}else {
+	 			if(j == tempPeriodList.size()-1) {
+
+	 				System.out.println(j);
+	 				int forTempIndex = Integer.parseInt(substring2);
+	 				for(int a =forTempIndex; a>0; a-- ) {
+	 					if(j == 0) {
+	 						periodList.add(tempIndex, tempPeriodList.get(j)+a);
+	 					}else {
+	 						periodList.add(tempIndex+1, tempPeriodList.get(j)+a);
+	 					}
+	 					
+	 				}
+	 				
+	 			}else {
+	 				
+	 				if(j == 0) {
+		 				periodList.add(tempIndex,tempPeriodList.get(j)+"4");
+			 			periodList.add(tempIndex, tempPeriodList.get(j)+"3");
+			 			periodList.add(tempIndex, tempPeriodList.get(j)+"2");
+			 			periodList.add(tempIndex, tempPeriodList.get(j)+"1");
+			 			tempIndex = tempIndex+4;
+	 				}else {
+		 				periodList.add(tempIndex+1, tempPeriodList.get(j)+"4");
+			 			periodList.add(tempIndex+1, tempPeriodList.get(j)+"3");
+			 			periodList.add(tempIndex+1, tempPeriodList.get(j)+"2");
+			 			periodList.add(tempIndex+1, tempPeriodList.get(j)+"1");
+			 			tempIndex = tempIndex+4;
+	 				}
+	 			}
+	 			
+	 		}
+	 		tempIndex = tempIndex++;
+	 	}
+	 	System.out.println(periodList);
         for(int j=0; j<selectUserList.size(); j++) {
-        	
-            String userRank =selectUserList.get(j).getGlRank();
-            int indexGap =0;
-            int iChoiceIndex=0;
-            int userChoiceIndex=0;
-            for(int i =0; i<selectRankList.size(); i++){
-            	if(selectRankList.get(i).equals(iRankChoice)) {
-            		iChoiceIndex=i;
+        	float totalPoint =0;
+        	for(int p=0; p<periodList.size(); p++) {
+        		String userRank ="";
+        		if(selectUserList.get(j).getGlRank().equals("UNRANK")) {
+        			userRank = selectUserList.get(j).getGlRank();
+    	 		}else if(selectUserList.get(j).getGlRank().equals("MASTER")) {
+    	 			userRank = selectUserList.get(j).getGlRank();
+    	 		}else if(selectUserList.get(j).getGlRank().equals("GRANDMASTER")) {
+    	 			userRank = selectUserList.get(j).getGlRank();
+    	 		}else if(selectUserList.get(j).getGlRank().equals("CHALLENGER")) {
+    	 			userRank = selectUserList.get(j).getGlRank();
+    	 		}else {
+    	 			userRank = selectUserList.get(j).getGlRank().substring(0, selectUserList.get(j).getGlRank().length()-1);
+    	 		}
+        		System.out.println(userRank);
+                int indexGap =0;
+                int iChoiceIndex=0;
+                int userChoiceIndex=0;
+                for(int i =0; i<selectRankList.size(); i++){
+                	if(selectRankList.get(i).equals(periodList.get(p))) {
+                		iChoiceIndex=i;
+                	}
+                	if(selectRankList.get(i).equals(userRank)) {
+                		userChoiceIndex=i;
+                	}  
+                }
+                if(userChoiceIndex>iChoiceIndex) {
+                	indexGap =userChoiceIndex-iChoiceIndex;
+            	}else if(userChoiceIndex<iChoiceIndex) {
+            		indexGap =iChoiceIndex-userChoiceIndex;
             	}
-            	if(selectRankList.get(i).equals(userRank)) {
-            		userChoiceIndex=i;
-            	}  
-            }
-            if(userChoiceIndex>iChoiceIndex) {
-            	indexGap =userChoiceIndex-iChoiceIndex;
-        	}else if(userChoiceIndex<iChoiceIndex) {
-        		indexGap =iChoiceIndex-userChoiceIndex;
+                float detailBounusPoint = 0;
+                float optionPoint =((float)optionSelectNumberPoint/(float)selectRankList.size());
+                float userPoint =(float)optionSelectNumberPoint-((float)indexGap*(float)optionPoint);
+                totalPoint =totalPoint + userPoint;
+                System.out.println(userPoint);
         	}
-            float optionPoint =((float)optionSelectNumberPoint/(float)selectRankList.size());
-            float userPoint =(float)optionSelectNumberPoint-((float)indexGap*(float)optionPoint);
-            selectUserList.get(j).setRankScore(userPoint);
+        	System.out.println(totalPoint);
+        	totalPoint = totalPoint/periodList.size();
+            selectUserList.get(j).setRankScore(totalPoint);
         }
-	 	
-        
+	 	System.out.println(selectUserList);
         
 		return selectUserList;
 	}
