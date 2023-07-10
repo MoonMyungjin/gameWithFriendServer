@@ -76,6 +76,7 @@ public class FriendController {
 		friendVO.setfMyId(myId);
 		friendVO.setfYouId(youId);
 		FriendVO selectUserFriendState = friendService.selectUserFriendState(friendVO);
+		System.out.println(selectUserFriendState);
 		dataMap.put("selectUserFriendState", selectUserFriendState);
 		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
 		
