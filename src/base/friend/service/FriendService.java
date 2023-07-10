@@ -25,4 +25,6 @@ public interface FriendService {
 	void addFriendAccept(FriendVO friendVO) throws SQLException;
 	
 	void addFriendAcceptYou(FriendVO friendVO) throws SQLException;
+	
+	FriendVO friendCheck(FriendVO friendVO) throws SQLException;
 }

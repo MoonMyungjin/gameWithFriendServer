@@ -60,7 +60,7 @@
 		
 	</update>
 	
-	<update id="addFriendAcceptYou" parameterType="base.friend.vo.FriendVO" >
+	<update id="friendCheck" parameterType="base.friend.vo.FriendVO" >
 
 			UPDATE FRIEND SET
 			F_STATE_CD = '10501'

@@ -98,6 +98,23 @@ public class FriendController {
 	}
 	
 	
+	@CrossOrigin("http://localhost:3000")
+	@RequestMapping(value = "/friend/friendCheck.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String,Object>> friendCheck(HttpServletRequest request,HttpMethod httpMethod,@RequestParam(required = true) String myId,@RequestParam(required = true) String targetId) throws Exception{
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		FriendVO friendVO = new FriendVO();
+		friendVO.setfMyId(myId);
+		friendVO.setfYouId(targetId);
+		FriendVO vo = friendService.friendCheck(friendVO);
+		vo.setfMyId(myId);
+		vo.setfYouId(targetId);
+		dataMap.put("FriendVO", vo);
+		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
+		
+		return entity;
+	}
+	
+	
 	
 
 }

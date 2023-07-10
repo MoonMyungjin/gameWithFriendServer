@@ -55,6 +55,13 @@ public class FriendServiceImpl implements FriendService {
 		friendDAO.addFriendAcceptYou(friendVO);
 		
 	}
+	
+	
+	@Override
+	public FriendVO friendCheck(FriendVO friendVO) throws SQLException {
+		return friendDAO.friendCheck(friendVO);
+		
+	}
 
 
 }
