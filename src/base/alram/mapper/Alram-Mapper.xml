@@ -15,7 +15,8 @@
 						 B.CD_DTL_NAME AS cdDtlName,
 						 B.CD_DTL_DESC AS cdDtlDesc,
 						 C.U_NICKNAME AS uNickName,
-						(SELECT U_NICKNAME FROM USER WHERE U_INTG_ID = A.AL_SEND_ID) AS sendNickName 
+						(SELECT U_NICKNAME FROM USER WHERE U_INTG_ID = A.AL_SEND_ID) AS sendNickName,
+						AL_READ_YN AS alReadYn 
 				FROM ALRAM A, CODE_DTL B, USER C 
 				WHERE A.AL_CODE_ID = B.CD_DTL_ID 
 				AND A.AL_MY_ID = C.U_INTG_ID

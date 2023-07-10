@@ -16,9 +16,15 @@ public class AlramVO {
 	private String uNickName;
 	private String sendNickName;
 	private String alSeq;
+	private String alReadYn;
 	
 	
-	
+	public String getAlReadYn() {
+		return alReadYn;
+	}
+	public void setAlReadYn(String alReadYn) {
+		this.alReadYn = alReadYn;
+	}
 	public String getCdDtlId() {
 		return cdDtlId;
 	}
