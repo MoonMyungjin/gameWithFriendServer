@@ -44,5 +44,17 @@ public class FriendServiceImpl implements FriendService {
 		return friendDAO.selectUserFriendState(friendVO);
 	}
 
+	@Override
+	public void addFriendAccept(FriendVO friendVO) throws SQLException {
+		friendDAO.addFriendAccept(friendVO);
+		
+	}
+	
+	@Override
+	public void addFriendAcceptYou(FriendVO friendVO) throws SQLException {
+		friendDAO.addFriendAcceptYou(friendVO);
+		
+	}
+
 
 }

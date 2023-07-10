@@ -39,4 +39,11 @@ public class FriendDAO {
 		return session.selectOne("base.friend.mapper.selectUserFriendState",friendVO);
 	}
 	
+	public void addFriendAccept(FriendVO friendVO) throws SQLException {
+		session.update("base.friend.mapper.addFriendAccept",friendVO);
+	}
+	
+	public void addFriendAcceptYou(FriendVO friendVO) throws SQLException {
+		session.update("base.friend.mapper.addFriendAcceptYou",friendVO);
+	}
 }

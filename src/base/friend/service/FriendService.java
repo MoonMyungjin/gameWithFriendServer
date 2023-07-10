@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import base.admin.vo.UserVO;
+import base.alram.vo.AlramVO;
 import base.friend.vo.FriendVO;
 
 @Repository("FriendService")
@@ -20,4 +21,8 @@ public interface FriendService {
 	int friendNum(String myNick) throws SQLException;
 	
 	FriendVO selectUserFriendState(FriendVO friendVO) throws SQLException;
+	
+	void addFriendAccept(FriendVO friendVO) throws SQLException;
+	
+	void addFriendAcceptYou(FriendVO friendVO) throws SQLException;
 }
