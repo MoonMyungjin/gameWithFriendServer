@@ -60,14 +60,12 @@
 		
 	</update>
 	
-	<update id="friendCheck" parameterType="base.friend.vo.FriendVO" >
-
-			UPDATE FRIEND SET
-			F_STATE_CD = '10501'
-			WHERE F_MY_ID = #{fYouId}
-			AND F_YOU_ID =  #{fMyId}
-			
+	<select id="friendCheck" parameterType="base.friend.vo.FriendVO" >
 		
-	</update>		
+			SELECT F_STATE_CD FROM FRIEND 
+			WHERE F_MY_ID = #{fYouId}
+			AND F_YOU_ID = #{fMyId}
+		
+	</select>		
 	
 </mapper>
