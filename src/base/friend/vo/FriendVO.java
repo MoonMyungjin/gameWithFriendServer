@@ -11,8 +11,15 @@ public class FriendVO {
 	private String fRegDate;
 	private String fModId;
 	private String fModDate;
+	private String keyWord;
 	
 	
+	public String getKeyWord() {
+		return keyWord;
+	}
+	public void setKeyWord(String keyWord) {
+		this.keyWord = keyWord;
+	}
 	public String getfMyId() {
 		return fMyId;
 	}
