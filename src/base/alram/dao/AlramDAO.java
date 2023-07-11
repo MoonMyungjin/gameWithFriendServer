@@ -23,12 +23,19 @@ public class AlramDAO {
 		return session.selectList("base.alram.mapper.findMyAlramList", alramVO);
 	}
 	
-
+	public int findMyAlramListUnReadCount(AlramVO alramVO) throws SQLException {
+		return session.selectOne("base.alram.mapper.findMyAlramListUnReadCount", alramVO);
+	}
+	
 	public void sendAlram(AlramVO alramVO) throws SQLException {
 		session.update("base.alram.mapper.sendAlram", alramVO);
 	}
 	
 	public void alramDelete(AlramVO alramVO) throws SQLException {
 		session.update("base.alram.mapper.alramDelete", alramVO);
+	}
+	
+	public void alramRead(AlramVO alramVO) throws SQLException {
+		session.update("base.alram.mapper.alramRead", alramVO);
 	}
 }
