@@ -19,8 +19,14 @@
 	
 	<select id="selectFriendList" resultType="base.friend.vo.FriendVO">
 		
-		SELECT F_YOU_ID AS fYouId
-		FROM FRIEND
+		SELECT F.F_YOU_ID as fYouId
+			  ,GL.GL_RANK as glRank
+			  ,GL.GL_SUMMONER as glSummoner
+			  ,GL.GL_CHAMPION as glChampion
+	  		  ,B.FL_UNIQUE_NAME as ProfileImgUrl
+		 FROM FRIEND F
+		 LEFT JOIN GAME_LOL GL ON (F.F_YOU_ID = GL.GL_NICK)
+  		 LEFT JOIN FILE B ON (F.F_YOU_ID = B.FL_TABLE_KEY)
 		WHERE F_MY_ID = #{myNick}
 		AND F_STATE_CD = '10501'
 		
