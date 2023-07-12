@@ -54,7 +54,7 @@ public class FriendController {
 	
 	
 	@RequestMapping(value = "/friend/findFriendList.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String,Object>> findFriendList(@RequestParam(required = true) String myNick,@RequestParam(required = true) String keyWord,HttpServletRequest req
+	public ResponseEntity<Map<String,Object>> findFriendList(@RequestParam(required = true) String myNick,@RequestParam(required = false) String keyWord,HttpServletRequest req
 			,HttpMethod httpMethod) throws Exception{
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		FriendVO friendVO = new FriendVO();

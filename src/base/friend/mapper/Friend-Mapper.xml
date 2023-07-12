@@ -29,7 +29,9 @@
   		 LEFT JOIN FILE B ON (F.F_YOU_ID = B.FL_TABLE_KEY)
 		WHERE F_MY_ID = #{fMyId}
 		AND F_STATE_CD = '10501'
-		AND F_YOU_ID LIKE CONCAT('%',#{keyWord},'%')
+		<if test="keyWord != null and !keyWord.equals('')">
+			AND F_YOU_ID LIKE CONCAT('%',#{keyWord},'%')
+		</if>
 	</select>
 	
 	<select id="selectUserFriendState" resultType="base.friend.vo.FriendVO">
