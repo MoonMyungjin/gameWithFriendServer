@@ -53,7 +53,6 @@ public class FriendController {
 	}
 	
 	
-	@CrossOrigin("http://localhost:3000")
 	@RequestMapping(value = "/friend/findFriendList.do", method = RequestMethod.GET)
 	public ResponseEntity<Map<String,Object>> findFriendList(@RequestParam(required = true) String myNick,HttpServletRequest req
 			,HttpMethod httpMethod) throws Exception{
