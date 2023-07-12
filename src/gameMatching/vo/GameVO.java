@@ -12,15 +12,36 @@ public class GameVO {
 	private String glPosition;
 	private String glTime;
 	private String glNick;
+	private String glDate;
 	private float matchingScore;
 	private float rankScore;
 	private float timeScore;
 	private float postionScore;
 	private float championScore;
 	private String url;
+	private String myId;
+	private String gameType;
 	
 	
 	
+	public String getGameType() {
+		return gameType;
+	}
+	public void setGameType(String gameType) {
+		this.gameType = gameType;
+	}
+	public String getMyId() {
+		return myId;
+	}
+	public void setMyId(String myId) {
+		this.myId = myId;
+	}
+	public String getGlDate() {
+		return glDate;
+	}
+	public void setGlDate(String glDate) {
+		this.glDate = glDate;
+	}
 	public String getUrl() {
 		return url;
 	}

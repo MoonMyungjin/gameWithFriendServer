@@ -54,10 +54,13 @@ public class FriendController {
 	
 	
 	@RequestMapping(value = "/friend/findFriendList.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String,Object>> findFriendList(@RequestParam(required = true) String myNick,HttpServletRequest req
+	public ResponseEntity<Map<String,Object>> findFriendList(@RequestParam(required = true) String myNick,@RequestParam(required = true) String keyWord,HttpServletRequest req
 			,HttpMethod httpMethod) throws Exception{
-		Map<String, Object> dataMap = new HashMap<String, Object>();		
-		List<FriendVO> friendList = friendService.friendList(myNick);
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		FriendVO friendVO = new FriendVO();
+		friendVO.setfMyId(myNick);
+		friendVO.setKeyWord(keyWord);
+		List<FriendVO> friendList = friendService.friendList(friendVO);
 		int friendNum = friendService.friendNum(myNick);
 		dataMap.put("friendList", friendList);
 		dataMap.put("friendNum", friendNum);
@@ -76,6 +79,36 @@ public class FriendController {
 		friendVO.setfYouId(youId);
 		FriendVO selectUserFriendState = friendService.selectUserFriendState(friendVO);
 		dataMap.put("selectUserFriendState", selectUserFriendState);
+		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
+		
+		return entity;
+	}
+	
+	
+	@CrossOrigin("http://localhost:3000")
+	@RequestMapping(value = "/friend/addFriendAccept.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String,Object>> addFriendAccept(HttpServletRequest request,HttpMethod httpMethod,@RequestParam(required = true) String myId,@RequestParam(required = true) String targetId) throws Exception{
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		FriendVO friendVO = new FriendVO();
+		friendVO.setfMyId(myId);
+		friendVO.setfYouId(targetId);
+		friendService.addFriendAccept(friendVO);
+		friendService.addFriendAcceptYou(friendVO);
+		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
+		
+		return entity;
+	}
+	
+	
+	@CrossOrigin("http://localhost:3000")
+	@RequestMapping(value = "/friend/friendCheck.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String,Object>> friendCheck(HttpServletRequest request,HttpMethod httpMethod,@RequestParam(required = true) String myId,@RequestParam(required = true) String targetId) throws Exception{
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		FriendVO friendVO = new FriendVO();
+		friendVO.setfMyId(myId);
+		friendVO.setfYouId(targetId);
+		FriendVO vo = friendService.friendCheck(friendVO);
+		dataMap.put("vo",vo);
 		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
 		
 		return entity;

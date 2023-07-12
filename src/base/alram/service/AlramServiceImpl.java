@@ -37,6 +37,18 @@ public class AlramServiceImpl implements AlramService {
 		alramDAO.alramDelete(alramVO);	
 		
 	}
+	
+	@Override
+	public void alramRead(AlramVO alramVO) throws SQLException {
+		alramDAO.alramRead(alramVO);	
+		
+	}
+
+	@Override
+	public int findMyAlramListUnReadCount(AlramVO alramVO) throws SQLException {
+		return  alramDAO.findMyAlramListUnReadCount(alramVO);	
+		
+	}
 
 
 	

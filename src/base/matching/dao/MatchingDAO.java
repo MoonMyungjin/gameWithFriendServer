@@ -10,6 +10,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import base.matching.vo.MatchingHistoryVO;
+import gameMatching.vo.GameVO;
 
 @Repository("MatchingDAO")
 public class MatchingDAO {
@@ -19,22 +20,29 @@ public class MatchingDAO {
 	
 	public List<MatchingHistoryVO> selectHistoryList(Map<String, String> paramMap) throws SQLException {
 		String where = "";
+		String myID = paramMap.get("myID");
 		String baseDate = paramMap.get("baseDate");
 		
 		if(baseDate == null || baseDate.equals("")) baseDate = "NOW()";
 		
 		switch (paramMap.get("selectType")) {
 		case "latest": 
-			where = "A.M_MATCHING_DATE IN (SELECT MAX(M_MATCHING_DATE) FROM MATCHING)";
+			where = "A.M_MATCHING_DATE IN (SELECT MAX(M_MATCHING_DATE) FROM MATCHING WHERE M_MY_ID = '" + myID + "')";
 			break;
 		case "previous":
-			where = "A.M_MATCHING_DATE IN (SELECT MAX(M_MATCHING_DATE) FROM MATCHING WHERE M_MATCHING_DATE < '" + baseDate + "')";
+			where = "A.M_MATCHING_DATE IN (SELECT MAX(M_MATCHING_DATE) "
+					                      + "FROM MATCHING "
+					                     + "WHERE M_MATCHING_DATE < '" + baseDate + "'"
+					                       + "AND M_MY_ID = '" + myID + "')";
 			break;
 		case "later":
-			where = "A.M_MATCHING_DATE IN (SELECT MIN(M_MATCHING_DATE) FROM MATCHING WHERE M_MATCHING_DATE > '" + baseDate + "')";
+			where = "A.M_MATCHING_DATE IN (SELECT MIN(M_MATCHING_DATE) "
+                                          + "FROM MATCHING "
+                                         + "WHERE M_MATCHING_DATE > '" + baseDate + "'"
+                                           + "AND M_MY_ID = '" + myID + "')";
 			break;
 		default:
-			where = "A.M_MATCHING_DATE IN (SELECT MAX(M_MATCHING_DATE) FROM MATCHING)";
+			where = "A.M_MATCHING_DATE IN (SELECT MAX(M_MATCHING_DATE) FROM MATCHING WHERE M_MY_ID = '" + myID + "')";
 			break;
 		}
 		
@@ -49,6 +57,16 @@ public class MatchingDAO {
 	public String selectPreviousLaterDate(Map<String, String> paramMap) throws SQLException {
 		return session.selectOne("base.matching.mapper.selectPreviousLaterDate", paramMap);
 	}
-
 	
+	public List<MatchingHistoryVO> selectExceptList(MatchingHistoryVO vo) throws SQLException {
+		return session.selectList("base.matching.mapper.selectExceptList", vo);
+	}
+	
+	public void insertMatchingHistory(List<GameVO> list) throws SQLException {
+		session.insert("base.matching.mapper.insertMatchingHistory", list);
+	}
+	
+	public String selectMatchingHistoryTableKey() throws SQLException {
+		return session.selectOne("base.matching.mapper.selectMatchingHistoryTableKey");
+	}
 }

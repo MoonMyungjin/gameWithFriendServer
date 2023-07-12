@@ -59,11 +59,12 @@ public class GameMatchingController {
 	@RequestMapping("/gameMatching/selectGameMatchingUserTop3")
 	public ResponseEntity<Map<String,Object>> selectGameMatchingUserTop3(HttpServletRequest req
 			,HttpMethod httpMethod
-			,@RequestBody HashMap<String, Object> optionInfo) throws Exception{
+			,@RequestBody HashMap<String, Object> optionInfo
+			,@RequestParam(required = true) String myId) throws Exception{
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		System.out.println(optionInfo);
 		System.out.println(optionInfo.size());
-		List<GameVO> testMethod = gameMatchingService.selectGameMatchingUserTop3(optionInfo);
+		List<GameVO> testMethod = gameMatchingService.selectGameMatchingUserTop3(optionInfo,myId);
 		dataMap.put("userInfo", testMethod);
 		
 		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);

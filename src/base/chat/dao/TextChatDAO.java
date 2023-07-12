@@ -24,7 +24,19 @@ public class TextChatDAO {
 		return resultList; 
 	}
 	
-	public void insertChatRoom(HashMap<String,Object> commandMap) throws Exception {
+	public String insertChatRoom(HashMap<String,Object> commandMap) throws Exception {
 		session.insert("base.chat.mapper.insertChatRoom", commandMap);
+		String chatRoomId = (String) commandMap.get("chaSeq");
+		
+		return chatRoomId;
+	}
+	
+	public void insertChatRoomDetail(HashMap<String,Object> commandMap) throws Exception {
+		session.insert("base.chat.mapper.insertChatRoomDetail", commandMap);
+	}
+	
+	public String selectChatRoom(HashMap<String,Object> commandMap) throws Exception {
+		String chatRoomId = session.selectOne("base.chat.mapper.selectChatRoom", commandMap);
+		return chatRoomId;
 	}
 }

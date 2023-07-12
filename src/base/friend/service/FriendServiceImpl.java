@@ -30,8 +30,8 @@ public class FriendServiceImpl implements FriendService {
 	}
 	
 	@Override
-	public List<FriendVO> friendList(String myNick) throws SQLException {
-		return friendDAO.selectFriendList(myNick);
+	public List<FriendVO> friendList(FriendVO friendVO) throws SQLException {
+		return friendDAO.selectFriendList(friendVO);
 	}
 
 	@Override
@@ -42,6 +42,25 @@ public class FriendServiceImpl implements FriendService {
 	@Override
 	public FriendVO selectUserFriendState(FriendVO friendVO) throws SQLException {
 		return friendDAO.selectUserFriendState(friendVO);
+	}
+
+	@Override
+	public void addFriendAccept(FriendVO friendVO) throws SQLException {
+		friendDAO.addFriendAccept(friendVO);
+		
+	}
+	
+	@Override
+	public void addFriendAcceptYou(FriendVO friendVO) throws SQLException {
+		friendDAO.addFriendAcceptYou(friendVO);
+		
+	}
+	
+	
+	@Override
+	public FriendVO friendCheck(FriendVO friendVO) throws SQLException {
+		return friendDAO.friendCheck(friendVO);
+		
 	}
 
 

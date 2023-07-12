@@ -40,4 +40,49 @@
                (SELECT MIN(M_MATCHING_DATE) as laterDate FROM MATCHING WHERE M_MATCHING_DATE <![CDATA[>]]> #{baseDate} AND M_MY_ID = #{myID}) B;
 	</select>
 	
+	<select id="selectExceptList" resultType="base.matching.vo.MatchingHistoryVO">
+				SELECT A.M_USER_ID AS mUserID
+				FROM (
+							SELECT M_USER_ID,
+									COUNT(M_USER_ID) AS COUNT
+							 FROM MATCHING 
+							WHERE M_MY_ID = #{mMyID}
+							AND M_MATCHING_DATE = NOW()
+							GROUP BY M_USER_ID
+						) A
+				WHERE A.COUNT >3 
+
+	</select>
+	
+	
+	<insert id="insertMatchingHistory" parameterType="java.util.List" >
+				INSERT INTO MATCHING
+				(
+				M_MATCHING_ID
+				,M_MY_ID
+				,M_USER_ID
+				,M_GAME_TYPE
+				,M_MATCHING_SCORE
+				,M_MATCHING_DATE
+				) 
+				VALUES
+		<foreach collection="list" item="item" separator="," close=";" open="" index="index">
+				(
+				(cast(#{item.chIndex} as unsigned)
+				+#{index})
+				,#{item.myId}
+				,#{item.glNick}
+				,#{item.gameType}
+				,#{item.matchingScore}
+				,NOW()
+				)
+		  </foreach>
+	</insert>
+	
+	<select id="selectMatchingHistoryTableKey" resultType="string">
+
+		SELECT MAX(M_MATCHING_ID) + 1 FROM MATCHING 
+		
+	</select>
+	
 </mapper>

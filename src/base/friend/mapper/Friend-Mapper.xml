@@ -27,9 +27,9 @@
 		 FROM FRIEND F
 		 LEFT JOIN GAME_LOL GL ON (F.F_YOU_ID = GL.GL_NICK)
   		 LEFT JOIN FILE B ON (F.F_YOU_ID = B.FL_TABLE_KEY)
-		WHERE F_MY_ID = #{myNick}
+		WHERE F_MY_ID = #{fMyId}
 		AND F_STATE_CD = '10501'
-		
+		AND F_YOU_ID LIKE CONCAT('%',#{keyWord},'%')
 	</select>
 	
 	<select id="selectUserFriendState" resultType="base.friend.vo.FriendVO">
@@ -46,6 +46,7 @@
 			AND F_YOU_ID = #{fYouId}
 		
 	</select>
+
 	
 	<select id="selectFriendNum" resultType="java.lang.Integer">
 		
@@ -55,5 +56,32 @@
 		AND F_STATE_CD = '10501'
 		
 	</select>
+	
+	
+	<update id="addFriendAccept" parameterType="base.friend.vo.FriendVO" >
+
+			UPDATE FRIEND SET
+			F_STATE_CD = '10501'
+			WHERE F_MY_ID = #{fMyId}
+			AND F_YOU_ID = #{fYouId}
+		
+	</update>
+	
+	<update id="addFriendAcceptYou" parameterType="base.friend.vo.FriendVO" >
+
+			UPDATE FRIEND SET
+			F_STATE_CD = '10501'
+			WHERE F_MY_ID =  #{fYouId}
+			AND F_YOU_ID =#{fMyId}
+		
+	</update>
+	
+	<select id="friendCheck" parameterType="base.friend.vo.FriendVO" resultType="base.friend.vo.FriendVO"  >
+		
+			SELECT F_STATE_CD AS fStateCd FROM FRIEND 
+			WHERE F_MY_ID = #{fMyId} 
+			AND F_YOU_ID = #{fYouId}
+		
+	</select>		
 	
 </mapper>
