@@ -21,13 +21,13 @@ public class FReportController {
 	
 	@RequestMapping(value = "/report/submitReport.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String,Object>> submitReport (@RequestBody Map<String, String> params) throws Exception {
-		
-		
-		System.out.println(params.toString());
-		
+		int result = fReportService.insertReport(params);
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("result", result);
+		
 		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(resultMap, HttpStatus.OK);
+		
 		return entity;
 	}
 }
