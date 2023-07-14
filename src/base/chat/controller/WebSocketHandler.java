@@ -21,7 +21,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	public void afterConnectionEstablished(WebSocketSession session) throws IOException {
 		String chatRoomId = extractChatRoomId(session.getUri().getPath());
 		chatRooms.put(session.getId(), session);
-        session.sendMessage(new TextMessage(chatRoomId));
+//        session.sendMessage(new TextMessage(chatRoomId));
         
         System.out.println("session Open!");
 	}

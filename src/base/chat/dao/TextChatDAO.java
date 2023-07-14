@@ -39,4 +39,12 @@ public class TextChatDAO {
 		String chatRoomId = session.selectOne("base.chat.mapper.selectChatRoom", commandMap);
 		return chatRoomId;
 	}
+	
+	public List<Map<String, Object>> selectChatter(HashMap<String,Object> commandMap) throws Exception {
+		List<Map<String, Object>> resultList = session.selectList("base.chat.mapper.selectChatter", commandMap);
+		if (resultList.size() < 1) {
+			resultList = new ArrayList<Map<String,Object>>();
+		}
+		return resultList;
+	}
 }
