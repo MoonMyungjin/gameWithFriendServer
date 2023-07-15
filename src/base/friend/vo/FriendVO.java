@@ -11,6 +11,10 @@ public class FriendVO {
 	private String fRegDate;
 	private String fModId;
 	private String fModDate;
+	private String glRank;
+	private String glSummoner;
+	private String glChampion;
+	private String ProfileImgUrl;
 	private String keyWord;
 	
 	
@@ -62,9 +66,28 @@ public class FriendVO {
 	public void setfModDate(String fModDate) {
 		this.fModDate = fModDate;
 	}
-	
-	
-	
-	
-
+	public String getGlRank() {
+		return glRank;
+	}
+	public void setGlRank(String glRank) {
+		this.glRank = glRank;
+	}
+	public String getGlSummoner() {
+		return glSummoner;
+	}
+	public void setGlSummoner(String glSummoner) {
+		this.glSummoner = glSummoner;
+	}
+	public String getGlChampion() {
+		return glChampion;
+	}
+	public void setGlChampion(String glChampion) {
+		this.glChampion = glChampion;
+	}
+	public String getProfileImgUrl() {
+		return ProfileImgUrl;
+	}
+	public void setProfileImgUrl(String profileImgUrl) {
+		ProfileImgUrl = profileImgUrl;
+	}
 }

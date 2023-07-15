@@ -14,4 +14,7 @@ public interface TextChatService {
 	
 	// 채팅방을 open 하는 메서드
 	public String openChatRoom(HashMap<String, Object> commandMap) throws Exception;
+	
+	// chatRoomId로 채팅방 참여자들의 정보를 조회하는 메서드
+	public List<Map<String, Object>> selectChatter(HashMap<String, Object> commandMap) throws Exception;
 }

@@ -59,5 +59,12 @@ public class TextChatServiceImpl implements TextChatService{
 		return chatRoomId;
 	}
 	
+	public List<Map<String, Object>> selectChatter(HashMap<String, Object> commandMap) throws Exception {
+		List<Map<String, Object>> resultList = null;
+		
+		resultList = textChatDAO.selectChatter(commandMap);
+		
+		return resultList;
+	}
 
 }

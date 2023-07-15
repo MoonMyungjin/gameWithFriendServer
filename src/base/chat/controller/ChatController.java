@@ -49,5 +49,14 @@ public class ChatController {
 		return modelAndView;
 	}
 	
-	
+	@RequestMapping(value="/selectChatter.do")
+	public ModelAndView selectChater(HttpServletRequest requeest, @RequestBody HashMap<String, Object> commandMap) throws Exception {
+		ModelAndView modelAndView = new ModelAndView("jsonView");
+		
+		List<Map<String, Object>> resultList = textChatService.selectChatter(commandMap);
+		
+		modelAndView.addObject("resultList", resultList);
+		
+		return modelAndView;
+	}
 }
