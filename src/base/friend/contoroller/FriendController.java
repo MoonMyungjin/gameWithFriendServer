@@ -40,9 +40,13 @@ public class FriendController {
 	@RequestMapping(value = "/friend/friendAdd.do", method = RequestMethod.GET)
 	public void friendAdd(HttpServletRequest request,HttpMethod httpMethod,@RequestParam(required = true) String myNick,@RequestParam(required = true) String yourNick) throws Exception{
 		Map<String, Object> dataMap = new HashMap<String, Object>();
+		
 		FriendVO friendVO = new FriendVO();
 		friendVO.setfMyId(myNick);
 		friendVO.setfYouId(yourNick);
+		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		System.out.println(myNick);
+		System.out.println(friendVO.getfMyId());
 		friendService.friendAddSend(friendVO);
 		friendService.friendAddReceive(friendVO);
 		AlramVO alramVO = new AlramVO();
