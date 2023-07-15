@@ -19,7 +19,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws IOException {
-		String chatRoomId = extractChatRoomId(session.getUri().getPath());
+//		String chatRoomId = extractChatRoomId(session.getUri().getPath());
 		chatRooms.put(session.getId(), session);
 //        session.sendMessage(new TextMessage(chatRoomId));
         
