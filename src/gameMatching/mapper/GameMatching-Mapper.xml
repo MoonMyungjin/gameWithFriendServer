@@ -84,13 +84,15 @@
 	</select>
 	
 	<select id="selectUserlist" resultType="gameMatching.vo.GameVO">
-			SELECT 	GL_SUMMONER as glSummoner,
-					GL_RANK as glRank,
-					GL_CHAMPION as glChampion,
-					GL_POSITION as glPosition,
-					GL_TIME as glTime,
-					GL_NICK as glNick
-			FROM GAME_LOL
+			SELECT 	A.GL_SUMMONER AS glSummoner,
+						A.GL_RANK AS glRank,
+						A.GL_CHAMPION AS glChampion,
+						A.GL_POSITION AS glPosition,
+						A.GL_TIME AS glTime,
+						A.GL_NICK AS glNick,
+						B.U_NICKNAME AS appNick 		
+						FROM GAME_LOL A , USER B
+						WHERE A.GL_NICK = B.U_INTG_ID
 	</select>
 	
 	<select id="selectRankList" resultType="java.lang.String">

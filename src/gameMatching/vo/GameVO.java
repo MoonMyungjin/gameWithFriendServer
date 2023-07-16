@@ -21,9 +21,15 @@ public class GameVO {
 	private String url;
 	private String myId;
 	private String gameType;
+	private String appNick;
 	
 	
-	
+	public String getAppNick() {
+		return appNick;
+	}
+	public void setAppNick(String appNick) {
+		this.appNick = appNick;
+	}
 	public String getGameType() {
 		return gameType;
 	}
