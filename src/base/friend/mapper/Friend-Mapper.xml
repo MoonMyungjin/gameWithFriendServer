@@ -24,9 +24,11 @@
 			  ,GL.GL_SUMMONER as glSummoner
 			  ,GL.GL_CHAMPION as glChampion
 	  		  ,B.FL_UNIQUE_NAME as ProfileImgUrl
+	  		  ,U.U_NICKNAME AS appNick
 		 FROM FRIEND F
 		 LEFT JOIN GAME_LOL GL ON (F.F_YOU_ID = GL.GL_NICK)
   		 LEFT JOIN FILE B ON (F.F_YOU_ID = B.FL_TABLE_KEY)
+  		 LEFT JOIN USER U ON (F.F_YOU_ID = U.U_INTG_ID)
 		WHERE F_MY_ID = #{fMyId}
 		AND F_STATE_CD = '10501'
 		<if test="keyWord != null and !keyWord.equals('')">

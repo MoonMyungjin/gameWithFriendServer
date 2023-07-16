@@ -16,8 +16,15 @@ public class FriendVO {
 	private String glChampion;
 	private String ProfileImgUrl;
 	private String keyWord;
+	private String appNick;
 	
 	
+	public String getAppNick() {
+		return appNick;
+	}
+	public void setAppNick(String appNick) {
+		this.appNick = appNick;
+	}
 	public String getKeyWord() {
 		return keyWord;
 	}
