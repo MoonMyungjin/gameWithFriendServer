@@ -53,9 +53,12 @@
 	<select id="selectChatRoom" resultType="str">
 		SELECT CHA_SEQ
 		  FROM CHAT_DTL
-		 WHERE CHA_INTG_ID IN (#{sender}, #{receiver})
+		 WHERE CHA_INTG_ID IN
+		 <foreach item="chatter" index="index" collection="chatters" open="(" separator="," close=")">
+		        #{chatter}
+		  </foreach> 
 		 GROUP BY CHA_SEQ
-		HAVING COUNT(DISTINCT CHA_INTG_ID) = 2;
+		HAVING COUNT(DISTINCT CHA_INTG_ID) = #{size}
 	</select>
 	
 	<!-- chatRoomId로 채팅방 참여자 조회하는쿼리 -->

@@ -6,15 +6,17 @@
 
 <mapper namespace="base.login.mapper">
 	<select id="base.login.mapper.selectUserInfo" resultType="customMap">
-		SELECT U_INTG_ID
-		     , U_NICKNAME
-		     , U_LAST_LOGIN_IP
-		     , DATE_FORMAT(U_LAST_LOGIN_DTTM, '%Y%m%d%H%i%s') as U_LAST_LOGIN_DTTM
-		     , U_LAST_TERMINAL_KIND
-		     , U_LOGIN_CATE
-		     , U_STATE_CD
-		     , U_TYPE_CD
-		  FROM USER
+		SELECT A.U_INTG_ID
+		     , A.U_NICKNAME
+		     , A.U_LAST_LOGIN_IP
+		     , DATE_FORMAT(A.U_LAST_LOGIN_DTTM, '%Y%m%d%H%i%s') as U_LAST_LOGIN_DTTM
+		     , A.U_LAST_TERMINAL_KIND
+		     , A.U_LOGIN_CATE
+		     , A.U_STATE_CD
+		     , A.U_TYPE_CD
+		     , B.FL_UNIQUE_NAME as PROFILE_IMG_URL
+		  FROM USER A
+		  LEFT JOIN FILE B ON (A.U_INTG_ID = B.FL_TABLE_KEY)
 		 WHERE U_INTG_ID = #{uIntgId}
 	</select>
 	
