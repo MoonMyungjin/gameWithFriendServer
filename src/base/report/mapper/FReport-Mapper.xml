@@ -10,5 +10,14 @@
 		VALUES
 		((select MAX(R.RE_SEQ) +1 FROM REPORT as R), #{myID}, #{reportUserID}, #{reportDetails}, #{reportOptions}, NOW(), NULL, NULL, 'N', 'N', #{reportType});
 	</insert>
+	
+	<select id="selectReportTargetIdList" resultType="customMap">
+		SELECT RE_TARGET_ID
+		  FROM REPORT
+		  WHERE RE_SEND_ID = #{myId}
+	</select>
+	
+	
+	
 
 </mapper>

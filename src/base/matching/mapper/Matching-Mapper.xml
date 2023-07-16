@@ -47,7 +47,7 @@
 									COUNT(M_USER_ID) AS COUNT
 							 FROM MATCHING 
 							WHERE M_MY_ID = #{mMyID}
-							AND M_MATCHING_DATE = NOW()
+							AND M_MATCHING_DATE = DATE_FORMAT(NOW(), '%Y-%m-%d.')
 							GROUP BY M_USER_ID
 						) A
 				WHERE A.COUNT >3 

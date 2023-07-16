@@ -29,9 +29,11 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 
 import base.matching.dao.MatchingDAO;
 import base.matching.vo.MatchingHistoryVO;
+import base.report.dao.FReportDAO;
 import edu.emory.mathcs.backport.java.util.concurrent.TimeUnit;
 import gameMatching.dao.GameMatchingDAO;
 import gameMatching.vo.GameVO;
+import util.CustomMap;
 
 @Service("gameMatchingService")
 public class GameMatchingServiceImpl<E> implements GameMatchingService {
@@ -41,7 +43,9 @@ public class GameMatchingServiceImpl<E> implements GameMatchingService {
 	
 	@Resource(name="MatchingDAO")
 	protected MatchingDAO matchingDAO;
-
+	
+	@Resource(name="FReportDAO")
+	protected FReportDAO fReportDAO;
 	
 	@Override
 	public List<GameVO> selectChampion() throws SQLException {
@@ -100,22 +104,35 @@ public class GameMatchingServiceImpl<E> implements GameMatchingService {
         
         List<GameVO> selectUserList = gameMatchingDAO.selectUserlist();
 	 	MatchingHistoryVO vo = new MatchingHistoryVO();
+	 	vo.setmMyID(myId);
 	 	List<MatchingHistoryVO> selectExceptList = matchingDAO.selectExceptList(vo);
 
 	 	if(selectExceptList.size()>0) {
 	 		for (int i = 0; i < selectExceptList.size(); i++) {
 				
 	 			for (int j = 0; j < selectUserList.size(); j++) {
-					
-	 				if(selectExceptList.get(i).getmMyID().equals(selectUserList.get(j).getGlNick())) {
-//	 					selectUserList.remove(j);
+	 				if(selectExceptList.get(i).getmUserID().equals(selectUserList.get(j).getGlNick())) {
+	 					selectUserList.remove(j);
 	 				}
 	 				
 				}
 	 			
 			}
 	 	}
-        
+	 	List<CustomMap> selectReportTargetIdList = fReportDAO.selectReportTargetIdList(myId);
+	 	if(selectReportTargetIdList.size()>0) {
+	 		for (int i = 0; i < selectReportTargetIdList.size(); i++) {
+				
+	 			for (int j = 0; j < selectUserList.size(); j++) {
+	 				if(selectReportTargetIdList.get(i).get("reTargetId").equals(selectUserList.get(j).getGlNick())) {
+	 					selectUserList.remove(j);
+	 				}
+	 				
+				}
+	 			
+			}
+	 	}
+	 	
         for(int i=0; i<userSelectOptionList.size(); i++) {
         	if(userSelectOptionList.get(i).equals("rank")) {
 	    		int optionSelectNumber =i;
@@ -221,7 +238,7 @@ public class GameMatchingServiceImpl<E> implements GameMatchingService {
 			String url2 ="https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/"+lolSummonerId+"?api_key="+apiKey;
 			String jsonString2 = restTemplate.getForObject(url2, String.class);
 			JSONArray jsonObject2 = (JSONArray) jsonParser.parse(jsonString2);
-			String lolTier = "unRank";
+			String lolTier = "UNRANK";
 			String lolRank = "";
 			if(jsonObject2.size() !=0) {
 				JSONObject jsonResponse2 = (JSONObject) jsonObject2.get(0);
@@ -509,6 +526,8 @@ public class GameMatchingServiceImpl<E> implements GameMatchingService {
 	 	System.out.println(periodList);
         for(int j=0; j<selectUserList.size(); j++) {
         	float totalPoint =0;
+        	int userUnderRankNumber = 0;
+        	int userIChoiceRangeIndex = 0;
         	for(int p=0; p<periodList.size(); p++) {
         		String userRank ="";
         		if(selectUserList.get(j).getGlRank().equals("UNRANK")) {
@@ -521,31 +540,60 @@ public class GameMatchingServiceImpl<E> implements GameMatchingService {
     	 			userRank = selectUserList.get(j).getGlRank();
     	 		}else {
     	 			userRank = selectUserList.get(j).getGlRank().substring(0, selectUserList.get(j).getGlRank().length()-1);
+    	 			userUnderRankNumber =   Integer.parseInt(selectUserList.get(j).getGlRank().substring(selectUserList.get(j).getGlRank().length()-1,selectUserList.get(j).getGlRank().length() ));
     	 		}
-        		System.out.println(userRank);
                 int indexGap =0;
                 int iChoiceIndex=0;
                 int userChoiceIndex=0;
+                int iChoiceUnderRankNumber = 0;
                 for(int i =0; i<selectRankList.size(); i++){
-                	if(selectRankList.get(i).equals(periodList.get(p))) {
+                	String iChoiceRank = "";
+                	if(periodList.get(p).equals("UNRANK")) {
+                		iChoiceRank = periodList.get(p);
+        	 		}else if(periodList.get(p).equals("MASTER")) {
+        	 			iChoiceRank = periodList.get(p);
+        	 		}else if(periodList.get(p).equals("GRANDMASTER")) {
+        	 			iChoiceRank = periodList.get(p);
+        	 		}else if(periodList.get(p).equals("CHALLENGER")) {
+        	 			iChoiceRank = periodList.get(p);
+        	 		}else {
+        	 			iChoiceRank = periodList.get(p).substring(0, periodList.get(p).length()-1);
+        	 			iChoiceUnderRankNumber =  Integer.parseInt(periodList.get(p).substring(periodList.get(p).length()-1, periodList.get(p).length()));
+        	 			
+        	 		}
+                	if(selectRankList.get(i).equals(iChoiceRank)) {
                 		iChoiceIndex=i;
                 	}
                 	if(selectRankList.get(i).equals(userRank)) {
                 		userChoiceIndex=i;
-                	}  
+                	}
+                	
+            		if(userUnderRankNumber > iChoiceUnderRankNumber ) {
+
+                		userIChoiceRangeIndex = userUnderRankNumber - iChoiceUnderRankNumber;
+                	}else {
+
+                		userIChoiceRangeIndex = iChoiceUnderRankNumber - userUnderRankNumber;
+                	}
+            		userIChoiceRangeIndex = 4-userIChoiceRangeIndex;
+                	
                 }
                 if(userChoiceIndex>iChoiceIndex) {
                 	indexGap =userChoiceIndex-iChoiceIndex;
             	}else if(userChoiceIndex<iChoiceIndex) {
             		indexGap =iChoiceIndex-userChoiceIndex;
             	}
-                float detailBounusPoint = 0;
+               
+               
                 float optionPoint =((float)optionSelectNumberPoint/(float)selectRankList.size());
                 float userPoint =(float)optionSelectNumberPoint-((float)indexGap*(float)optionPoint);
+                float tempUnderPoint = optionPoint/4;
+                float detailBounusPoint = 0;
+                detailBounusPoint = tempUnderPoint * (float)userIChoiceRangeIndex;
+                userPoint = userPoint - detailBounusPoint;
                 totalPoint =totalPoint + userPoint;
-                System.out.println(userPoint);
+
         	}
-        	System.out.println(totalPoint);
         	totalPoint = totalPoint/periodList.size();
             selectUserList.get(j).setRankScore(totalPoint);
         }

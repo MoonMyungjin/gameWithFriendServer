@@ -10,6 +10,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import gameMatching.vo.GameVO;
+import util.CustomMap;
 
 @Repository("FReportDAO")
 public class FReportDAO {
@@ -26,5 +27,10 @@ public class FReportDAO {
 		params.put("reportType", reportType);
 		
 		return session.insert("base.freport.mapper.insertReport", params);
+	}
+	
+	public List<CustomMap> selectReportTargetIdList(String myId) throws SQLException {
+		
+		return session.selectList("base.freport.mapper.selectReportTargetIdList", myId);
 	}
 }
