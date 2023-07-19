@@ -65,4 +65,11 @@ public class AdminController {
 		
 		return result;
 	}
+	
+	@RequestMapping(value = "/admin/selectApiKey.do", method = RequestMethod.GET)
+	public String selectApiKey(HttpServletRequest request, Model model) throws Exception{
+		
+		String selectApiKey = adminService.selectApiKey();
+		return selectApiKey;
+	}
 }

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tinkerpop.shaded.jackson.databind.ObjectMapper;
 import org.json.simple.JSONArray;
@@ -27,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 import com.datastax.oss.driver.shaded.guava.common.collect.Comparators;
 import com.fasterxml.jackson.databind.JsonSerializer;
 
+import base.admin.dao.AdminDAO;
 import base.matching.dao.MatchingDAO;
 import base.matching.vo.MatchingHistoryVO;
 import base.report.dao.FReportDAO;
@@ -46,6 +48,9 @@ public class GameMatchingServiceImpl<E> implements GameMatchingService {
 	
 	@Resource(name="FReportDAO")
 	protected FReportDAO fReportDAO;
+	
+	@Resource(name="AdminDAO")
+	protected AdminDAO adminDAO;
 	
 	@Override
 	public List<GameVO> selectChampion() throws SQLException {
@@ -222,7 +227,8 @@ public class GameMatchingServiceImpl<E> implements GameMatchingService {
 		JSONParser jsonParser = new JSONParser();
 		RestTemplate restTemplate = new RestTemplate();
 		ArrayList<GameVO> updateList = new ArrayList<GameVO>();
-		String apiKey = "RGAPI-522c7f1f-69df-4f3b-b673-e1f1d02af1fb";
+		String selectApiKey = adminDAO.selectApiKey();
+		String apiKey = selectApiKey;
 		for (int j = 0; j < summonerList.size(); j++) {/* 인증한 유저리스트만큼 돌리기*/
 			summonerNameUser = summonerList.get(j).getGlSummoner();
 			
@@ -644,6 +650,31 @@ public class GameMatchingServiceImpl<E> implements GameMatchingService {
 			selectUserList.get(j).setChampionScore(ChampionScore);
 		}
 		return selectUserList;
+	}
+
+	@Override
+	public String checkMySummoner(String apiKey,String mySummoner,HttpServletResponse res) throws SQLException, ParseException {
+		String url = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+mySummoner+"?api_key="+apiKey;
+		RestTemplate restTemplate = new RestTemplate();
+		JSONParser jsonParser = new JSONParser();
+		String lolSummonerName = "NO";
+		try {
+			String jsonString = restTemplate.getForObject(url, String.class);
+			JSONObject jsonObject = (JSONObject) jsonParser.parse(jsonString);
+			Object object = jsonObject.get("name");
+			 lolSummonerName = String.valueOf(object);	
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+
+		return lolSummonerName;
+	}
+
+	@Override
+	public int appIdCheckSummonerName(String myId)
+			throws SQLException, ParseException {
+		return gameMatchingDAO.appIdCheckSummonerName(myId);
 	}
 
 }

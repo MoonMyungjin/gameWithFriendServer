@@ -11,6 +11,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -59,6 +60,16 @@ public class LoginController {
 		}
 		
 		return modelAndView;
+	}
+	
+	
+	@CrossOrigin("http://localhost:3000")
+	@RequestMapping(value="/login/userDelete.do")
+	public void userDelete(HttpServletRequest request, HttpMethod httpMethod, @RequestParam(required = true) String myId ) throws Exception{
+
+
+	 int cnt =loginService.updateUserDelete(myId);
+
 	}
 	
 	

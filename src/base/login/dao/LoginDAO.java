@@ -44,4 +44,10 @@ public class LoginDAO {
 		return cnt;
 	}
 	
+	public int updateUserDelete(String myId) throws Exception {
+		int cnt = session.update("base.login.mapper.updateUserDelete", myId);
+		
+		return cnt;
+	}
+	
 }

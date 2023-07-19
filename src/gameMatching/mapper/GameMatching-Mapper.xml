@@ -113,4 +113,10 @@
 			WHERE CD_DTL_PARENT_ID ='104'
 	</select>
 	
+	<select id="appIdCheckSummonerName" parameterType="java.lang.String" resultType="java.lang.Integer">
+	
+		SELECT COUNT(*) FROM GAME_LOL 
+		WHERE GL_NICK = #{myId}
+	</select>
+	
 </mapper>

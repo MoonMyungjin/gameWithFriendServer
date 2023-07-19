@@ -59,4 +59,8 @@ public class GameMatchingDAO {
 	public List<GameVO> selectUserlist() throws SQLException {
 		return session.selectList("gameMatching.mapper.selectUserlist");
 	}
+	
+	public int appIdCheckSummonerName(String myId) throws SQLException {
+		return session.selectOne("gameMatching.mapper.appIdCheckSummonerName",myId);
+	}
 }

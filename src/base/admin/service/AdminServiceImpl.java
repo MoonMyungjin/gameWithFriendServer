@@ -27,4 +27,9 @@ public class AdminServiceImpl implements AdminService {
 		adminDAO.userUpdate(params);
 	}
 
+	@Override
+	public String selectApiKey() throws SQLException {
+		return adminDAO.selectApiKey();		 
+	}
+
 }

@@ -70,4 +70,13 @@
 		 WHERE U_INTG_ID=#{id}
 	</update>
 	
+	
+		
+	
+	<select id="selectApiKey"  resultType="java.lang.String"  >
+		
+			SELECT apiKey  FROM APIKEY
+		
+	</select>
+	
 </mapper>

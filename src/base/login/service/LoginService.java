@@ -18,4 +18,7 @@ public interface LoginService {
 	// 유저정보조회
 	public int saveUserNickName (HashMap<String, Object> commandMap) throws Exception;
 	
+	// 유저탈퇴
+	public int updateUserDelete (String myId) throws Exception;
+	
 }

@@ -40,18 +40,18 @@
 	<!-- Repository -->
 	
 	<!-- Scheduler -->
-<!-- 	<bean id="jobTask" class="gameMatching.scheduler.Scheduler"/>
+ <!-- 	<bean id="jobTask" class="gameMatching.scheduler.Scheduler"/>
 		
 	<task:scheduler id="printScheduler"/>
 	
 	<task:scheduled-tasks scheduler="printScheduler">
 		<task:scheduled ref="jobTask" 
 						method="inserUserGameInfoScheduler"
-						cron= "0 47 14 * * *"
+						cron= "0 58 20 * * *"
 						/>
 	
 
-	</task:scheduled-tasks> -->
+	</task:scheduled-tasks>  -->
 	
 	<!-- Interceptor -->	 
 <!-- 	<bean id="commonInterceptor" class="com.lms.hexa.interceptor.CommonInterceptor"

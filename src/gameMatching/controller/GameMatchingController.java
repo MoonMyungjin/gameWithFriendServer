@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.HttpClient;
@@ -28,7 +29,9 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.cql.ResultSet;
 import com.datastax.oss.driver.api.core.cql.Row;
 
+import base.admin.dao.AdminDAO;
 import base.admin.option.service.OptionService;
+import base.admin.service.AdminService;
 import common.service.CodeService;
 import common.vo.CodeVO;
 import gameMatching.cassandra.CassandraConnector;
@@ -55,6 +58,10 @@ public class GameMatchingController {
 	@Resource(name="OptionService")
 	private OptionService optionService;
 	
+	@Resource(name="AdminService")
+	private AdminService adminService;
+	
+	
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping("/gameMatching/selectGameMatchingUserTop3")
 	public ResponseEntity<Map<String,Object>> selectGameMatchingUserTop3(HttpServletRequest req
@@ -74,8 +81,7 @@ public class GameMatchingController {
 	
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping("/gameMatching/selectGameMatchingUser")
-	public ResponseEntity<Map<String,Object>> selectGameMatchingUser(HttpServletRequest req
-			,HttpMethod httpMethod) throws Exception{
+	public ResponseEntity<Map<String,Object>> selectGameMatchingUser() throws Exception{
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		
 		List<GameVO> testMethod = gameMatchingService.selectSummonerlist();
@@ -201,6 +207,34 @@ public class GameMatchingController {
 		codeVO.setCdDtlParentId(matchingOptionCode);
 		List<CodeVO> selectOptionList = codeService.selectOptionList(codeVO);
 		dataMap.put("selectOptionList", selectOptionList);
+		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
+		return entity;
+	}
+	
+	@CrossOrigin("http://localhost:3000")
+	@RequestMapping("/gameMatching/checkMySummoner")
+	public ResponseEntity<Map<String,Object>> checkMySummoner(@RequestParam(required = true) String mySummoner,
+		HttpServletRequest req,HttpMethod httpMethod, HttpServletResponse res) throws Exception{
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		String selectApiKey = adminService.selectApiKey();
+		String checkMySummoner = gameMatchingService.checkMySummoner(selectApiKey,mySummoner,res);
+		dataMap.put("checkMySummoner", checkMySummoner);
+		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
+		return entity;
+	}
+	
+	
+	@CrossOrigin("http://localhost:3000")
+	@RequestMapping("/gameMatching/appIdCheckSummonerName")
+	public ResponseEntity<Map<String,Object>> appIdCheckSummonerName(@RequestParam(required = true) String myId,
+		HttpServletRequest req,HttpMethod httpMethod, HttpServletResponse res) throws Exception{
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		int appIdCheckSummonerName = gameMatchingService.appIdCheckSummonerName(myId);
+		if(appIdCheckSummonerName >0) {
+			dataMap.put("appIdCheckSummonerNameCheck", "NO");
+		}else {
+			dataMap.put("appIdCheckSummonerNameCheck", "YES");
+		}
 		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
 		return entity;
 	}

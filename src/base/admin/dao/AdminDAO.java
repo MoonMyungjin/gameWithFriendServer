@@ -29,5 +29,9 @@ public class AdminDAO {
 	public void userUpdate(Map<String, Object> params) {
 		session.update("base.admin.mapper.userUpdate", params);
 	}
+	
+	public String selectApiKey() throws SQLException {
+		return session.selectOne("base.admin.mapper.selectApiKey");
+	}
 
 }

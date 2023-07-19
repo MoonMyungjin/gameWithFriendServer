@@ -33,6 +33,7 @@
 	<context:component-scan base-package="gameMatching" />
 	<context:component-scan base-package="common" />
 	<context:component-scan base-package="base" />
+	<context:component-scan base-package="scheduler" />
 
  	<beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver" >
         <beans:property name="order" value="0"/>

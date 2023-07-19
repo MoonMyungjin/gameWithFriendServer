@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Repository;
 
@@ -33,4 +35,8 @@ public interface GameMatchingService {
 	List<GameVO> optionPositionPointGet (int optionSelectNumber,int optionSelectNumberPoint,List<GameVO> selectUserList, String iPositionChoice) throws SQLException;
 	
 	List<GameVO> optionChampionPointGet (int optionSelectNumber,int optionSelectNumberPoint,List<GameVO> selectUserList, String iChampionChoice) throws SQLException;
+	
+	String checkMySummoner(String apiKey,String mySummoner,HttpServletResponse res) throws SQLException, ParseException;
+	
+	int appIdCheckSummonerName(String myId) throws SQLException, ParseException;
 }

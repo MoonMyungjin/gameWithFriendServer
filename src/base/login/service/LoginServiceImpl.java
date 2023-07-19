@@ -63,5 +63,12 @@ public class LoginServiceImpl implements LoginService {
 		
 		return cnt;
 	}
+
+	@Override
+	public int updateUserDelete(String myId) throws Exception {
+		int cnt = loginDAO.updateUserDelete(myId);
+		
+		return cnt;
+	}
 	
 }

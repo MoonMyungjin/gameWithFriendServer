@@ -15,4 +15,5 @@ public interface AdminService {
 
 	void userUpdate(Map<String, Object> params) throws SQLException;
 
+	String selectApiKey() throws SQLException;
 }

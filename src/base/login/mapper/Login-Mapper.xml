@@ -71,4 +71,15 @@
 		 WHERE U_INTG_ID = #{uIntgId}
 	</update>
 	
+	
+	<update id="base.login.mapper.updateUserDelete" >
+		
+				UPDATE USER SET 
+				U_STATE_CD = '10604'
+				, U_MOD_ID = #{myId}
+		     	, U_MOD_DATE = NOW()			
+				WHERE U_INTG_ID = #{myId}
+	</update>
+	
+
 </mapper>
