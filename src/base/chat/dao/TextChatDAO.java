@@ -47,4 +47,25 @@ public class TextChatDAO {
 		}
 		return resultList;
 	}
+	
+	public int selectChatterCnt(String chatRoomId) throws Exception {
+		int cnt = session.selectOne("base.chat.mapper.selectChatterCnt", chatRoomId);
+		return cnt;
+	}
+	
+	public void insertTmpMsg(HashMap<String,Object> commandMap) throws Exception {
+		session.insert("base.chat.mapper.insertTmpMsg", commandMap);
+	}
+	
+	public List<String> selectUnreadMsg(HashMap<String,Object> commandMap) throws Exception {
+		List<String> resultList = session.selectList("base.chat.mapper.selectUnreadMsg", commandMap);
+		if (resultList.size() < 1) {
+			resultList = new ArrayList<String>();
+		}
+		return resultList;
+	}
+	
+	public void deleteTmpMsg(HashMap<String, Object> commandMap) throws Exception {
+		session.delete("base.chat.mapper.deleteTmpMsg", commandMap);
+	}
 }

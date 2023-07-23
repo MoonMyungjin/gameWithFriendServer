@@ -1,5 +1,6 @@
 package base.chat.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,9 +8,13 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import base.chat.dao.TextChatDAO;
+import util.CustomMap;
 
 @Service(value="textChatService")
 public class TextChatServiceImpl implements TextChatService{
@@ -57,24 +62,6 @@ public class TextChatServiceImpl implements TextChatService{
 					textChatDAO.insertChatRoomDetail(paramMap);
 				}
 			}
-//			if (StringUtils.isNotEmpty(sender)) {
-//				paramMap.put("chaSeq", chatRoomId);
-//				paramMap.put("chaIntgId", commandMap.get("sender"));
-//				paramMap.put("chaRegId", commandMap.get("sender"));
-//				paramMap.put("chaModId", commandMap.get("sender"));
-//				
-//				textChatDAO.insertChatRoomDetail(paramMap);
-//			}
-//			
-//			if (StringUtils.isNotEmpty(receiver)) {
-//				paramMap.put("chaSeq", chatRoomId);
-//				paramMap.put("chaIntgId", commandMap.get("receiver"));
-//				paramMap.put("chaRegId", commandMap.get("sender"));
-//				paramMap.put("chaModId", commandMap.get("sender"));
-//				
-//				textChatDAO.insertChatRoomDetail(paramMap);
-//			}
-			
 		}
 		
 		return chatRoomId;
@@ -88,4 +75,55 @@ public class TextChatServiceImpl implements TextChatService{
 		return resultList;
 	}
 
+	@Override
+	public int selectChatterCnt(String chatRoomId) throws Exception {
+		int chatterCnt = textChatDAO.selectChatterCnt(chatRoomId);;
+		
+		return chatterCnt;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void insertTempMsgData(HashMap<String, Object> commandMap) throws Exception {
+		String chatRoomId = (String) commandMap.get("chatRoomId");
+		String msg = (String)commandMap.get("text");
+		HashMap<String, Object> userInfo = (HashMap<String, Object>) commandMap.get("user");
+		
+		String senderId = (String) userInfo.get("_id");
+		List<Map<String, Object>> chatters = textChatDAO.selectChatter(commandMap);
+		for (Map<String,Object> chatter : chatters) {
+			if (chatter.get("uIntgId").equals(senderId)) {
+				continue;
+			} else {
+				HashMap<String, Object> insertMap = new HashMap<String, Object>();
+				
+				insertMap.put("chatRoomId", chatRoomId);
+				insertMap.put("id", (String) commandMap.get("_id"));
+				insertMap.put("sender", (String) userInfo.get("_id"));
+				insertMap.put("receiver", chatter.get("uIntgId"));
+				insertMap.put("msg", msg);
+				
+				textChatDAO.insertTmpMsg(insertMap);
+			}
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Map<String, Object>> selectUnreadMsg(HashMap<String, Object> commandMap) throws Exception {
+		List<String> resultList = textChatDAO.selectUnreadMsg(commandMap);
+		List<Map<String, Object>> returnList = new ArrayList<Map<String, Object>>();
+		
+		for (String resultString : resultList) {
+			ObjectMapper objectMapper = new ObjectMapper();
+			Map<String, Object> returnMap = objectMapper.readValue(resultString, HashMap.class);
+			
+			returnList.add(returnMap);
+		}
+		
+		// 화면에 나갈 준비가 끝났으면, 파일에 저장될 tmpData 이므로 db에서 삭제
+		textChatDAO.deleteTmpMsg(commandMap);
+		
+		return returnList;
+	}
 }

@@ -59,4 +59,15 @@ public class ChatController {
 		
 		return modelAndView;
 	}
+	
+	@RequestMapping(value="/selectUnreadMsg.do")
+	public ModelAndView selectUnreadMsg(HttpServletRequest requeest, @RequestBody HashMap<String, Object> commandMap) throws Exception {
+		ModelAndView modelAndView = new ModelAndView("jsonView");
+		
+		List<Map<String, Object>> resultList = textChatService.selectUnreadMsg(commandMap);
+		
+		modelAndView.addObject("resultList", resultList);
+		
+		return modelAndView;
+	}
 }

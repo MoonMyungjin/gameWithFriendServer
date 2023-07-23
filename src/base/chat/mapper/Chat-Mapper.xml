@@ -72,4 +72,56 @@
 		 WHERE A.CHA_SEQ = #{chatRoomId}
 	</select>
 	
+	<select id="selectChatterCnt" resultType="int">
+		SELECT COUNT(1)
+		  FROM CHAT_DTL A
+		  JOIN USER B ON A.CHA_INTG_ID = B.U_INTG_ID
+		  LEFT JOIN FILE C ON B.U_INTG_ID = C.FL_TABLE_KEY
+		 WHERE A.CHA_SEQ = #{chatRoomId}
+	</select>
+	
+	<insert id="insertTmpMsg" parameterType="hashMap">
+		INSERT INTO CHAT_TMP_MSG (CHA_SEQ, CHA_ID, CHA_SENDER, CHA_RECEIVER, CHA_MSG, CHA_REG_ID, CHA_REG_DATE, CHA_MOD_ID,  CHA_MOD_DATE)
+		VALUES (
+			#{chatRoomId},
+			#{id},
+			#{sender},
+			#{receiver},
+			#{msg},
+			#{sender},
+			NOW(),
+			#{sender},
+			NOW()
+		)
+	</insert>
+	
+	<select id="selectUnreadMsg" resultType="str">
+		SELECT 
+	        JSON_OBJECT(
+	            '_id', A.CHA_ID,
+	            'createdAt', A.CHA_REG_DATE,
+	            'text', A.CHA_MSG,
+	            'user', JSON_OBJECT(
+	                '_id' , A.CHA_SENDER,
+	            	'user' ,
+	            	JSON_OBJECT(
+	                '_id', A.CHA_SENDER,
+	                'avatar', B.FL_UNIQUE_NAME,
+	                'name', C.U_NICKNAME
+	                )
+	            )
+	        ) AS json_data
+		FROM CHAT_TMP_MSG A
+		LEFT JOIN FILE B ON (A.CHA_SENDER = B.FL_TABLE_KEY)
+		JOIN USER C ON A.CHA_SENDER = C.U_INTG_ID
+		WHERE A.CHA_RECEIVER = #{receiver}
+		  AND A.CHA_SEQ = #{chatRoomId}
+		ORDER BY A.CHA_REG_DATE DESC
+	</select>
+	
+	<delete id="deleteTmpMsg" parameterType="hashMap">
+		DELETE FROM CHAT_TMP_MSG
+		 WHERE CHA_SEQ = #{chatRoomId}
+		   AND CHA_RECEIVER = #{receiver}
+	</delete>
 </mapper>
