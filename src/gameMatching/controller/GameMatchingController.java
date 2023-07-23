@@ -173,7 +173,7 @@ public class GameMatchingController {
 		codeVO.setCdDtlParentId("101");
 		List<CodeVO> selectOptionList = codeService.selectOptionList(codeVO);
 		if(gameType.equals("소환사의협곡")){
-			codeVO.setCdDtlParentId("10901");
+			codeVO.setCdDtlParentId("110");
 			selectOptionList = codeService.selectOptionList(codeVO);
 			dataMap.put("selectOptionList", selectOptionList);
 		}else if(gameType.equals("칼바람나락")){
