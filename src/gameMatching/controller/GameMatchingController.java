@@ -167,6 +167,7 @@ public class GameMatchingController {
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping("/gameMatching/selectMatchingOption")
 	public ResponseEntity<Map<String,Object>> selectMatchingOption(@RequestParam(required = true) String gameType,
+			@RequestParam(required = true) String gameTypePlusTwo,
 		HttpServletRequest req,HttpMethod httpMethod) throws Exception{
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		CodeVO codeVO = new CodeVO();
@@ -176,6 +177,11 @@ public class GameMatchingController {
 			codeVO.setCdDtlParentId("110");
 			selectOptionList = codeService.selectOptionList(codeVO);
 			dataMap.put("selectOptionList", selectOptionList);
+			if(gameTypePlusTwo.equals("랭크")) {
+				codeVO.setCdDtlParentId("101");
+				selectOptionList = codeService.selectOptionList(codeVO);
+				dataMap.put("selectOptionList", selectOptionList);
+			}
 		}else if(gameType.equals("칼바람나락")){
 			selectOptionList.remove(1);
 			dataMap.put("selectOptionList", selectOptionList);
