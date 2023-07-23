@@ -69,14 +69,6 @@ public class MainController {
 		mainVO.setMyId(myNick);
 		mainService.likeTarget(mainVO);
 		AlramVO alramVO = new AlramVO();
-		if(yourNick.equals("")) {
-			
-		}else {
-			alramVO.setAlMyId(yourNick);
-			alramVO.setAlSendId(myNick);
-			alramVO.setAlCodeId("10802");
-			alramService.sendAlram(alramVO);
-		}
 		
 	}
 	
