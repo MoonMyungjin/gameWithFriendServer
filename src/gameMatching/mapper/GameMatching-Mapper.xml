@@ -99,6 +99,7 @@
 			SELECT CD_DTL_NAME
 			FROM CODE_DTL
 			WHERE CD_DTL_PARENT_ID ='102'
+			ORDER BY CD_DTL_ORDER
 	</select>
 	
 	<select id="selectPositionList" resultType="java.lang.String">

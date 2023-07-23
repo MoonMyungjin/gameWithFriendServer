@@ -51,7 +51,7 @@ public class FriendController {
 		friendService.friendAddReceive(friendVO);
 		AlramVO alramVO = new AlramVO();
 		alramVO.setTargetId(yourNick);
-		alramVO.setAlSendId(myNick);
+		alramVO.setMyId(myNick);
 		alramVO.setAlCodeId("10801");
 		alramService.sendAlram(alramVO);
 	}
