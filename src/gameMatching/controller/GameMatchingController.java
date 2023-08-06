@@ -92,7 +92,7 @@ public class GameMatchingController {
 		
 		return entity;
 	}
-	
+
 	@CrossOrigin("http://localhost:3000")	
 	@RequestMapping("/gameMatching/pullRiotApi")	
 	public UserGameInfoVO pullRiotApi() throws Exception {
@@ -178,6 +178,14 @@ public class GameMatchingController {
 			selectOptionList = codeService.selectOptionList(codeVO);
 			dataMap.put("selectOptionList", selectOptionList);
 			if(gameTypePlusTwo.equals("랭크")) {
+				codeVO.setCdDtlParentId("101");
+				selectOptionList = codeService.selectOptionList(codeVO);
+				dataMap.put("selectOptionList", selectOptionList);
+			}else if(gameTypePlusTwo.equals("일반")) {
+				codeVO.setCdDtlParentId("101");
+				selectOptionList = codeService.selectOptionList(codeVO);
+				dataMap.put("selectOptionList", selectOptionList);
+			}else if(gameTypePlusTwo.equals("자유랭크")) {
 				codeVO.setCdDtlParentId("101");
 				selectOptionList = codeService.selectOptionList(codeVO);
 				dataMap.put("selectOptionList", selectOptionList);
