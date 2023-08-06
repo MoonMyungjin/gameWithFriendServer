@@ -11,6 +11,7 @@ public class MainVO {
 	private String glChampion;
 	private String glPosition;
 	private String glTime;
+	private String glMostUrl;
 	private String uLoginCate;
 	private String uNickname;
 	private String targetId;
@@ -19,6 +20,12 @@ public class MainVO {
 	
 	
 	
+	public String getGlMostUrl() {
+		return glMostUrl;
+	}
+	public void setGlMostUrl(String glMostUrl) {
+		this.glMostUrl = glMostUrl;
+	}
 	public String getYlState() {
 		return ylState;
 	}

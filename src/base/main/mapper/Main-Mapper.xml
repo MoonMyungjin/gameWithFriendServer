@@ -13,6 +13,7 @@
 		,GL_CHAMPION AS glChampion
 		,GL_POSITION AS glPosition
 		,GL_TIME AS glTime
+		,GL_MOST_URL AS glMostUrl
 		,U_LOGIN_CATE AS uLoginCate
 		,U_NICKNAME AS uNickname
 		 FROM LIKE_TOP_FIVE
