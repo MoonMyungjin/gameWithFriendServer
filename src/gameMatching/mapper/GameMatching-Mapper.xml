@@ -6,18 +6,6 @@
 
 <mapper namespace="gameMatching.mapper">
 	
-<!-- 	<resultMap type="academyinfo" id="academyinfoMap"> -->
-<!-- 		<result property="id" column="id"/> -->
-<!-- 		<result property="acaIpoImg" column="ACA_IPO_IMG"/> -->
-<!-- 		<result property="acaIpoCeoName" column="ACA_IPO_CEO_NAME"/> -->
-<!-- 		<result property="acaIpoName" column="ACA_IPO_NAME"/> -->
-<!-- 		<result property="acaIpoAddress" column="ACA_IPO_ADDRESS"/> -->
-<!-- 		<result property="acaIpoOnNumber" column="ACA_IPO_ON_NUMBER"/> -->
-<!-- 		<result property="acaIpoPhone" column="ACA_IPO_PHONE"/> -->
-<!-- 		<result property="acaIpoFax" column="ACA_IPO_FAX"/> -->
-<!-- 		<result property="acaIpoCopy" column="ACA_IPO_COPY"/> -->
-<!-- 	</resultMap> -->
-	
 	<select id="selectChampion" resultType="gameMatching.vo.GameVO">
 		SELECT 
 				A.CH_INDEX AS chIndex,
@@ -45,13 +33,6 @@
 				GL_SEQ AS glSeq
 		FROM GAME_LOL
 		WHERE 
-		<!-- GL_NICK IN (
-										SELECT 
-												U_NICKNAME 
-										FROM USER
-										WHERE U_NICKNAME IS NOT NULL
-						  )
-		AND  -->
 		GL_SUMMONER IS NOT NULL
 	</select>
 	

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import base.admin.vo.UserVO;
 import base.alram.service.AlramService;
@@ -24,6 +26,7 @@ import base.main.service.MainService;
 import base.main.vo.MainVO;
 import common.service.CodeService;
 import common.vo.CodeVO;
+import util.HduoResponse;
 
 
 @Controller
@@ -56,7 +59,6 @@ public class MainController {
 		mainVO.setTargetId(targetId);
 		String msg="";
 		msg = mainService.fintTargetLike(mainVO);
-		System.out.println(msg);
 		dataMap.put("msg", msg);
 		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
 		
@@ -75,16 +77,14 @@ public class MainController {
 	}
 	
 	@CrossOrigin("http://localhost:3000")
-	@RequestMapping(value = "/main/selectMatchingOptionList.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String,Object>> selectMatchingOption(HttpServletRequest request,HttpMethod httpMethod) throws Exception{
-		Map<String, Object> dataMap = new HashMap<String, Object>();
+	@RequestMapping(value = "/main/selectMatchingOptionList.do", method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public HduoResponse<List<CodeVO>> selectMatchingOption(HttpServletRequest request,HttpMethod httpMethod) throws Exception{
 		CodeVO codeVO = new CodeVO();
 		codeVO.setCdDtlParentId("109");
 		List<CodeVO> selectMatchingOptionList = codeService.selectOptionList(codeVO);
-		dataMap.put("selectMatchingOptionList", selectMatchingOptionList);
-		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
-		
-		return entity;
+		HduoResponse<List<CodeVO>> buildWith = HduoResponse.create().succeed().buildWith(selectMatchingOptionList);
+		return buildWith;
 	}
 	
 	

@@ -18,11 +18,13 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public Map<String, Object> checkLoginUserInfo(HashMap<String, Object> commandMap) throws Exception {
+		commandMap.put("uIntgId", "sss");
 		Map<String, Object> returnMap = loginDAO.selectUserInfo(commandMap); 
 		
 		HashMap<String, Object> paramMap = new HashMap<String, Object>();
 		if (StringUtils.isEmpty((String) returnMap.get("uIntgId"))) {
 			// 신규 아이디를 insert 해주는로직을 넣자
+			
 			paramMap.putAll(commandMap);
 			paramMap.put("uStateCd", "10601");
 			paramMap.put("uTypeCd", "10703");

@@ -5,9 +5,12 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import gameMatching.cassandra.CassandraMapper;
 import gameMatching.controller.GameMatchingController;
@@ -19,15 +22,24 @@ import gameMatching.vo.UserGameInfoVO;
 
 
 
-@Component("jobTask")
+
+
+@EnableScheduling
+@Component
 public class Scheduler  {
 	
-	@Resource(name="gameMatchingDAO")
-	protected GameMatchingDAO gameMatchingDAO;
+	UserGameInfoVO userGameInfo = new UserGameInfoVO();
+	GameVO game = new GameVO();
 	
-	@Scheduled(cron = "0 58 20 * * *")
+	@Resource(name="gameMatchingService")
+	public GameMatchingService gameMatchingService;
+	
+	@Resource(name="gameMatchingDAO")
+	public GameMatchingDAO gameMatchingDAO;
+	
+	@Scheduled(cron = "0 14 22 * * *")
 	public void inserUserGameInfoScheduler() throws Exception {
-		System.out.println("TEST");
-		List<GameVO> selectSummonerlist = gameMatchingDAO.selectSummonerlist();
+		List<GameVO> selectSummonerlist = gameMatchingService.selectSummonerlist();
+		gameMatchingService.findSummonerData(selectSummonerlist);
 	}
 }
