@@ -2,7 +2,7 @@ package util;
 
 import java.util.Objects;
 
-import org.apache.http.HttpStatus;
+import org.springframework.http.HttpStatus;
 
 import groovy.transform.builder.Builder;
 

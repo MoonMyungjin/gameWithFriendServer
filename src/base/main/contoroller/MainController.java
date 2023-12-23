@@ -26,6 +26,7 @@ import base.main.service.MainService;
 import base.main.vo.MainVO;
 import common.service.CodeService;
 import common.vo.CodeVO;
+import util.Error;
 import util.HduoResponse;
 
 
@@ -83,7 +84,8 @@ public class MainController {
 		CodeVO codeVO = new CodeVO();
 		codeVO.setCdDtlParentId(option);
 		List<CodeVO> selectMatchingOptionList = codeService.selectOptionList(codeVO);
-		HduoResponse<List<CodeVO>> buildWith = HduoResponse.create().succeed().buildWith(selectMatchingOptionList);
+		HduoResponse<List<CodeVO>> buildWith = HduoResponse.create().succeed().buildWith(selectMatchingOptionList);	
+		HduoResponse<List<CodeVO>> buildWithError = HduoResponse.create().fail(new Error(HttpStatus.BAD_REQUEST, "sss")).buildWith(selectMatchingOptionList);
 		return buildWith;
 	}
 	
