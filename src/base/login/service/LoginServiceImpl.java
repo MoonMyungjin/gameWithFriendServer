@@ -18,7 +18,6 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public Map<String, Object> checkLoginUserInfo(HashMap<String, Object> commandMap) throws Exception {
-		commandMap.put("uIntgId", "sss");
 		Map<String, Object> returnMap = loginDAO.selectUserInfo(commandMap); 
 		
 		HashMap<String, Object> paramMap = new HashMap<String, Object>();
