@@ -2,12 +2,12 @@ package base.myPage.service;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import base.admin.vo.UserVO;
 import base.myPage.dao.MypageDAO;
 import common.dao.FileDAO;
 import common.vo.FileVO;
@@ -38,7 +38,7 @@ public class MypageServiceImpl implements MypageService {
 	}
 
 	@Override
-	public List<UserVO> selectUserInfo(String uIntgId) throws SQLException  {
+	public Map<String, Object> selectUserInfo(String uIntgId) throws SQLException  {
 		
 		return mypageDAO.selectUserInfo(uIntgId);
 	}

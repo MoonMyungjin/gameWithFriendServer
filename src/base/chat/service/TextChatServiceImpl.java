@@ -42,7 +42,6 @@ public class TextChatServiceImpl implements TextChatService{
 		String[] chatters = tmpChatters.toArray(new String[tmpChatters.size()]);
 		commandMap.put("chatters", chatters);
 		commandMap.put("size", chatters.length);
-//		String[] chatterInfo = new String[];
 		
 		
 		String chatRoomId = textChatDAO.selectChatRoom(commandMap);

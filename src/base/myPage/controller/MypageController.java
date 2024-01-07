@@ -1,7 +1,6 @@
 package base.myPage.controller;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,23 +11,22 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import base.admin.vo.UserVO;
 import base.myPage.service.MypageService;
 import common.util.FileManageUtil;
 import common.vo.FileVO;
-import gameMatching.vo.GameVO;
+import util.Error;
+import util.HduoResponse;
 
 
-@Controller
+@RestController
 public class MypageController {
 	
 	@Resource(name="MypageService")
@@ -64,16 +62,24 @@ public class MypageController {
 		
 	}
 	
-	@RequestMapping("/mypage/selectUserInfo.do")
-	public ResponseEntity<Map<String,Object>> selectUserInfo(@RequestParam(name = "uIntgId", required=true) String uIntgId, HttpServletRequest req,HttpMethod httpMethod) throws Exception{
-		Map<String, Object> dataMap = new HashMap<String, Object>();
+	@RequestMapping(value="/mypage/selectUserInfo.do", method=RequestMethod.GET)
+	public HduoResponse<Map<String,Object>> selectUserInfo(@RequestParam(name = "uIntgId", required=true) String uIntgId, HttpServletRequest req,HttpMethod httpMethod) throws Exception{
+		// 결과를 return하는 Hduo 공통 Response
+		HduoResponse<Map<String, Object>> buildWith = null;
 		
-		List<UserVO> userVO = mypageService.selectUserInfo(uIntgId);
-		dataMap.put("user", userVO);
-		ResponseEntity<Map<String,Object>> entity  = new ResponseEntity<Map<String,Object>>(dataMap,HttpStatus.OK);
+		Map<String, Object> userInfo = mypageService.selectUserInfo(uIntgId);
 		
-		return entity;
+		try {
+			buildWith = HduoResponse.create().succeed().buildWith(userInfo);
+		} catch (NullPointerException e) {
+			String msg = "아이디를 찾을 수 없습니다. /r/n 다시 로그인해 주세요.";
+			Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR, msg);
+			buildWith = HduoResponse.create().fail(error).buildWith(userInfo);
+		} catch (Exception e) {
+			String msg = "에러가 발생했습니다..";
+			Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR, msg);
+			buildWith = HduoResponse.create().fail(error).buildWith(userInfo);
+		}
+		return buildWith;
 	}
-	
-	
 }

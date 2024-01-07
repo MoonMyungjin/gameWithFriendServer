@@ -4,7 +4,7 @@
 
 <mapper namespace="base.myPage.mapper">
 
-	<select id="selectUserInfo" resultType="base.admin.vo.UserVO">
+	<select id="selectUserInfo" resultType="customMap">
 		SELECT A.*
 			  ,B.FL_UNIQUE_NAME as PROFILE_IMG_URL
 		  FROM USER A
