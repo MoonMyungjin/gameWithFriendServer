@@ -5,7 +5,8 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="base.login.mapper">
-	<select id="base.login.mapper.selectUserInfo" resultType="customMap" >
+	<!-- 사용자 정보 조회 -->
+	<select id="selectUserInfo" resultType="customMap" >
 		SELECT A.U_INTG_ID
 		     , A.U_NICKNAME
 		     , A.U_LAST_LOGIN_IP
@@ -20,7 +21,8 @@
 		 WHERE U_INTG_ID = #{uIntgId}
 	</select>
 	
-	<insert id="inserUserInfo">
+	<!-- 사용자 정보 insert -->
+	<insert id="insertUserInfo">
 		INSERT INTO USER
 		(
 		 U_INTG_ID,
@@ -53,7 +55,8 @@
 		)
 	</insert>
 	
-	<update id="base.login.mapper.updateUserLoginInfo">
+	<!-- 사용자 로그인 정보 저장 -->
+	<update id="updateUserLoginInfo">
 		UPDATE USER
 		   SET U_LAST_LOGIN_IP = #{uLastLoginIp}
 		     , U_LAST_LOGIN_DTTM = NOW()
@@ -63,7 +66,8 @@
 		 WHERE U_INTG_ID = #{uIntgId}
 	</update>
 	
-	<update id="base.login.mapper.updateUserNickName" >
+	<!-- 사용자 닉네임 삭제 -->
+	<update id="updateUserNickName" >
 		UPDATE USER
 		   SET U_NICKNAME = #{uNickname}#
 		     , U_MOD_ID = #{uIntgId}
@@ -71,15 +75,48 @@
 		 WHERE U_INTG_ID = #{uIntgId}
 	</update>
 	
-	
-	<update id="base.login.mapper.updateUserDelete" >
-		
-				UPDATE USER SET 
-				U_STATE_CD = '10604'
-				, U_MOD_ID = #{myId}
-		     	, U_MOD_DATE = NOW()			
-				WHERE U_INTG_ID = #{myId}
+	<!-- 닉네임 삭제 쿼리 -->	
+	<update id="updateUserDelete" >
+			UPDATE USER SET 
+			U_STATE_CD = '10604'
+			, U_MOD_ID = #{myId}
+	     	, U_MOD_DATE = NOW()			
+			WHERE U_INTG_ID = #{myId}
 	</update>
 	
+	<!-- 라이엇 ID 정보 insert -->
+	<insert id="insertGameLolInfo">
+		<selectKey order="BEFORE" keyProperty="glSeq" resultType="String">
+		   SELECT IFNULL(
+		     (SELECT CONVERT(MAX(GL_SEQ), INT) + 1
+		        FROM GAME_LOL
+		     ),
+		     1
+		   ) AS GL_SEQ
+		   FROM DUAL;
+		 </selectKey>
+		INSERT INTO GAME_LOL
+		(
+		 GL_SEQ,
+		 GL_NICK,
+		 GL_SUMMONER,
+		 GL_RANK,
+		 GL_CHAMPION,
+		 GL_POSITION,
+		 GL_TIME,
+		 GL_DATE
+		)
+		VALUES
+		(
+		 #{glSeq},
+		 #{uIntgId},
+		 #{glSummoner},
+		 NULL,
+		 NULL,
+		 NULL,
+		 NULL,
+		 NOW()
+		)
+	</insert>
 
 </mapper>

@@ -29,7 +29,7 @@ public class LoginServiceImpl implements LoginService {
 			paramMap.put("uTypeCd", "10703");
 			
 			int cnt = loginDAO.insertUserInfo(paramMap);
-			System.out.println("------------------------------------------!!" + cnt);
+			
 			if (cnt < 1) {
 				returnMap.put("errorMsg", "fail");
 			} else {
@@ -60,9 +60,25 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public int saveUserNickName(HashMap<String, Object> commandMap) throws Exception {
-		int cnt = loginDAO.updateUserNickName(commandMap);
+		// 사용자 통합id
+		String uIntgId = (String) commandMap.get("uIntgId");
+		// 유저 라이엇id
+		String glSummoner = (String) commandMap.get("glSummoner");
 		
-		return cnt;
+		int cnt = 0;
+		int cnt2 = 0;
+		
+		// 닉네임 저장
+		if (StringUtils.isNotEmpty(uIntgId)) {
+			cnt = loginDAO.updateUserNickName(commandMap);
+		}
+		
+		// 라이엇 Id 저장
+		if (StringUtils.isNotEmpty(glSummoner)) {
+			cnt2 = loginDAO.insertGameLolInfo(commandMap);
+		}
+		
+		return cnt + cnt2;
 	}
 
 	@Override
