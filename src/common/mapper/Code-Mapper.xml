@@ -24,12 +24,15 @@
 			FROM CODE_DTL A
 			WHERE A.CD_DTL_PARENT_ID = #{cdDtlParentId}
 			AND A.CD_DTl_USE_YN = 'Y'
-			<if test="params.length > 0"   >
-			AND A.CD_DTL_ID NOT IN 
-				<foreach item="params" index="index" collection="params" open="(" separator="," close=")">
-		        	#{params}
-				</foreach> 
+			<if test="params != null " >
+				<if test="params.length > 0  " >
+					AND A.CD_DTL_ID NOT IN 
+					<foreach item="params" index="index" collection="params" open="(" separator="," close=")">
+			        	#{params}
+					</foreach> 
+				</if>
 			</if>
+			
 		
 	</select>
 	
