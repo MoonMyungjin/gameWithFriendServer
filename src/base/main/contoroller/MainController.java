@@ -80,9 +80,13 @@ public class MainController {
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping(value = "/main/selectMatchingOptionList.do", method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public HduoResponse<List<CodeVO>> selectMatchingOption(HttpServletRequest request,HttpMethod httpMethod,@RequestParam(required = true) String option) throws Exception{
+	public HduoResponse<List<CodeVO>> selectMatchingOption(HttpServletRequest request,HttpMethod httpMethod
+			,@RequestParam(required = true) String option
+			,@RequestParam(required = true) String[] params
+			) throws Exception{
 		CodeVO codeVO = new CodeVO();
 		codeVO.setCdDtlParentId(option);
+		codeVO.setParams(params);
 		List<CodeVO> selectMatchingOptionList = codeService.selectOptionList(codeVO);
 		HduoResponse<List<CodeVO>> buildWith = HduoResponse.create().succeed().buildWith(selectMatchingOptionList);
 		return buildWith;

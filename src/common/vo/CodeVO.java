@@ -6,9 +6,27 @@ public class CodeVO {
 	private String cdDtlParentId;
 	private String cdDtlId;
 	private String cdDtlDesc;
+	private String cdDtlUseYn;
 	private String url;
+	private String[] params;
 	
 	
+	public String[] getParams() {
+		return params;
+	}
+
+	public void setParams(String[] params) {
+		this.params = params;
+	}
+
+	public String getCdDtlUseYn() {
+		return cdDtlUseYn;
+	}
+
+	public void setCdDtlUseYn(String cdDtlUseYn) {
+		this.cdDtlUseYn = cdDtlUseYn;
+	}
+
 	public String getCdDtlId() {
 		return cdDtlId;
 	}
