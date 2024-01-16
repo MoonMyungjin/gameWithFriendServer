@@ -11,7 +11,7 @@
 		 CD_DTL_DESC 
 		FROM CODE_DTL
 		WHERE CD_DTL_PARENT_ID = #{CD_DTL_PARENT_ID}
-		AND CD_DTL_ID !='10102'
+		<!--AND CD_DTL_ID !='10102'-->
 		 <where>
 		 	 <if test="SEARCH_KEY != null and !SEARCH_KEY.equals('')">
 				 AND CD_DTL_NAME LIKE CONCAT('%',#{SEARCH_KEY},'%')
@@ -204,7 +204,7 @@
 		 CD_DTL_DESC 
 		FROM CODE_DTL
 		WHERE CD_DTL_PARENT_ID = #{CD_DTL_ID_UNDER}
-		AND CD_DTL_ID !='10102'
+		<!--AND CD_DTL_ID !='10102'--> 
  		ORDER BY CD_DTL_ID 
 	</select>
 	
