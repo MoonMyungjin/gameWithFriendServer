@@ -27,7 +27,7 @@ public class LoginDAO {
 	}
 	
 	public int insertUserInfo(HashMap<String,Object> commandMap) throws Exception {
-		int cnt = session.insert("base.login.mapper.inserUserInfo", commandMap);
+		int cnt = session.insert("base.login.mapper.insertUserInfo", commandMap);
 		
 		return cnt;
 	}
@@ -50,4 +50,9 @@ public class LoginDAO {
 		return cnt;
 	}
 	
+	public int insertGameLolInfo(HashMap<String,Object> commandMap) throws Exception {
+		int cnt = session.insert("base.login.mapper.insertGameLolInfo", commandMap);
+		
+		return cnt;
+	}
 }

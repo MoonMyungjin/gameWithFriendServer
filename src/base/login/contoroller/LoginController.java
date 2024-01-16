@@ -54,12 +54,11 @@ public class LoginController {
 		try {
 			int cnt = loginService.saveUserNickName(commandMap);
 			
-			if (cnt == 1) {
+			if (cnt >= 1) {
 				resultMap = loginService.selectUserInfo(commandMap);
 			} else {
 				throw new Exception("닉네임 저장 실패");
 			}
-			
 			
 			buildWith = HduoResponse.create().succeed().buildWith(resultMap);
 		} catch (NullPointerException e) {
@@ -79,10 +78,7 @@ public class LoginController {
 	@CrossOrigin("http://localhost:3000")
 	@RequestMapping(value="/login/userDelete.do")
 	public void userDelete(HttpServletRequest request, HttpMethod httpMethod, @RequestParam(required = true) String myId ) throws Exception{
-
-
-	 int cnt =loginService.updateUserDelete(myId);
-
+		loginService.updateUserDelete(myId);
 	}
 	
 	
